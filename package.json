@@ -1,0 +1,12 @@
+{
+  "name": "income-calculator",
+  "version": "1.0.0",
+  "author": "Timothy Scott Gonzalez",
+  "license": "Apache 2.0",
+  "scripts": {
+    "test": "node test"
+  },
+  "devDependencies": {
+    "tape": "^4.5.1"
+  }
+}
