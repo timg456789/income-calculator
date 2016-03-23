@@ -7,6 +7,7 @@ test('define failure', function (t) {
 });
 
 test('define success', function (t) {
-    t.plan(1);
+    t.plan(2);
+    t.ok(true);
     t.ok(true);
 });
