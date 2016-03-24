@@ -35,23 +35,21 @@ test('find the next pay period from 04-01-2016', function(t) {
     t.equal(nextBiweeklyPayDate.getDate(), 15);
 });
 
-test('seek out the month with three paychecks', function(t) {
-    t.plan(5);
+test('seek out the month with three paychecks from 03-24-2016', function(t) {
+    t.plan(3);
+
     var startDate = new Date(2016, 2, 24);
     var triple = calc.getThreePayCheckMonth(startDate.getTime());
 
-    t.equal(triple.getDay(), 5);
+    t.ok(calc.monthHasThreePayChecks(triple.getTime()));
+    t.equal(triple.getFullYear(), 2016, '2016');
+    t.equal(triple.getMonth(), 3, 'april');
+});
 
-    var triplesMonth = triple.getMonth();
+test('seek out the month with three paychecks from 04-29-2016', function(t) {
+    t.plan(1);
+    var startDate = new Date(2016, 3, 29);
+    var triple = calc.getThreePayCheckMonth(startDate.getTime());
 
-    triple.setDate(triple.getDate() + 14);
-
-    t.equal(triple.getDay(), 5);
-    t.equal(triple.getMonth(), triplesMonth);
-
-    triple.setDate(triple.getDate() + 14);
-
-    t.equal(triple.getDay(), 5);
-    t.equal(triple.getMonth(), triplesMonth);
-
+    t.ok(calc.monthHasThreePayChecks(triple.getTime()));
 });

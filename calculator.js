@@ -19,6 +19,35 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime) {
 }
 
 exports.getThreePayCheckMonth = function (time) {
+
     var start = exports.getNextBiweeklyPayDateFrom(time);
-    return start;
+
+    if (exports.monthHasThreePayChecks(start.getTime())) {
+        return start;
+    } else {
+        return exports.getThreePayCheckMonth(start.getTime());
+    }
+    
+}
+
+exports.monthHasThreePayChecks = function (time) {
+
+    var hasThree = false;
+
+    var triple = new Date(time);
+
+    if (triple.getDay() === 5) {
+        var triplesMonth = triple.getMonth();
+        triple.setDate(triple.getDate() + 14);
+        if (triple.getDay() === 5 &&
+            triple.getMonth() === triplesMonth) {
+            triple.setDate(triple.getDate() + 14);
+            if (triple.getDay() === 5 &&
+                triple.getMonth() === triplesMonth) {
+                hasThree = true;
+            }
+        }
+    }
+
+    return hasThree;
 }
