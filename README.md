@@ -11,3 +11,6 @@ I'm eventually going to try and break it as well pushing it beyond its limit.
 
 For now though, I want to find some interesting things in the calendar.
 The calendar is beginning to fascinate me with its complexity.
+
+TODO Next Commit:
+Pretty up monthHasThreePayChecks() 
