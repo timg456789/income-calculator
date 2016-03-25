@@ -43,11 +43,11 @@ exports.monthHasThreePayChecks = function (time) {
         var triplesMonth = triple.getMonth();
         triple.setDate(triple.getDate() + BIWEEKLY_INTERVAL);
 
-        if (dateIsFridayInMonth(triple, triplesMonth)) {
+        if (isDayOfMonth(triple, triplesMonth, FRIDAY)) {
 
             triple.setDate(triple.getDate() + BIWEEKLY_INTERVAL);
 
-            if (dateIsFridayInMonth(triple, triplesMonth)) {
+            if (isDayOfMonth(triple, triplesMonth, FRIDAY)) {
                 hasThree = true;
             }
         }
@@ -56,7 +56,7 @@ exports.monthHasThreePayChecks = function (time) {
     return hasThree;
 }
 
-function dateIsFridayInMonth(date, month) {
-    return date.getDay() === FRIDAY &&
+function isDayOfMonth(date, month, day) {
+    return date.getDay() === day &&
         date.getMonth() === month;
 }
