@@ -14,15 +14,12 @@ test('Test start date limitations', function(t) {
 });
 
 test('seek out the month with three paychecks from 04-29-2016', function(t) {
-    t.plan(10);
+    t.plan(9);
+
     var startDate = new Date(2016, 3, 29);
     var tripleFirst = calc.getThreePayCheckMonth(startDate.getTime());
     var tripleSecond = calc.getNextBiweeklyPayDateFrom(tripleFirst.getTime());
     var tripleThird = calc.getNextBiweeklyPayDateFrom(tripleSecond.getTime());
-
-    var date = tripleFirst.getTime();
-    var hasThree = calc.monthHasThreePayChecks(date);
-    t.ok(hasThree);
 
     t.equal(tripleFirst.getFullYear(), 2016);
     t.equal(tripleFirst.getMonth(), 8);
