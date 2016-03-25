@@ -1,4 +1,6 @@
 const BIWEEKLY_PAY_START_DATE = new Date(2016, 2, 18);
+const FRIDAY = 5;
+const BIWEEKLY_INTERVAL = 14;
 
 function checkTime(time) {
     if (time < BIWEEKLY_PAY_START_DATE.getTime()) {
@@ -12,7 +14,7 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime) {
     var currentPayPeriod = new Date(BIWEEKLY_PAY_START_DATE.getTime());
 
     while (currentPayPeriod.getTime() <= startDateTime) {
-        currentPayPeriod.setDate(currentPayPeriod.getDate() + 14);
+        currentPayPeriod.setDate(currentPayPeriod.getDate() + BIWEEKLY_INTERVAL);
     }
 
     return currentPayPeriod;
@@ -36,16 +38,13 @@ exports.monthHasThreePayChecks = function (time) {
 
     var triple = new Date(time);
 
-    var friday = 5;
-    var biWeeklyInterval = 14;
-
-    if (triple.getDay() === friday) {
+    if (triple.getDay() === FRIDAY) {
         var triplesMonth = triple.getMonth();
-        triple.setDate(triple.getDate() + biWeeklyInterval);
-        if (triple.getDay() === friday &&
+        triple.setDate(triple.getDate() + BIWEEKLY_INTERVAL);
+        if (triple.getDay() === FRIDAY &&
             triple.getMonth() === triplesMonth) {
-            triple.setDate(triple.getDate() + biWeeklyInterval);
-            if (triple.getDay() === friday &&
+            triple.setDate(triple.getDate() + BIWEEKLY_INTERVAL);
+            if (triple.getDay() === FRIDAY &&
                 triple.getMonth() === triplesMonth) {
                 hasThree = true;
             }
