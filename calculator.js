@@ -36,13 +36,15 @@ exports.monthHasThreePayChecks = function (time) {
 
     var triple = new Date(time);
 
-    if (triple.getDay() === 5) {
+    var friday = 5;
+
+    if (triple.getDay() === friday) {
         var triplesMonth = triple.getMonth();
         triple.setDate(triple.getDate() + 14);
-        if (triple.getDay() === 5 &&
+        if (triple.getDay() === friday &&
             triple.getMonth() === triplesMonth) {
             triple.setDate(triple.getDate() + 14);
-            if (triple.getDay() === 5 &&
+            if (triple.getDay() === friday &&
                 triple.getMonth() === triplesMonth) {
                 hasThree = true;
             }
