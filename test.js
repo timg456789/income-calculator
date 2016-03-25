@@ -13,39 +13,6 @@ test('Test start date limitations', function(t) {
     }
 });
 
-test('find the next pay period from 03-23-2016', function(t) {
-    t.plan(3);
-    var startDate = new Date(2016, 2, 23);
-
-    var nextBiweeklyPayDate = calc.getNextBiweeklyPayDateFrom(startDate.getTime());
-
-    t.equal(nextBiweeklyPayDate.getFullYear(), 2016);
-    t.equal(nextBiweeklyPayDate.getMonth(), 3);
-    t.equal(nextBiweeklyPayDate.getDate(), 1);
-});
-
-test('find the next pay period from 04-01-2016', function(t) {
-    t.plan(3);
-    var startDate = new Date(2016, 3, 1);
-
-    var nextBiweeklyPayDate = calc.getNextBiweeklyPayDateFrom(startDate.getTime());
-
-    t.equal(nextBiweeklyPayDate.getFullYear(), 2016);
-    t.equal(nextBiweeklyPayDate.getMonth(), 3);
-    t.equal(nextBiweeklyPayDate.getDate(), 15);
-});
-
-test('seek out the month with three paychecks from 03-24-2016', function(t) {
-    t.plan(3);
-
-    var startDate = new Date(2016, 2, 24);
-    var triple = calc.getThreePayCheckMonth(startDate.getTime());
-
-    t.ok(calc.monthHasThreePayChecks(triple.getTime()));
-    t.equal(triple.getFullYear(), 2016, '2016');
-    t.equal(triple.getMonth(), 3, 'april');
-});
-
 test('seek out the month with three paychecks from 04-29-2016', function(t) {
     t.plan(10);
     var startDate = new Date(2016, 3, 29);
