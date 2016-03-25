@@ -20,7 +20,9 @@ test('seek out the month with three paychecks from 04-29-2016', function(t) {
     var tripleSecond = calc.getNextBiweeklyPayDateFrom(tripleFirst.getTime());
     var tripleThird = calc.getNextBiweeklyPayDateFrom(tripleSecond.getTime());
 
-    t.ok(calc.monthHasThreePayChecks(tripleFirst.getTime()));
+    var date = tripleFirst.getTime();
+    var hasThree = calc.monthHasThreePayChecks(date);
+    t.ok(hasThree);
 
     t.equal(tripleFirst.getFullYear(), 2016);
     t.equal(tripleFirst.getMonth(), 8);
