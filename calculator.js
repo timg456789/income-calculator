@@ -47,8 +47,7 @@ exports.monthHasThreePayChecks = function (time) {
 
             triple.setDate(triple.getDate() + BIWEEKLY_INTERVAL);
 
-            if (triple.getDay() === FRIDAY &&
-                triple.getMonth() === triplesMonth) {
+            if (dateIsFridayInMonth(triple, triplesMonth)) {
                 hasThree = true;
             }
         }
