@@ -22,10 +22,13 @@ test('september 2016 is the next month three paychecks from 04-29-2016', functio
     var tripleFirst = calc.getThreePayCheckMonth(
         startDate.getTime(),
         cal.BIWEEKLY_INTERVAL,
-        cal.FRIDAY);
+        cal.FRIDAY,
+        cal.BIWEEKLY_PAY_START_DATE.getTime());
 
-    var tripleSecond = calc.getNextBiweeklyPayDateFrom(tripleFirst.getTime());
-    var tripleThird = calc.getNextBiweeklyPayDateFrom(tripleSecond.getTime());
+    var tripleSecond = calc.getNextBiweeklyPayDateFrom(tripleFirst.getTime(),
+        cal.BIWEEKLY_PAY_START_DATE.getTime());
+    var tripleThird = calc.getNextBiweeklyPayDateFrom(tripleSecond.getTime(),
+        cal.BIWEEKLY_PAY_START_DATE.getTime());
 
     t.equal(tripleFirst.getFullYear(), 2016);
     t.equal(tripleFirst.getMonth(), 8);

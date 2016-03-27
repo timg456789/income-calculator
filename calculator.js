@@ -7,10 +7,10 @@ function checkTime(time) {
     }
 }
 
-exports.getNextBiweeklyPayDateFrom = function (startDateTime) {
+exports.getNextBiweeklyPayDateFrom = function (startDateTime, firstPayDateTime) {
     checkTime(startDateTime);
 
-    var currentPayPeriod = new Date(calendar.BIWEEKLY_PAY_START_DATE.getTime());
+    var currentPayPeriod = new Date(firstPayDateTime);
 
     while (currentPayPeriod.getTime() <= startDateTime) {
         currentPayPeriod.setDate(currentPayPeriod.getDate() + calendar.BIWEEKLY_INTERVAL);
@@ -19,14 +19,14 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime) {
     return currentPayPeriod;
 }
 
-exports.getThreePayCheckMonth = function (time, interval, payDay) {
+exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTime) {
 
-    var start = exports.getNextBiweeklyPayDateFrom(time);
+    var start = exports.getNextBiweeklyPayDateFrom(time, firstPayDateTime);
 
     if (monthHasThreePayChecks(start.getTime(), interval, payDay)) {
         return start;
     } else {
-        return exports.getThreePayCheckMonth(start.getTime(), interval, payDay);
+        return exports.getThreePayCheckMonth(start.getTime(), interval, payDay, calendar.BIWEEKLY_PAY_START_DATE.getTime());
     }
     
 }
