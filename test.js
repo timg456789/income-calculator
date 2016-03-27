@@ -1,5 +1,6 @@
 var test = require('tape');
 var calc = require('./calculator');
+var cal = require ('./calendar');
 
 test('Test start date limitations', function(t) {
     t.plan(1);
@@ -17,7 +18,12 @@ test('september 2016 is the next month three paychecks from 04-29-2016', functio
     t.plan(9);
 
     var startDate = new Date(2016, 3, 29);
-    var tripleFirst = calc.getThreePayCheckMonth(startDate.getTime());
+
+    var tripleFirst = calc.getThreePayCheckMonth(
+        startDate.getTime(),
+        cal.BIWEEKLY_INTERVAL,
+        cal.FRIDAY);
+
     var tripleSecond = calc.getNextBiweeklyPayDateFrom(tripleFirst.getTime());
     var tripleThird = calc.getNextBiweeklyPayDateFrom(tripleSecond.getTime());
 

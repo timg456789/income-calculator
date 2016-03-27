@@ -19,14 +19,14 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime) {
     return currentPayPeriod;
 }
 
-exports.getThreePayCheckMonth = function (time) {
+exports.getThreePayCheckMonth = function (time, interval, payDay) {
 
     var start = exports.getNextBiweeklyPayDateFrom(time);
 
-    if (monthHasThreePayChecks(start.getTime(), calendar.BIWEEKLY_INTERVAL, calendar.FRIDAY)) {
+    if (monthHasThreePayChecks(start.getTime(), interval, payDay)) {
         return start;
     } else {
-        return exports.getThreePayCheckMonth(start.getTime());
+        return exports.getThreePayCheckMonth(start.getTime(), interval, payDay);
     }
     
 }
