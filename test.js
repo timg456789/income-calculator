@@ -7,7 +7,9 @@ test('Test start date limitations', function(t) {
     var startDate = new Date(2016, 2, 17);
 
     try {
-        calc.getNextBiweeklyPayDateFrom(startDate.getTime());
+        calc.getNextBiweeklyPayDateFrom(startDate.getTime(),
+            cal.BIWEEKLY_PAY_START_DATE.getTime(),
+            cal.BIWEEKLY_INTERVAL);
         t.ok(false);
     } catch(err) {
         t.equal(err, "BiWeeklyPay period has not yet started.");
@@ -25,10 +27,14 @@ test('september 2016 is the next month three paychecks from 04-29-2016', functio
         cal.FRIDAY,
         cal.BIWEEKLY_PAY_START_DATE.getTime());
 
-    var tripleSecond = calc.getNextBiweeklyPayDateFrom(tripleFirst.getTime(),
-        cal.BIWEEKLY_PAY_START_DATE.getTime());
-    var tripleThird = calc.getNextBiweeklyPayDateFrom(tripleSecond.getTime(),
-        cal.BIWEEKLY_PAY_START_DATE.getTime());
+    var tripleSecond = calc.getNextBiweeklyPayDateFrom(
+        tripleFirst.getTime(),
+        cal.BIWEEKLY_PAY_START_DATE.getTime(),
+        cal.BIWEEKLY_INTERVAL);
+    var tripleThird = calc.getNextBiweeklyPayDateFrom(
+        tripleSecond.getTime(),
+        cal.BIWEEKLY_PAY_START_DATE.getTime(),
+        cal.BIWEEKLY_INTERVAL);
 
     t.equal(tripleFirst.getFullYear(), 2016);
     t.equal(tripleFirst.getMonth(), 8);
