@@ -47,17 +47,13 @@ function monthHasThreePayChecks(time) {
 
     if (first.getDay() === FRIDAY) {
 
-        if (isDayOfMonth(second, month, FRIDAY)) {
+        if (second.getMonth() === month) {
 
-            if (isDayOfMonth(third, month, FRIDAY)) {
+            if (third.getMonth() === month) {
                 hasThree = true;
             }
         }
     }
 
     return hasThree;
-}
-
-function isDayOfMonth(date, month) {
-    return date.getMonth() === month;
 }
