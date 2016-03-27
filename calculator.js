@@ -1,6 +1,7 @@
 const BIWEEKLY_PAY_START_DATE = new Date(2016, 2, 18);
 const FRIDAY = 5;
-const BIWEEKLY_INTERVAL = 14;
+
+var calendar = require('./calendar.js');
 
 function checkTime(time) {
     if (time < BIWEEKLY_PAY_START_DATE.getTime()) {
@@ -14,7 +15,7 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime) {
     var currentPayPeriod = new Date(BIWEEKLY_PAY_START_DATE.getTime());
 
     while (currentPayPeriod.getTime() <= startDateTime) {
-        currentPayPeriod.setDate(currentPayPeriod.getDate() + BIWEEKLY_INTERVAL);
+        currentPayPeriod.setDate(currentPayPeriod.getDate() + calendar.BIWEEKLY_INTERVAL);
     }
 
     return currentPayPeriod;
@@ -40,8 +41,8 @@ function monthHasThreePayChecks(time) {
     var second = new Date(time);
     var third = new Date(time);
 
-    second.setDate(first.getDate() + BIWEEKLY_INTERVAL);
-    third.setDate(first.getDate() + BIWEEKLY_INTERVAL * 2);
+    second.setDate(first.getDate() + calendar.BIWEEKLY_INTERVAL);
+    third.setDate(first.getDate() + calendar.BIWEEKLY_INTERVAL * 2);
 
     if (first.getDay() === FRIDAY &&
         second.getMonth() === first.getMonth() &&

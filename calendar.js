@@ -1,0 +1,1 @@
+exports.BIWEEKLY_INTERVAL = 14;
