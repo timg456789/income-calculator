@@ -26,7 +26,7 @@ exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTi
     if (monthHasThreePayChecks(start.getTime(), interval, payDay)) {
         return start;
     } else {
-        return exports.getThreePayCheckMonth(start.getTime(), interval, payDay, calendar.BIWEEKLY_PAY_START_DATE.getTime());
+        return exports.getThreePayCheckMonth(start.getTime(), interval, payDay, firstPayDateTime);
     }
     
 };
