@@ -40,16 +40,14 @@ function monthHasThreePayChecks(time) {
     var second = new Date(time);
     var third = new Date(time);
 
-    var month = first.getMonth();
-
     second.setDate(first.getDate() + BIWEEKLY_INTERVAL);
     third.setDate(first.getDate() + BIWEEKLY_INTERVAL * 2);
 
     if (first.getDay() === FRIDAY) {
 
-        if (second.getMonth() === month) {
+        if (second.getMonth() === first.getMonth()) {
 
-            if (third.getMonth() === month) {
+            if (third.getMonth() === first.getMonth()) {
                 hasThree = true;
             }
         }
