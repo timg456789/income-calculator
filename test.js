@@ -16,8 +16,8 @@ test('Test start date limitations', function(t) {
     }
 });
 
-test('september 2016 is the next month three paychecks from 04-29-2016', function(t) {
-    t.plan(9);
+test('september 2016 is the next month with three paychecks from 04-29-2016', function(t) {
+    t.plan(3);
 
     var startDate = new Date(2016, 3, 29);
 
@@ -36,17 +36,9 @@ test('september 2016 is the next month three paychecks from 04-29-2016', functio
         cal.BIWEEKLY_PAY_START_DATE.getTime(),
         cal.BIWEEKLY_INTERVAL);
 
-    t.equal(tripleFirst.getFullYear(), 2016);
-    t.equal(tripleFirst.getMonth(), 8);
-    t.equal(tripleFirst.getDate(), 2);
-
-    t.equal(tripleSecond.getFullYear(), 2016);
-    t.equal(tripleSecond.getMonth(), 8);
-    t.equal(tripleSecond.getDate(), 16);
-
-    t.equal(tripleThird.getFullYear(), 2016);
-    t.equal(tripleThird.getMonth(), 8);
-    t.equal(tripleThird.getDate(), 30);
+    t.equal(tripleFirst.toString(), new Date(2016, cal.SEPTEMBER, 2).toString());
+    t.equal(tripleSecond.toString(), new Date(2016, cal.SEPTEMBER, 16).toString());
+    t.equal(tripleThird.toString(), new Date(2016, cal.SEPTEMBER, 30).toString());
 
 });
 
