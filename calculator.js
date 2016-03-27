@@ -17,7 +17,7 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime, firstPayDateTime) 
     }
 
     return currentPayPeriod;
-}
+};
 
 exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTime) {
 
@@ -29,7 +29,7 @@ exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTi
         return exports.getThreePayCheckMonth(start.getTime(), interval, payDay, calendar.BIWEEKLY_PAY_START_DATE.getTime());
     }
     
-}
+};
 
 function monthHasThreePayChecks(time, interval, payDay) {
 
