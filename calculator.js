@@ -58,7 +58,6 @@ function monthHasThreePayChecks(time) {
     return hasThree;
 }
 
-function isDayOfMonth(date, month, day) {
-    return date.getDay() === day &&
-        date.getMonth() === month;
+function isDayOfMonth(date, month) {
+    return date.getMonth() === month;
 }
