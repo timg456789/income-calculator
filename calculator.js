@@ -43,9 +43,6 @@ function monthHasThreePayChecks(time) {
     var month = first.getMonth();
 
     second.setDate(first.getDate() + BIWEEKLY_INTERVAL);
-    // This is going to fail on a leap year after looking through the calendar.
-    // I knew it was too simple to start, but I didn't figure it out now until
-    // looking at both the calendar and the code.
     third.setDate(first.getDate() + BIWEEKLY_INTERVAL * 2);
 
     if (first.getDay() === FRIDAY) {
