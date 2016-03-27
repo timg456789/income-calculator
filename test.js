@@ -13,7 +13,7 @@ test('Test start date limitations', function(t) {
     }
 });
 
-test('seek out the month with three paychecks from 04-29-2016', function(t) {
+test('september 2016 is the next month three paychecks from 04-29-2016', function(t) {
     t.plan(9);
 
     var startDate = new Date(2016, 3, 29);
