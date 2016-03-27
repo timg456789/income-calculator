@@ -23,7 +23,7 @@ exports.getThreePayCheckMonth = function (time) {
 
     var start = exports.getNextBiweeklyPayDateFrom(time);
 
-    if (monthHasThreePayChecks(start.getTime())) {
+    if (monthHasThreePayChecks(start.getTime(), calendar.BIWEEKLY_INTERVAL)) {
         return start;
     } else {
         return exports.getThreePayCheckMonth(start.getTime());
@@ -31,7 +31,7 @@ exports.getThreePayCheckMonth = function (time) {
     
 }
 
-function monthHasThreePayChecks(time) {
+function monthHasThreePayChecks(time, interval) {
 
     var hasThree = false;
 
@@ -39,8 +39,8 @@ function monthHasThreePayChecks(time) {
     var second = new Date(time);
     var third = new Date(time);
 
-    second.setDate(first.getDate() + calendar.BIWEEKLY_INTERVAL);
-    third.setDate(first.getDate() + calendar.BIWEEKLY_INTERVAL * 2);
+    second.setDate(first.getDate() + interval);
+    third.setDate(first.getDate() + interval * 2);
 
     if (first.getDay() === calendar.FRIDAY &&
         second.getMonth() === first.getMonth() &&
