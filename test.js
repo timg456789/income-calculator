@@ -34,3 +34,12 @@ test('september 2016 is the next month three paychecks from 04-29-2016', functio
     t.equal(tripleThird.getDate(), 30);
 
 });
+
+test('there are 4 paychecks between 03-26-2016 and 04-29-2016', function(t) {
+    t.plan(1);
+
+    var startDate = new Date(2016, 2, 26);
+    t.equal(startDate.toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+
+
+});
