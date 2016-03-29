@@ -28,6 +28,19 @@ exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTi
     return start;
 };
 
+exports.dayDiff = function (startTime, endTime) {
+    var start = new Date(startTime);
+    var end = new Date(endTime);
+    var diff = 0;
+
+    while (start.getTime() <= end.getTime()) {
+        diff += 1;
+        start.setDate(start.getDate() + 1);
+    }
+
+    return diff;
+}
+
 function monthHasThreePayChecks(time, interval, payDay) {
 
     var hasThree = false;

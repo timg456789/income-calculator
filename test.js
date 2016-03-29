@@ -42,11 +42,19 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 
 });
 
-test('there are 4 paychecks between 03-26-2016 and 04-29-2016', function(t) {
-    t.plan(1);
+test('there are 3 paychecks between 04-01-2016 and 04-29-2016', function(t) {
+    t.plan(3);
 
-    var startDate = new Date(2016, 2, 26);
-    t.equal(startDate.toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    var startDate = new Date(2016, 3, 01);
+    t.equal(startDate.toString(), 'Fri Apr 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
 
+    var endDate = new Date(2016, 3, 29);
+    t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
 
+    var dayDiff = calc.dayDiff(startDate.getTime(), endDate.getTime());
+
+    t.equal(dayDiff, 29);
+
+    //var payCheckCount = calc.getPayCheckCountBetween(startTime, endTime);
+    //t.equal(payCheckCount, 4);
 });
