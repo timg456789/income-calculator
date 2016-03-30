@@ -33,7 +33,7 @@ exports.dayDiff = function (startTime, endTime) {
     var end = new Date(endTime);
     var diff = 0;
 
-    while (start.getTime() <= end.getTime()) {
+    while (start.getTime() < end.getTime()) {
         diff += 1;
         start.setDate(start.getDate() + 1);
     }
