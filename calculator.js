@@ -13,7 +13,6 @@ exports.getNextBiweeklyPayDateFrom = function (startDateTime, firstPayDateTime, 
     while (currentPayPeriod.getTime() <= startDateTime) {
         currentPayPeriod.setDate(currentPayPeriod.getDate() + interval);
     }
-
     return currentPayPeriod;
 };
 
@@ -40,6 +39,35 @@ exports.dayDiff = function (startTime, endTime) {
 
     return diff;
 }
+
+exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
+
+    var payCheckCount = 0;
+    var firstPayCheck = exports.getNextBiweeklyPayDateFrom(startTime - 1, firstPayDateTime, interval);
+
+    if (firstPayCheck.getTime() === startTime) {
+        payCheckCount += 1;
+    }
+
+    payCheckCount += exports.dayDiff(startTime, endTime) / interval;
+
+    return payCheckCount;
+}
+
+/*
+a little too fast
+exports.getRecurringIncome = function(
+    startTime,
+    endTime,
+    intervalDays,
+    rate) {
+
+    var dayDiff = exports.dayDiff(startTime, endTime);
+    var rate = (dayDiff / intervalDays) * rate;
+
+    return rate;
+}
+*/
 
 function monthHasThreePayChecks(time, interval, payDay) {
 

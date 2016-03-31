@@ -42,7 +42,7 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 
 });
 
-test('how many days are there between january 1 2000 and january 1 2001', function(t) {
+test('there are 366 days between january 1 2000 and january 1 2001', function(t) {
     t.plan(3);
 
     var startDate = new Date(2000, 0, 1);
@@ -55,19 +55,47 @@ test('how many days are there between january 1 2000 and january 1 2001', functi
 
 });
 
-test('there are 3 paychecks between 04-01-2016 and 04-29-2016', function(t) {
+test('there 28 days between 04-01-2016 and 04-29-2016', function(t) {
     t.plan(3);
 
     var startDate = new Date(2016, 3, 01);
-    t.equal(startDate.toString(), 'Fri Apr 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-
     var endDate = new Date(2016, 3, 29);
-    t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-
     var dayDiff = calc.dayDiff(startDate.getTime(), endDate.getTime());
 
+    t.equal(startDate.toString(), 'Fri Apr 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(dayDiff, 28);
-
-    //var payCheckCount = calc.getPayCheckCountBetween(startTime, endTime);
-    //t.equal(payCheckCount, 4);
 });
+
+test('there are three paychecks between 04-01-2016 and 04-29-2016 on a biweekly interval', function(t) {
+    t.plan(1);
+
+    var startDate = new Date(2016, 3, 01);
+    var endDate = new Date(2016, 3, 29);
+    var payCheckCount = calc.getPayCheckCount(
+        startDate.getTime(),
+        endDate.getTime(),
+        cal.BIWEEKLY_INTERVAL,
+        cal.BIWEEKLY_PAY_START_DATE.getTime());
+
+    t.equal(payCheckCount, 3);
+});
+
+/*
+test('every day is a friday in the 3 intervals from 04-01-2016 and 04-29-2016', function(t) {
+    t.plan(3);
+
+    var rate = 1600;
+    var startDate = new Date(2016, 3, 01);
+    var endDate = new Date(2016, 3, 29);
+    var biweeklyRecurringIncome = calc.getRecurringIncome(
+        startDate.getTime(),
+        endDate.getTime(),
+        cal.BIWEEKLY_INTERVAL,
+        rate);
+
+    t.equal(startDate.toString(), 'Fri Apr 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(biweeklyRecurringIncome, 5400);
+});
+*/
