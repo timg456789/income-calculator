@@ -42,8 +42,7 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 
 });
 
-//http://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
-test('how many days are there betweeon january 1 2000 and january 1 2001', function(t) {
+test('how many days are there between january 1 2000 and january 1 2001', function(t) {
     t.plan(3);
 
     var startDate = new Date(2000, 0, 1);
