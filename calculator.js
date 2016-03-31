@@ -54,20 +54,21 @@ exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTi
     return payCheckCount;
 }
 
-/*
-a little too fast
 exports.getRecurringIncome = function(
     startTime,
     endTime,
-    intervalDays,
-    rate) {
+    interval,
+    rate,
+    firstPayDateTime) {
 
-    var dayDiff = exports.dayDiff(startTime, endTime);
-    var rate = (dayDiff / intervalDays) * rate;
+    var numberOfPaychecks = exports.getPayCheckCount(
+        startTime,
+        endTime,
+        interval,
+        firstPayDateTime);
 
-    return rate;
+    return numberOfPaychecks * rate;
 }
-*/
 
 function monthHasThreePayChecks(time, interval, payDay) {
 

@@ -81,8 +81,7 @@ test('there are three paychecks between 04-01-2016 and 04-29-2016 on a biweekly 
     t.equal(payCheckCount, 3);
 });
 
-/*
-test('every day is a friday in the 3 intervals from 04-01-2016 and 04-29-2016', function(t) {
+test('4800 from 04-01-2016 and 04-29-2016', function(t) {
     t.plan(3);
 
     var rate = 1600;
@@ -92,10 +91,10 @@ test('every day is a friday in the 3 intervals from 04-01-2016 and 04-29-2016', 
         startDate.getTime(),
         endDate.getTime(),
         cal.BIWEEKLY_INTERVAL,
-        rate);
+        rate,
+        cal.BIWEEKLY_PAY_START_DATE.getTime());
 
     t.equal(startDate.toString(), 'Fri Apr 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(biweeklyRecurringIncome, 5400);
+    t.equal(biweeklyRecurringIncome, 4800);
 });
-*/
