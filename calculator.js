@@ -42,16 +42,17 @@ exports.dayDiff = function (startTime, endTime) {
 
 exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
 
-    var payCheckCount = 0;
-    var firstPayCheck = exports.getNextBiweeklyPayDateFrom(startTime - 1, firstPayDateTime, interval);
+    var start = exports.getNextBiweeklyPayDateFrom(
+            startTime - 1,
+            firstPayDateTime,
+            interval);
+    start.setDate(start.getDate() - interval);
 
-    if (firstPayCheck.getTime() === startTime) {
-        payCheckCount += 1;
-    }
+    var dayDiff = exports.dayDiff(
+        start.getTime(),
+        endTime);
 
-    payCheckCount += exports.dayDiff(startTime, endTime) / interval;
-
-    return payCheckCount;
+    return dayDiff / interval;
 }
 
 exports.getRecurringIncome = function(
@@ -66,6 +67,8 @@ exports.getRecurringIncome = function(
         endTime,
         interval,
         firstPayDateTime);
+
+    console.log('numChecks: ' + numberOfPaychecks);
 
     return numberOfPaychecks * rate;
 }
