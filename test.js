@@ -114,7 +114,7 @@ test('4800 from 03-26-2016 and 04-30-2016', function(t) {
         cal.BIWEEKLY_PAY_START_DATE.getTime());
 
     t.equal(startDate.toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(endDate.toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(biweeklyRecurringIncome, 4800);
 });
 
