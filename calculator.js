@@ -47,6 +47,7 @@ exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTi
         firstPayDateTime,
         interval
     );
+    adjustedStart.setDate(adjustedStart.getDate() - interval);
 
     var adjustedEnd = new Date(endTime);
     adjustedEnd.setDate(adjustedEnd.getDate() - interval);
@@ -56,9 +57,7 @@ exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTi
         firstPayDateTime,
         interval
     );
-
-    adjustedStart.setDate(adjustedStart.getDate() - interval);
-
+    
     var dayDiff = exports.dayDiff(
         adjustedStart.getTime(),
         adjustedEnd.getTime()
