@@ -42,25 +42,27 @@ exports.dayDiff = function (startTime, endTime) {
 
 exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
 
-    var start = exports.getNextBiweeklyPayDateFrom(
-            startTime - 1,
-            firstPayDateTime,
-            interval);
-
-    var end = new Date(endTime);
-    end.setDate(end.getDate() - interval);
-
-    end = exports.getNextBiweeklyPayDateFrom(
-        end.getTime(),
+    var adjustedStart = exports.getNextBiweeklyPayDateFrom(
+        startTime - 1,
         firstPayDateTime,
         interval
     );
 
-    start.setDate(start.getDate() - interval);
+    var adjustedEnd = new Date(endTime);
+    adjustedEnd.setDate(adjustedEnd.getDate() - interval);
+
+    adjustedEnd = exports.getNextBiweeklyPayDateFrom(
+        adjustedEnd.getTime(),
+        firstPayDateTime,
+        interval
+    );
+
+    adjustedStart.setDate(adjustedStart.getDate() - interval);
 
     var dayDiff = exports.dayDiff(
-        start.getTime(),
-        end.getTime());
+        adjustedStart.getTime(),
+        adjustedEnd.getTime()
+    );
 
     return dayDiff / interval;
 }
