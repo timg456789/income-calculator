@@ -16,7 +16,7 @@ test('Test start date limitations', function(t) {
             startDate.getTime(),
             cal.BIWEEKLY_INTERVAL
         );
-        
+
         t.ok(false);
     } catch(err) {
         t.equal(err, "BiWeeklyPay period has not yet started.");
@@ -36,19 +36,22 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
     t.equal(tripleFirst.toString(), new Date(2016, cal.SEPTEMBER, 2).toString());
 
     var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime()
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
+        interval: cal.BIWEEKLY_INTERVAL
     });
+
     var tripleSecond = payrollCalendar.getNextBiweeklyPayDateFrom(
-        tripleFirst.getTime(),
-        cal.BIWEEKLY_INTERVAL);
+        tripleFirst.getTime());
     t.equal(tripleSecond.toString(), new Date(2016, cal.SEPTEMBER, 16).toString());
 
     var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime()
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
+        interval: cal.BIWEEKLY_INTERVAL
     });
+
     var tripleThird = payrollCalendar.getNextBiweeklyPayDateFrom(
-        tripleSecond.getTime(),
-        cal.BIWEEKLY_INTERVAL);
+        tripleSecond.getTime());
+
     t.equal(tripleThird.toString(), new Date(2016, cal.SEPTEMBER, 30).toString());
 
 });

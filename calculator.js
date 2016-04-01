@@ -6,9 +6,10 @@ exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTi
 
     while(!monthHasThreePayChecks(start.getTime(), interval, payDay)) {
         var payrollCalendar = new PayrollCalendar({
-            firstPayDateTime: firstPayDateTime
+            firstPayDateTime: firstPayDateTime,
+            interval: interval
         });
-        start = payrollCalendar.getNextBiweeklyPayDateFrom(start.getTime(), interval);
+        start = payrollCalendar.getNextBiweeklyPayDateFrom(start.getTime());
     }
 
     return start;
@@ -30,11 +31,11 @@ exports.dayDiff = function (startTime, endTime) {
 exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
 
     var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: firstPayDateTime
+        firstPayDateTime: firstPayDateTime,
+        interval: interval
     });
     var adjustedStart = payrollCalendar.getNextBiweeklyPayDateFrom(
-        startTime - 1,
-        interval
+        startTime - 1
     );
     adjustedStart.setDate(adjustedStart.getDate() - interval);
 
@@ -42,8 +43,7 @@ exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTi
     adjustedEnd.setDate(adjustedEnd.getDate() - interval);
 
     adjustedEnd = payrollCalendar.getNextBiweeklyPayDateFrom(
-        adjustedEnd.getTime(),
-        interval
+        adjustedEnd.getTime()
     );
     
     var dayDiff = exports.dayDiff(

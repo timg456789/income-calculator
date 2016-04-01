@@ -12,7 +12,7 @@ function PayrollCallendar(config) {
         var currentPayPeriod = new Date(config.firstPayDateTime);
 
         while (currentPayPeriod.getTime() <= startDateTime) {
-            currentPayPeriod.setDate(currentPayPeriod.getDate() + interval);
+            currentPayPeriod.setDate(currentPayPeriod.getDate() + config.interval);
         }
         return currentPayPeriod;
     };
