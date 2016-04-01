@@ -9,7 +9,7 @@ function PayrollCallendar(config) {
     this.getNextBiweeklyPayDateFrom = function (startDateTime, firstPayDateTime, interval) {
         checkTime(startDateTime, config.firstPayDateTime);
 
-        var currentPayPeriod = new Date(firstPayDateTime);
+        var currentPayPeriod = new Date(config.firstPayDateTime);
 
         while (currentPayPeriod.getTime() <= startDateTime) {
             currentPayPeriod.setDate(currentPayPeriod.getDate() + interval);
