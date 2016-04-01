@@ -7,7 +7,9 @@ test('Test start date limitations', function(t) {
     t.plan(1);
     var startDate = new Date(2016, 2, 17);
 
-    var payrollCalendar = new PayrollCalendar();
+    var payrollCalendar = new PayrollCalendar({
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime()
+    });
     try {
         payrollCalendar.getNextBiweeklyPayDateFrom(startDate.getTime(),
             cal.BIWEEKLY_PAY_START_DATE.getTime(),
@@ -30,14 +32,18 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
         cal.BIWEEKLY_PAY_START_DATE.getTime());
     t.equal(tripleFirst.toString(), new Date(2016, cal.SEPTEMBER, 2).toString());
 
-    var payrollCalendar = new PayrollCalendar();
+    var payrollCalendar = new PayrollCalendar({
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime()
+    });
     var tripleSecond = payrollCalendar.getNextBiweeklyPayDateFrom(
         tripleFirst.getTime(),
         cal.BIWEEKLY_PAY_START_DATE.getTime(),
         cal.BIWEEKLY_INTERVAL);
     t.equal(tripleSecond.toString(), new Date(2016, cal.SEPTEMBER, 16).toString());
 
-    var payrollCalendar = new PayrollCalendar();
+    var payrollCalendar = new PayrollCalendar({
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime()
+    });
     var tripleThird = payrollCalendar.getNextBiweeklyPayDateFrom(
         tripleSecond.getTime(),
         cal.BIWEEKLY_PAY_START_DATE.getTime(),

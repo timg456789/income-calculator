@@ -1,5 +1,4 @@
-function PayrollCallendar() {
-    this.anything = 'something';
+function PayrollCallendar(config) {
 
     function checkTime(time, firstPayDateTime) {
         if (time < firstPayDateTime) {
@@ -8,7 +7,7 @@ function PayrollCallendar() {
     }
 
     this.getNextBiweeklyPayDateFrom = function (startDateTime, firstPayDateTime, interval) {
-        checkTime(startDateTime, firstPayDateTime);
+        checkTime(startDateTime, config.firstPayDateTime);
 
         var currentPayPeriod = new Date(firstPayDateTime);
 
