@@ -1,13 +1,15 @@
 var test = require('tape');
 var calc = require('./calculator');
 var cal = require ('./calendar');
+var PayrollCalendar = require('./payroll-calendar');
 
 test('Test start date limitations', function(t) {
     t.plan(1);
     var startDate = new Date(2016, 2, 17);
 
+    var payrollCalendar = new PayrollCalendar();
     try {
-        calc.getNextBiweeklyPayDateFrom(startDate.getTime(),
+        payrollCalendar.getNextBiweeklyPayDateFrom(startDate.getTime(),
             cal.BIWEEKLY_PAY_START_DATE.getTime(),
             cal.BIWEEKLY_INTERVAL);
         t.ok(false);
@@ -28,13 +30,15 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
         cal.BIWEEKLY_PAY_START_DATE.getTime());
     t.equal(tripleFirst.toString(), new Date(2016, cal.SEPTEMBER, 2).toString());
 
-    var tripleSecond = calc.getNextBiweeklyPayDateFrom(
+    var payrollCalendar = new PayrollCalendar();
+    var tripleSecond = payrollCalendar.getNextBiweeklyPayDateFrom(
         tripleFirst.getTime(),
         cal.BIWEEKLY_PAY_START_DATE.getTime(),
         cal.BIWEEKLY_INTERVAL);
     t.equal(tripleSecond.toString(), new Date(2016, cal.SEPTEMBER, 16).toString());
 
-    var tripleThird = calc.getNextBiweeklyPayDateFrom(
+    var payrollCalendar = new PayrollCalendar();
+    var tripleThird = payrollCalendar.getNextBiweeklyPayDateFrom(
         tripleSecond.getTime(),
         cal.BIWEEKLY_PAY_START_DATE.getTime(),
         cal.BIWEEKLY_INTERVAL);
@@ -118,7 +122,14 @@ test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.equal(biweeklyRecurringIncome, 4800);
 });
 
+test('node class', function(t) {
+    t.plan(1);
 
+
+
+
+    t.pass();
+});
 
 
 

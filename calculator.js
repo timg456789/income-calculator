@@ -1,27 +1,12 @@
-
-function checkTime(time, firstPayDateTime) {
-    if (time < firstPayDateTime) {
-        throw "BiWeeklyPay period has not yet started.";
-    }
-}
-
-exports.getNextBiweeklyPayDateFrom = function (startDateTime, firstPayDateTime, interval) {
-    checkTime(startDateTime, firstPayDateTime);
-
-    var currentPayPeriod = new Date(firstPayDateTime);
-
-    while (currentPayPeriod.getTime() <= startDateTime) {
-        currentPayPeriod.setDate(currentPayPeriod.getDate() + interval);
-    }
-    return currentPayPeriod;
-};
+var PayrollCalendar = require('./payroll-calendar');
 
 exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTime) {
 
     var start = new Date(time);
 
     while(!monthHasThreePayChecks(start.getTime(), interval, payDay)) {
-        start = exports.getNextBiweeklyPayDateFrom(start.getTime(), firstPayDateTime, interval);
+        var payrollCalendar = new PayrollCalendar();
+        start = payrollCalendar.getNextBiweeklyPayDateFrom(start.getTime(), firstPayDateTime, interval);
     }
 
     return start;
@@ -42,7 +27,8 @@ exports.dayDiff = function (startTime, endTime) {
 
 exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
 
-    var adjustedStart = exports.getNextBiweeklyPayDateFrom(
+    var payrollCalendar = new PayrollCalendar();
+    var adjustedStart = payrollCalendar.getNextBiweeklyPayDateFrom(
         startTime - 1,
         firstPayDateTime,
         interval
@@ -52,7 +38,7 @@ exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTi
     var adjustedEnd = new Date(endTime);
     adjustedEnd.setDate(adjustedEnd.getDate() - interval);
 
-    adjustedEnd = exports.getNextBiweeklyPayDateFrom(
+    adjustedEnd = payrollCalendar.getNextBiweeklyPayDateFrom(
         adjustedEnd.getTime(),
         firstPayDateTime,
         interval
