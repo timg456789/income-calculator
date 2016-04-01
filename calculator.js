@@ -46,11 +46,21 @@ exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTi
             startTime - 1,
             firstPayDateTime,
             interval);
+
+    var end = new Date(endTime);
+    end.setDate(end.getDate() - interval);
+
+    end = exports.getNextBiweeklyPayDateFrom(
+        end.getTime(),
+        firstPayDateTime,
+        interval
+    );
+
     start.setDate(start.getDate() - interval);
 
     var dayDiff = exports.dayDiff(
         start.getTime(),
-        endTime);
+        end.getTime());
 
     return dayDiff / interval;
 }
