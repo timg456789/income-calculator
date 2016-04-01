@@ -69,8 +69,6 @@ exports.getRecurringIncome = function(
         interval,
         firstPayDateTime);
 
-    console.log('numChecks: ' + numberOfPaychecks);
-
     return numberOfPaychecks * rate;
 }
 
