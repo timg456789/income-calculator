@@ -100,12 +100,12 @@ test('4800 from 04-01-2016 and 04-29-2016', function(t) {
     t.equal(biweeklyRecurringIncome, 4800);
 });
 
-test('4800 from 03-26-2016 and 04-29-2016', function(t) {
+test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.plan(3);
 
     var rate = 1600;
     var startDate = new Date(2016, 2, 26);
-    var endDate = new Date(2016, 3, 29);
+    var endDate = new Date(2016, 3, 30);
     var biweeklyRecurringIncome = calc.getRecurringIncome(
         startDate.getTime(),
         endDate.getTime(),
