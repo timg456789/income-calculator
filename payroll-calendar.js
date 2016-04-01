@@ -1,13 +1,13 @@
 function PayrollCallendar(config) {
 
-    function checkTime(time, firstPayDateTime) {
-        if (time < firstPayDateTime) {
+    function checkTime(time) {
+        if (time < config.firstPayDateTime) {
             throw "BiWeeklyPay period has not yet started.";
         }
     }
 
-    this.getNextBiweeklyPayDateFrom = function (startDateTime, interval) {
-        checkTime(startDateTime, config.firstPayDateTime);
+    this.getNextBiweeklyPayDateFrom = function (startDateTime) {
+        checkTime(startDateTime);
 
         var currentPayPeriod = new Date(config.firstPayDateTime);
 
