@@ -1,4 +1,4 @@
-function PayRollCallendar() {
+function PayrollCallendar() {
     this.anything = 'something';
 
     function checkTime(time, firstPayDateTime) {
@@ -20,4 +20,4 @@ function PayRollCallendar() {
 
 }
 
-module.exports = PayRollCallendar;
+module.exports = PayrollCallendar;
