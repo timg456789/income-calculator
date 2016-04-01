@@ -4,11 +4,13 @@ exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTi
 
     var start = new Date(time);
 
+    var config = {
+        firstPayDateTime: firstPayDateTime,
+        interval: interval
+    };
+
     while(!monthHasThreePayChecks(start.getTime(), interval, payDay)) {
-        var payrollCalendar = new PayrollCalendar({
-            firstPayDateTime: firstPayDateTime,
-            interval: interval
-        });
+        var payrollCalendar = new PayrollCalendar(config);
         start = payrollCalendar.getNextBiweeklyPayDateFrom(start.getTime());
     }
 
