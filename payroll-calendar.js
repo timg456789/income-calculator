@@ -1,5 +1,7 @@
 function PayrollCallendar(config) {
 
+    var that = this;
+
     function checkTime(time) {
         if (time < config.firstPayDateTime) {
             throw "BiWeeklyPay period has not yet started.";
@@ -18,26 +20,25 @@ function PayrollCallendar(config) {
     };
 
     this.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
-
-        var adjustedStart = this.getNextDate(
-            startTime - 1
-        );
-        adjustedStart.setDate(adjustedStart.getDate() - interval);
-
-        var adjustedEnd = new Date(endTime);
-        adjustedEnd.setDate(adjustedEnd.getDate() - interval);
-
-        adjustedEnd = this.getNextDate(
-            adjustedEnd.getTime()
-        );
-
         var calc = require('./calculator');
         var dayDiff = calc.dayDiff(
-            adjustedStart.getTime(),
-            adjustedEnd.getTime()
+            getAdjustedStartDate(startTime),
+            getAdjustedEndDate(endTime)
         );
-
         return dayDiff / interval;
+    }
+
+    function getAdjustedStartDate(startTime) {
+        var adjustedStart = that.getNextDate(startTime - 1);
+        adjustedStart.setDate(adjustedStart.getDate() - config.interval);
+        return adjustedStart;
+    }
+
+    function getAdjustedEndDate(endTime) {
+        var adjustedEnd = new Date(endTime);
+        adjustedEnd.setDate(adjustedEnd.getDate() - config.interval);
+        adjustedEnd = that.getNextDate(adjustedEnd.getTime());
+        return adjustedEnd;
     }
 
 }
