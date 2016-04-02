@@ -4,7 +4,7 @@
   "author": "Timothy Scott Gonzalez",
   "license": "Apache 2.0",
   "scripts": {
-    "test": "node test"
+    "test": "tape *test.js"
   },
   "devDependencies": {
     "tape": "^4.5.1"

@@ -3,11 +3,6 @@ var test = require('tape');
 test('calculate expenses', function(t) {
     t.plan(1);
 
-    // In may 2016 this is kind of constant.
-    var expensesApril2016 = 1775.35;
-
-    var projectedExpenses = 0;
-
     var car = {
         amount: 125
     };
@@ -28,19 +23,24 @@ test('calculate expenses', function(t) {
         amount: 100
     };
 
-    var recurringExpenses = [car, rent, carInsurance, utilities, phone];
+    var weeklyExpenses = [car];
+    var monthlyExpenses = [rent, carInsurance, utilities, phone];
 
-    for(var i = 0; i < recurringExpenses.length; i++) {
-        projectedExpenses += recurringExpenses[i].amount;
-    }
+    var monthlyTotal = getSum(monthlyExpenses);
+    var weeklyTotal = getSum(weeklyExpenses) * 5;
 
-    projectedExpenses += car.amount * 4; // car insurance is weekly.
-    // it got added once with the monthly expenses.
-    // now it gets complex, because weeks in a month are not constant like months in a year.
-    // each week needs to get calculated, to see how many of the weekly expense dates occur in that month.
-    // for now this is 5 total fridays for the month of april.
-    // eventually i would expect 4 fridays.
+    var projectedExpenses = monthlyTotal + weeklyTotal;
+    var recurringExpensesApril2016 = 1775.35;
 
-    t.equal(expensesApril2016, projectedExpenses, 'expenses for april 2016 are: ' + expensesApril2016);
+    t.equal(projectedExpenses, recurringExpensesApril2016, 'expenses for april 2016 are: ' + recurringExpensesApril2016);
 });
 
+function getSum(expenses) {
+    var sum = 0;
+
+    for(var i = 0; i < expenses.length; i++) {
+        sum += expenses[i].amount;
+    }
+
+    return sum;
+}
