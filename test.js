@@ -74,7 +74,12 @@ test('there are three paychecks between 04-01-2016 and 04-29-2016 on a biweekly 
 
     var startDate = new Date(2016, 3, 01);
     var endDate = new Date(2016, 3, 29);
-    var payCheckCount = calc.getPayCheckCount(
+
+    var payrollCalendar = new PayrollCalendar({
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
+        interval: cal.BIWEEKLY_INTERVAL
+    });
+    var payCheckCount = payrollCalendar.getPayCheckCount(
         startDate.getTime(),
         endDate.getTime(),
         cal.BIWEEKLY_INTERVAL,

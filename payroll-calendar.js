@@ -17,6 +17,29 @@ function PayrollCallendar(config) {
         return currentPayPeriod;
     };
 
+    this.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
+
+        var adjustedStart = this.getNextDate(
+            startTime - 1
+        );
+        adjustedStart.setDate(adjustedStart.getDate() - interval);
+
+        var adjustedEnd = new Date(endTime);
+        adjustedEnd.setDate(adjustedEnd.getDate() - interval);
+
+        adjustedEnd = this.getNextDate(
+            adjustedEnd.getTime()
+        );
+
+        var calc = require('./calculator');
+        var dayDiff = calc.dayDiff(
+            adjustedStart.getTime(),
+            adjustedEnd.getTime()
+        );
+
+        return dayDiff / interval;
+    }
+
 }
 
 module.exports = PayrollCallendar;

@@ -30,40 +30,19 @@ exports.dayDiff = function (startTime, endTime) {
     return diff;
 }
 
-exports.getPayCheckCount = function(startTime, endTime, interval, firstPayDateTime) {
-
-    var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: firstPayDateTime,
-        interval: interval
-    });
-    var adjustedStart = payrollCalendar.getNextDate(
-        startTime - 1
-    );
-    adjustedStart.setDate(adjustedStart.getDate() - interval);
-
-    var adjustedEnd = new Date(endTime);
-    adjustedEnd.setDate(adjustedEnd.getDate() - interval);
-
-    adjustedEnd = payrollCalendar.getNextDate(
-        adjustedEnd.getTime()
-    );
-    
-    var dayDiff = exports.dayDiff(
-        adjustedStart.getTime(),
-        adjustedEnd.getTime()
-    );
-
-    return dayDiff / interval;
-}
-
 exports.getRecurringIncome = function(
     startTime,
     endTime,
     interval,
     rate,
     firstPayDateTime) {
+    
+    var payrollCalendar = new PayrollCalendar({
+        firstPayDateTime: firstPayDateTime,
+        interval: interval
+    });
 
-    var numberOfPaychecks = exports.getPayCheckCount(
+    var numberOfPaychecks = payrollCalendar.getPayCheckCount(
         startTime,
         endTime,
         interval,
