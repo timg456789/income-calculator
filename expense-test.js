@@ -46,7 +46,7 @@ test('there are 5 fridays in april 2016', function(t) {
     );
 
 
-    var dt = new Date(2016, 3, 1);;
+    var dt = new Date(2016, cal.APRIL, 1);;
     console.log(dt);
     console.log(dt.getDay());
 
