@@ -35,7 +35,23 @@ test('calculate expenses', function(t) {
     t.equal(projectedExpenses, recurringExpensesApril2016, 'expenses for april 2016 are: ' + recurringExpensesApril2016);
 });
 
+test('there are 5 fridays in april 2016', function(t) {
+    t.plan(1);
 
+    var calc = require('./calculator');
+    var cal = require('./calendar');
+    var numberOfFridays = calc.getWeekDaysInMonth(
+        cal.FRIDAY,
+        cal.APRIL
+    );
+
+
+    var dt = new Date(2016, 3, 1);;
+    console.log(dt);
+    console.log(dt.getDay());
+
+    t.equal(numberOfFridays, 5);
+});
 
 function getSum(expenses) {
     var sum = 0;

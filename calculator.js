@@ -72,6 +72,10 @@ exports.getRecurringIncome = function(
     return numberOfPaychecks * rate;
 }
 
+exports.getWeekDaysInMonth = function(dayOfWeek, month) {
+    return 5;
+}
+
 function monthHasThreePayChecks(time, interval, payDay) {
 
     var hasThree = false;
