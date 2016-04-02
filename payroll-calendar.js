@@ -19,7 +19,7 @@ function PayrollCallendar(config) {
         return currentPayPeriod;
     };
 
-    this.getPayCheckCount = function(startTime, endTime) {
+    this.getCount = function(startTime, endTime) {
         var calc = require('./calculator');
         var dayDiff = calc.dayDiff(
             getAdjustedStartDate(startTime),

@@ -42,7 +42,7 @@ exports.getRecurringIncome = function(
         interval: interval
     });
 
-    var numberOfPaychecks = payrollCalendar.getPayCheckCount(
+    var numberOfPaychecks = payrollCalendar.getCount(
         startTime,
         endTime);
 
