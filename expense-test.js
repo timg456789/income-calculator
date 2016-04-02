@@ -23,16 +23,11 @@ test('calculate expenses', function(t) {
         amount: 100
     };
 
-    var weeklyExpenses = [car];
     var monthlyExpenses = [rent, carInsurance, utilities, phone];
-
-    var monthlyTotal = getSum(monthlyExpenses);
-    var weeklyTotal = getSum(weeklyExpenses) * 5;
-
-    var projectedExpenses = monthlyTotal + weeklyTotal;
+    var weeklyExpenses = [car];
     var recurringExpensesApril2016 = 1775.35;
 
-    t.equal(projectedExpenses, recurringExpensesApril2016, 'expenses for april 2016 are: ' + recurringExpensesApril2016);
+    t.equal(getExpenses(monthlyExpenses, weeklyExpenses), recurringExpensesApril2016, 'expenses for april 2016 are: ' + recurringExpensesApril2016);
 });
 
 test('there are 5 fridays in april 2016', function(t) {
@@ -62,6 +57,12 @@ test('there are 4 fridays in may 2016', function(t) {
 
     t.equal(numberOfFridays, 4);
 });
+
+function getExpenses(monthlyExpenses, weeklyExpenses) {
+    var monthlyTotal = getSum(monthlyExpenses);
+    var weeklyTotal = getSum(weeklyExpenses) * 5;
+    return monthlyTotal + weeklyTotal;
+}
 
 function getSum(expenses) {
     var sum = 0;
