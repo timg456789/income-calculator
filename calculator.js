@@ -36,7 +36,7 @@ exports.getRecurringIncome = function(
     interval,
     rate,
     firstPayDateTime) {
-    
+
     var payrollCalendar = new PayrollCalendar({
         firstPayDateTime: firstPayDateTime,
         interval: interval
@@ -44,9 +44,7 @@ exports.getRecurringIncome = function(
 
     var numberOfPaychecks = payrollCalendar.getPayCheckCount(
         startTime,
-        endTime,
-        interval,
-        firstPayDateTime);
+        endTime);
 
     return numberOfPaychecks * rate;
 }

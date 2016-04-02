@@ -81,9 +81,7 @@ test('there are three paychecks between 04-01-2016 and 04-29-2016 on a biweekly 
     });
     var payCheckCount = payrollCalendar.getPayCheckCount(
         startDate.getTime(),
-        endDate.getTime(),
-        cal.BIWEEKLY_INTERVAL,
-        cal.BIWEEKLY_PAY_START_DATE.getTime());
+        endDate.getTime());
 
     t.equal(payCheckCount, 3);
 });
