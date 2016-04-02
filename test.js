@@ -69,18 +69,6 @@ test('there are 366 days between january 1 2000 and january 1 2001', function(t)
 
 });
 
-test('there 28 days between 04-01-2016 and 04-29-2016', function(t) {
-    t.plan(3);
-
-    var startDate = new Date(2016, 3, 01);
-    var endDate = new Date(2016, 3, 29);
-    var dayDiff = calc.dayDiff(startDate.getTime(), endDate.getTime());
-
-    t.equal(startDate.toString(), 'Fri Apr 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(endDate.toString(), 'Fri Apr 29 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(dayDiff, 28);
-});
-
 test('there are three paychecks between 04-01-2016 and 04-29-2016 on a biweekly interval', function(t) {
     t.plan(1);
 
