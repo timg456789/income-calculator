@@ -72,8 +72,20 @@ exports.getRecurringIncome = function(
     return numberOfPaychecks * rate;
 }
 
-exports.getWeekDaysInMonth = function(dayOfWeek, month) {
-    return 5;
+exports.getWeekDaysInMonth = function(dayOfWeek, month, year) {
+
+    var current = new Date(year, month, 1);
+
+    var count = 0;
+
+    while (current.getMonth() <= month) {
+        if (current.getDay() == dayOfWeek) {
+            count += 1;
+        }
+        current.setDate(current.getDate() + 1);
+    }
+
+    return count;
 }
 
 function monthHasThreePayChecks(time, interval, payDay) {
