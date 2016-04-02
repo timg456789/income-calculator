@@ -42,15 +42,25 @@ test('there are 5 fridays in april 2016', function(t) {
     var cal = require('./calendar');
     var numberOfFridays = calc.getWeekDaysInMonth(
         cal.FRIDAY,
-        cal.APRIL
+        cal.APRIL,
+        2016
     );
 
-
-    var dt = new Date(2016, cal.APRIL, 1);;
-    console.log(dt);
-    console.log(dt.getDay());
-
     t.equal(numberOfFridays, 5);
+});
+
+test('there are 4 fridays in may 2016', function(t) {
+    t.plan(1);
+
+    var calc = require('./calculator');
+    var cal = require('./calendar');
+    var numberOfFridays = calc.getWeekDaysInMonth(
+        cal.FRIDAY,
+        cal.MAY,
+        2016
+    );
+
+    t.equal(numberOfFridays, 4);
 });
 
 function getSum(expenses) {
