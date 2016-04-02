@@ -12,7 +12,7 @@ test('Test start date limitations', function(t) {
     });
 
     try {
-        payrollCalendar.getNextBiweeklyPayDateFrom(
+        payrollCalendar.getNextDate(
             startDate.getTime(),
             cal.BIWEEKLY_INTERVAL
         );
@@ -40,7 +40,7 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
         interval: cal.BIWEEKLY_INTERVAL
     });
 
-    var tripleSecond = payrollCalendar.getNextBiweeklyPayDateFrom(
+    var tripleSecond = payrollCalendar.getNextDate(
         tripleFirst.getTime());
     t.equal(tripleSecond.toString(), new Date(2016, cal.SEPTEMBER, 16).toString());
 
@@ -49,7 +49,7 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
         interval: cal.BIWEEKLY_INTERVAL
     });
 
-    var tripleThird = payrollCalendar.getNextBiweeklyPayDateFrom(
+    var tripleThird = payrollCalendar.getNextDate(
         tripleSecond.getTime());
 
     t.equal(tripleThird.toString(), new Date(2016, cal.SEPTEMBER, 30).toString());

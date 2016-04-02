@@ -6,7 +6,7 @@ function PayrollCallendar(config) {
         }
     }
 
-    this.getNextBiweeklyPayDateFrom = function (startDateTime) {
+    this.getNextDate = function (startDateTime) {
         checkTime(startDateTime);
 
         var currentPayPeriod = new Date(config.firstPayDateTime);

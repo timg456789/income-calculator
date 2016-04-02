@@ -35,6 +35,8 @@ test('calculate expenses', function(t) {
     t.equal(projectedExpenses, recurringExpensesApril2016, 'expenses for april 2016 are: ' + recurringExpensesApril2016);
 });
 
+
+
 function getSum(expenses) {
     var sum = 0;
 
