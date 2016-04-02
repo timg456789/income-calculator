@@ -119,15 +119,3 @@ test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.equal(endDate.toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(biweeklyRecurringIncome, 4800);
 });
-
-test('node class', function(t) {
-    t.plan(1);
-
-
-
-
-    t.pass();
-});
-
-
-
