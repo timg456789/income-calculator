@@ -1,16 +1,11 @@
 var PayrollCalendar = require('./payroll-calendar');
 
-exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTime) {
+exports.getThreePayCheckMonth = function (time, payDay, calConfig) {
 
     var start = new Date(time);
 
-    var config = {
-        firstPayDateTime: firstPayDateTime,
-        interval: interval
-    };
-
-    while(!monthHasThreePayChecks(start.getTime(), interval, payDay)) {
-        var payrollCalendar = new PayrollCalendar(config);
+    while(!monthHasThreePayChecks(start.getTime(), calConfig.interval, payDay)) {
+        var payrollCalendar = new PayrollCalendar(calConfig);
         start = payrollCalendar.getNextDate(start.getTime());
     }
 

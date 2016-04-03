@@ -29,11 +29,15 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 
     var startDate = new Date(2016, 3, 29);
 
+    var calConfig = {
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
+            interval: cal.BIWEEKLY_INTERVAL
+    };
+
     var tripleFirst = calc.getThreePayCheckMonth(
         startDate.getTime(),
-        cal.BIWEEKLY_INTERVAL,
         cal.FRIDAY,
-        cal.BIWEEKLY_PAY_START_DATE.getTime());
+        calConfig);
     t.equal(tripleFirst.toString(), new Date(2016, cal.SEPTEMBER, 2).toString());
 
     var payrollCalendar = new PayrollCalendar({
