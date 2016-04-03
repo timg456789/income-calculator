@@ -21,12 +21,3 @@ test('calculate recurring expenses for may 2016', function(t) {
     t.equal(actual, expected, 'expenses for may 2016 are: ' + expected);
 
 });
-
-test('profits for april 2016', function(t) {
-    t.plan(1);
-
-    var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
-    //var profits =
-
-    t.equal(expectedProfits);
-});
