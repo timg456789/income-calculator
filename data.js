@@ -3,6 +3,7 @@ var cal = require('./calendar');
 exports.biweeklyRate = 1600;
 
 exports.recurringExpensesApril2016 = 1775.35;
+exports.recurringExpensesMay2016 = 1650.35;
 
 exports.recurringIncomeApril2016 = 4800
 exports.recurringIncomeMay2016 = 3200

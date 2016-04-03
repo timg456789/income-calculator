@@ -15,9 +15,9 @@ test('calculate recurring expenses for april 2016', function(t) {
 test('calculate recurring expenses for may 2016', function(t) {
     t.plan(1);
 
-    var expected = 1650.35;
     var actual = calc.total(data.mayExpensesConfig);
-
-    t.equal(actual, expected, 'expenses for may 2016 are: ' + expected);
+    var msg = 'expenses for may 2016 are: ' + data.recurringExpensesMay2016
+    
+    t.equal(actual, data.recurringExpensesMay2016, msg);
 
 });
