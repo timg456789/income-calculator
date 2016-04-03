@@ -8,7 +8,7 @@ test('profits for april 2016', function(t) {
 
     var netIncome = calc.getNetIncome(
         data.aprilExpensesConfig,
-        data.aprilIncomeConfig);
+        data.aprilIncomeConfig());
 
     var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
     t.equal(netIncome, expectedProfits, 'profits for april 2016: ' + netIncome);

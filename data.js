@@ -5,6 +5,7 @@ exports.biweeklyRate = 1600;
 exports.recurringExpensesApril2016 = 1775.35;
 
 exports.recurringIncomeApril2016 = 4800
+exports.recurringIncomeMay2016 = 3200
 
 exports.monthlyExpenses = [
     {
@@ -48,16 +49,23 @@ exports.mayExpensesConfig = {
     year: 2016
 };
 
-exports.aprilIncomeConfig = {
-    calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
-    rate: exports.biweeklyRate,
-    startTime: new Date(2016, 2, 26).getTime(),
-    endTime: new Date(2016, 3, 30).getTime()
+exports.aprilIncomeConfig = function () {
+    var base = createMonthIncomeConfig();
+    base.startTime = new Date(2016, 2, 26).getTime();
+    base.endTime = new Date(2016, 3, 30).getTime();
+    return base;
+}
+
+exports.mayIncomeConfig = function () {
+    var base = createMonthIncomeConfig();
+    base.startTime = new Date(2016, 4, 1).getTime();
+    base.endTime = new Date(2016, 5, 0).getTime();
+    return base;
 };
 
-exports.mayIncomeConfig = {
-    calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
-    rate: exports.biweeklyRate,
-    startTime: new Date(2016, 4, 1).getTime(),
-    endTime: new Date(2016, 5, 0).getTime()
-};
+function createMonthIncomeConfig() {
+    return {
+        calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
+        rate: exports.biweeklyRate,
+    }
+}
