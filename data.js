@@ -47,3 +47,9 @@ exports.mayExpensesConfig = {
     month: cal.MAY,
     year: 2016
 };
+
+exports.aprilIncomeConfig = {
+    rate: exports.biweeklyRate,
+    startTime: new Date(2016, 2, 26).getTime(),
+    endTime: new Date(2016, 3, 30).getTime()
+};

@@ -58,16 +58,10 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.plan(3);
 
-    var incomeConfig = {
-        rate: data.biweeklyRate,
-        startTime: new Date(2016, 2, 26).getTime(),
-        endTime: new Date(2016, 3, 30).getTime()
-    };
-
     var payrollCalendar = new PayrollCalendar(cal.BIWEEKLY_CALENDAR_CONFIG);
-    var biweeklyRecurringIncome = payrollCalendar.getRecurringIncome(incomeConfig);
+    var biweeklyRecurringIncome = payrollCalendar.getRecurringIncome(data.aprilIncomeConfig);
 
-    t.equal(new Date(incomeConfig.startTime).toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(new Date(incomeConfig.endTime).toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(new Date(data.aprilIncomeConfig.startTime).toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(new Date(data.aprilIncomeConfig.endTime).toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(biweeklyRecurringIncome, data.recurringIncomeApril2016);
 });
