@@ -2,23 +2,17 @@ var test = require('tape');
 var cal = require('./calendar');
 var calc = require('./calculator');
 var data = require('./data');
-var PayrollCalendar = require('./payroll-calendar');
 
 test('profits for april 2016', function(t) {
     t.plan(1);
 
-    var expenses = calc.total(data.aprilExpensesConfig);
+    var netIncome = calc.getNetIncome(
+        data.aprilExpensesConfig,
+        cal.BIWEEKLY_CALENDAR_CONFIG,
+        data.aprilIncomeConfig);
 
-    var rate = data.biweeklyRate;
-    var startDate = new Date(2016, 2, 26);
-    var endDate = new Date(2016, 3, 30);
-
-    var payrollCalendar = new PayrollCalendar(cal.BIWEEKLY_CALENDAR_CONFIG);
-
-    var revenue = payrollCalendar.getRecurringIncome(data.aprilIncomeConfig);
-
-    var profits = revenue - expenses;
+    console.log(netIncome);
 
     var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
-    t.equal(profits, expectedProfits, 'profits for april 2016: ' + profits);
+    t.equal(netIncome, expectedProfits, 'profits for april 2016: ' + netIncome);
 });
