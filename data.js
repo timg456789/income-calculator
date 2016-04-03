@@ -1,36 +1,36 @@
 var cal = require('./calendar');
 
-exports.biweeklyRate = 1600;
+exports.biweeklyRate = 1600 * 100;
 
-exports.recurringExpensesApril2016 = 1775.35;
-exports.recurringExpensesMay2016 = 1650.35;
+exports.recurringExpensesApril2016 = 177535;
+exports.recurringExpensesMay2016 = 165035;
 
-exports.recurringIncomeApril2016 = 4800
-exports.recurringIncomeMay2016 = 3200
+exports.recurringIncomeApril2016 = 4800 * 100
+exports.recurringIncomeMay2016 = 3200 * 100
 
 exports.monthlyExpenses = [
     {
         name: "rent",
-        amount: 550
+        amount: 550 * 100
     },
     {
         name: "carInsurance",
-        amount: 335.35
+        amount: 33535
     },
     {
         name: "utilities",
-        amount: 165
+        amount: 165 * 100
     },
     {
         name: "phone",
-        amount: 100
+        amount: 100 * 100
     }
 ];
 
 exports.weeklyExpenses = [
     {
         name: "car",
-        amount: 125
+        amount: 125 * 100
     }
 ];
 
