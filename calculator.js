@@ -65,6 +65,29 @@ exports.getWeekDaysInMonth = function(dayOfWeek, month, year) {
     return count;
 }
 
+exports.getExpenses = function (monthlyExpenses, weeklyExpenses, dayOfWeek, month, year) {
+    var monthlyTotal = getSum(monthlyExpenses);
+
+    var weeklyBillingPeriodsInMonth = exports.getWeekDaysInMonth(
+        dayOfWeek,
+        month,
+        year
+    );
+
+    var weeklyTotal = getSum(weeklyExpenses) * weeklyBillingPeriodsInMonth;
+    return monthlyTotal + weeklyTotal;
+}
+
+function getSum(expenses) {
+    var sum = 0;
+
+    for(var i = 0; i < expenses.length; i++) {
+        sum += expenses[i].amount;
+    }
+
+    return sum;
+}
+
 function monthHasThreePayChecks(time, interval, payDay) {
 
     var hasThree = false;
