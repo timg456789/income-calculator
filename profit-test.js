@@ -1,11 +1,12 @@
 var test = require('tape');
+var cal = require('./calendar');
 var calc = require('./calculator');
 var data = require('./data');
+var PayrollCalendar = require('./payroll-calendar');
 
 test('profits for april 2016', function(t) {
     t.plan(1);
 
-    var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
     var expenses = calc.getExpenses(data.aprilExpensesConfig);
 
     var rate = data.biweeklyRate;
@@ -24,5 +25,6 @@ test('profits for april 2016', function(t) {
 
     var profits = revenue - expenses;
 
+    var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
     t.equal(profits, expectedProfits, 'profits for april 2016: ' + profits);
 });
