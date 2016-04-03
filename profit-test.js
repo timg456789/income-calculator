@@ -8,7 +8,6 @@ test('profits for april 2016', function(t) {
 
     var netIncome = calc.getNetIncome(
         data.aprilExpensesConfig,
-        cal.BIWEEKLY_CALENDAR_CONFIG,
         data.aprilIncomeConfig);
 
     console.log(netIncome);
