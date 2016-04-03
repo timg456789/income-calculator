@@ -2,6 +2,7 @@ var test = require('tape');
 var calc = require('./calculator');
 var cal = require ('./calendar');
 var PayrollCalendar = require('./payroll-calendar');
+var data = require('./data');
 
 test('Test start date limitations', function(t) {
     t.plan(1);
@@ -59,7 +60,7 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.plan(3);
 
-    var rate = 1600;
+    var rate = data.biweeklyRate;
     var startDate = new Date(2016, 2, 26);
     var endDate = new Date(2016, 3, 30);
 

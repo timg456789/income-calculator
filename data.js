@@ -1,4 +1,6 @@
 
+exports.biweeklyRate = 1600;
+
 exports.monthlyExpenses = [
     {
         name: "rent",
