@@ -1,5 +1,10 @@
+var cal = require('./calendar');
 
 exports.biweeklyRate = 1600;
+
+exports.recurringExpensesApril2016 = 1775.35;
+
+exports.recurringIncomeApril2016 = 4800
 
 exports.monthlyExpenses = [
     {
@@ -26,3 +31,19 @@ exports.weeklyExpenses = [
         amount: 125
     }
 ];
+
+exports.aprilExpensesConfig = {
+    monthlyExpenses: exports.monthlyExpenses,
+    weeklyExpenses: exports.weeklyExpenses,
+    dayOfWeek: cal.FRIDAY,
+    month: cal.APRIL,
+    year: 2016
+};
+
+exports.mayExpensesConfig = {
+    monthlyExpenses: exports.monthlyExpenses,
+    weeklyExpenses: exports.weeklyExpenses,
+    dayOfWeek: cal.FRIDAY,
+    month: cal.MAY,
+    year: 2016
+};

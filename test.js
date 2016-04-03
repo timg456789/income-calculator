@@ -73,5 +73,5 @@ test('4800 from 03-26-2016 and 04-30-2016', function(t) {
 
     t.equal(startDate.toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(endDate.toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(biweeklyRecurringIncome, 4800);
+    t.equal(biweeklyRecurringIncome, data.recurringIncomeApril2016);
 });

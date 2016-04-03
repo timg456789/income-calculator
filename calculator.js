@@ -12,16 +12,16 @@ exports.getThreePayCheckMonth = function (time, payDay, calConfig) {
     return start;
 };
 
-exports.getExpenses = function (monthlyExpenses, weeklyExpenses, dayOfWeek, month, year) {
-    var monthlyTotal = getSum(monthlyExpenses);
+exports.getExpenses = function (monthExpenseConfig) {
+    var monthlyTotal = getSum(monthExpenseConfig.monthlyExpenses);
 
     var weeklyBillingPeriodsInMonth = getWeekDaysInMonth(
-        dayOfWeek,
-        month,
-        year
+        monthExpenseConfig.dayOfWeek,
+        monthExpenseConfig.month,
+        monthExpenseConfig.year
     );
 
-    var weeklyTotal = getSum(weeklyExpenses) * weeklyBillingPeriodsInMonth;
+    var weeklyTotal = getSum(monthExpenseConfig.weeklyExpenses) * weeklyBillingPeriodsInMonth;
     return monthlyTotal + weeklyTotal;
 }
 
