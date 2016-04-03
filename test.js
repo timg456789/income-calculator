@@ -65,3 +65,14 @@ test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.equal(new Date(data.aprilIncomeConfig.endTime).toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(biweeklyRecurringIncome, data.recurringIncomeApril2016);
 });
+
+test('3600 from 05-01-2016 and 05-31-2016', function(t) {
+    t.plan(3);
+
+    var payrollCalendar = new PayrollCalendar(cal.BIWEEKLY_CALENDAR_CONFIG);
+    var biweeklyRecurringIncome = payrollCalendar.getRecurringIncome(data.aprilIncomeConfig);
+
+    t.equal(new Date(data.mayIncomeConfig.startTime).toString(), 'Sun May 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(new Date(data.mayIncomeConfig.endTime).toString(), 'Tue May 31 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(biweeklyRecurringIncome, data.recurringIncomeApril2016);
+});

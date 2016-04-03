@@ -54,3 +54,10 @@ exports.aprilIncomeConfig = {
     startTime: new Date(2016, 2, 26).getTime(),
     endTime: new Date(2016, 3, 30).getTime()
 };
+
+exports.mayIncomeConfig = {
+    calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
+    rate: exports.biweeklyRate,
+    startTime: new Date(2016, 4, 1).getTime(),
+    endTime: new Date(2016, 5, 0).getTime()
+};
