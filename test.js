@@ -56,48 +56,21 @@ test('september 2016 is the next month with three paychecks from 04-29-2016', fu
 
 });
 
-test('there are 366 days between january 1 2000 and january 1 2001', function(t) {
-    t.plan(3);
-
-    var startDate = new Date(2000, 0, 1);
-    var endDate = new Date(2001, 0, 1);
-    var dayDiff = calc.dayDiff(startDate.getTime(), endDate.getTime());
-    
-    t.equal(dayDiff, 366);
-    t.equal(endDate.toString(), 'Mon Jan 01 2001 00:00:00 GMT-0500 (Eastern Standard Time)');
-    t.equal(startDate.toString(), 'Sat Jan 01 2000 00:00:00 GMT-0500 (Eastern Standard Time)');
-
-});
-
-test('there are three paychecks between 04-01-2016 and 04-29-2016 on a biweekly interval', function(t) {
-    t.plan(1);
-
-    var startDate = new Date(2016, 3, 01);
-    var endDate = new Date(2016, 3, 29);
-
-    var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
-        interval: cal.BIWEEKLY_INTERVAL
-    });
-    var payCheckCount = payrollCalendar.getCount(
-        startDate.getTime(),
-        endDate.getTime());
-
-    t.equal(payCheckCount, 3);
-});
-
 test('4800 from 03-26-2016 and 04-30-2016', function(t) {
     t.plan(3);
 
     var rate = 1600;
     var startDate = new Date(2016, 2, 26);
     var endDate = new Date(2016, 3, 30);
-    var biweeklyRecurringIncome = calc.getRecurringIncome(
+
+    var payrollCalendar = new PayrollCalendar({
+        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
+        interval: cal.BIWEEKLY_INTERVAL
+    });
+    var biweeklyRecurringIncome = payrollCalendar.getRecurringIncome(
         startDate.getTime(),
         endDate.getTime(),
-        cal.BIWEEKLY_INTERVAL,
-        rate,
-        cal.BIWEEKLY_PAY_START_DATE.getTime());
+        rate);
 
     t.equal(startDate.toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
     t.equal(endDate.toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');

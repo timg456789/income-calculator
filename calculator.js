@@ -17,38 +17,6 @@ exports.getThreePayCheckMonth = function (time, interval, payDay, firstPayDateTi
     return start;
 };
 
-exports.dayDiff = function (startTime, endTime) {
-    var start = new Date(startTime);
-    var end = new Date(endTime);
-    var diff = 0;
-
-    while (start.getTime() < end.getTime()) {
-        diff += 1;
-        start.setDate(start.getDate() + 1);
-    }
-
-    return diff;
-}
-
-exports.getRecurringIncome = function(
-    startTime,
-    endTime,
-    interval,
-    rate,
-    firstPayDateTime) {
-
-    var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: firstPayDateTime,
-        interval: interval
-    });
-
-    var numberOfPaychecks = payrollCalendar.getCount(
-        startTime,
-        endTime);
-
-    return numberOfPaychecks * rate;
-}
-
 exports.getExpenses = function (monthlyExpenses, weeklyExpenses, dayOfWeek, month, year) {
     var monthlyTotal = getSum(monthlyExpenses);
 

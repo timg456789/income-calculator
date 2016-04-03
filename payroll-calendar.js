@@ -19,13 +19,36 @@ function PayrollCallendar(config) {
         return currentPayPeriod;
     };
 
-    this.getCount = function(startTime, endTime) {
+    this.getRecurringIncome = function(
+        startTime,
+        endTime,
+        rate) {
+
+        var numberOfPaychecks = getCount(startTime, endTime);
+
+        return numberOfPaychecks * rate;
+    }
+
+    function dayDiff(startTime, endTime) {
+        var start = new Date(startTime);
+        var end = new Date(endTime);
+        var diff = 0;
+
+        while (start.getTime() < end.getTime()) {
+            diff += 1;
+            start.setDate(start.getDate() + 1);
+        }
+
+        return diff;
+    }
+
+    function getCount(startTime, endTime) {
         var calc = require('./calculator');
-        var dayDiff = calc.dayDiff(
+        var diff = dayDiff(
             getAdjustedStartDate(startTime),
             getAdjustedEndDate(endTime)
         );
-        return dayDiff / config.interval;
+        return diff / config.interval;
     }
 
     function getAdjustedStartDate(startTime) {
