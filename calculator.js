@@ -49,7 +49,20 @@ exports.getRecurringIncome = function(
     return numberOfPaychecks * rate;
 }
 
-exports.getWeekDaysInMonth = function(dayOfWeek, month, year) {
+exports.getExpenses = function (monthlyExpenses, weeklyExpenses, dayOfWeek, month, year) {
+    var monthlyTotal = getSum(monthlyExpenses);
+
+    var weeklyBillingPeriodsInMonth = getWeekDaysInMonth(
+        dayOfWeek,
+        month,
+        year
+    );
+
+    var weeklyTotal = getSum(weeklyExpenses) * weeklyBillingPeriodsInMonth;
+    return monthlyTotal + weeklyTotal;
+}
+
+function getWeekDaysInMonth(dayOfWeek, month, year) {
 
     var current = new Date(year, month, 1);
 
@@ -63,19 +76,6 @@ exports.getWeekDaysInMonth = function(dayOfWeek, month, year) {
     }
 
     return count;
-}
-
-exports.getExpenses = function (monthlyExpenses, weeklyExpenses, dayOfWeek, month, year) {
-    var monthlyTotal = getSum(monthlyExpenses);
-
-    var weeklyBillingPeriodsInMonth = exports.getWeekDaysInMonth(
-        dayOfWeek,
-        month,
-        year
-    );
-
-    var weeklyTotal = getSum(weeklyExpenses) * weeklyBillingPeriodsInMonth;
-    return monthlyTotal + weeklyTotal;
 }
 
 function getSum(expenses) {

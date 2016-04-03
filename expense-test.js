@@ -61,27 +61,3 @@ test('calculate recurring expenses for may 2016', function(t) {
     );
 
 });
-
-test('there are 5 fridays in april 2016', function(t) {
-    t.plan(1);
-
-    var numberOfFridays = calc.getWeekDaysInMonth(
-        cal.FRIDAY,
-        cal.APRIL,
-        2016
-    );
-
-    t.equal(numberOfFridays, 5);
-});
-
-test('there are 4 fridays in may 2016', function(t) {
-    t.plan(1);
-
-    var numberOfFridays = calc.getWeekDaysInMonth(
-        cal.FRIDAY,
-        cal.MAY,
-        2016
-    );
-
-    t.equal(numberOfFridays, 4);
-});
