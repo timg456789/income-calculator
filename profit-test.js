@@ -7,7 +7,7 @@ var PayrollCalendar = require('./payroll-calendar');
 test('profits for april 2016', function(t) {
     t.plan(1);
 
-    var expenses = calc.getExpenses(data.aprilExpensesConfig);
+    var expenses = calc.total(data.aprilExpensesConfig);
 
     var rate = data.biweeklyRate;
     var startDate = new Date(2016, 2, 26);
