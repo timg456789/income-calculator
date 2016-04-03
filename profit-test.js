@@ -13,15 +13,15 @@ test('profits for april 2016', function(t) {
     var startDate = new Date(2016, 2, 26);
     var endDate = new Date(2016, 3, 30);
 
-    var payrollCalendar = new PayrollCalendar({
-        firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime(),
-        interval: cal.BIWEEKLY_INTERVAL
-    });
+    var payrollCalendar = new PayrollCalendar(cal.BIWEEKLY_CALENDAR_CONFIG);
 
-    var revenue = payrollCalendar.getRecurringIncome(
-        startDate.getTime(),
-        endDate.getTime(),
-        rate);
+    var incomeConfig = {
+        rate: data.biweeklyRate,
+        startTime: new Date(2016, 2, 26).getTime(),
+        endTime: new Date(2016, 3, 30).getTime()
+    };
+
+    var revenue = payrollCalendar.getRecurringIncome(incomeConfig);
 
     var profits = revenue - expenses;
 
