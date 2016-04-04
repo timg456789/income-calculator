@@ -24,18 +24,6 @@ test('Test start date limitations', function(t) {
     }
 });
 
-// This is actually what I am net for the month.
-// Move this over into the calculator with the 3200 as a one time expense.
-// That's what I was doing before I found the rounding error and fixed everything by using cents,
-// or really whatever the base monetary unit is for the currency.
-test('rounding errors', function(t) {
-    t.plan(1);
-    var num = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
-    num = num - 3200 * 100;
-    console.log('total:' + num);
-    t.equal(num, -17535);
-});
-
 test('september 2016 is the next month with three paychecks from 04-29-2016', function(t) {
     t.plan(3);
 
