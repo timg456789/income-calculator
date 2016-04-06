@@ -38,16 +38,16 @@ exports.aprilExpensesConfig = {
     monthlyExpenses: exports.monthlyExpenses,
     weeklyExpenses: exports.weeklyExpenses,
     dayOfWeek: cal.FRIDAY,
-    month: cal.APRIL,
-    year: 2016
+    startTime: new Date(2016, cal.APRIL, 1).getTime(),
+    endTime: new Date(2016, cal.APRIL + 1, 0).getTime()
 };
 
 exports.mayExpensesConfig = {
     monthlyExpenses: exports.monthlyExpenses,
     weeklyExpenses: exports.weeklyExpenses,
     dayOfWeek: cal.FRIDAY,
-    month: cal.MAY,
-    year: 2016
+    startTime: new Date(2016, cal.MAY, 1).getTime(),
+    endTime: new Date(2016, cal.MAY + 1, 0).getTime()
 };
 
 exports.aprilIncomeConfig = function () {

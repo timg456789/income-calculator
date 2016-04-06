@@ -29,28 +29,23 @@ exports.getNetIncome = function (monthExpenseConfig, monthIncomeConfig, oneTimeE
 }
 
 function getWeeklyExpenses(monthExpenseConfig) {
-    var weeklyBillingPeriodsInMonth = getWeekDaysInMonth(
-        monthExpenseConfig.dayOfWeek,
-        monthExpenseConfig.month,
-        monthExpenseConfig.year
-    );
-
+    var weeklyBillingPeriodsInMonth = getWeekDaysBetween(monthExpenseConfig.startTime, monthExpenseConfig.endTime, monthExpenseConfig.dayOfWeek);
     var weeklyTotal = getSum(monthExpenseConfig.weeklyExpenses) * weeklyBillingPeriodsInMonth;
-
     return weeklyTotal
 }
 
-function getWeekDaysInMonth(dayOfWeek, month, year) {
+function getWeekDaysBetween(startTime, endTime, dayOfWeek) {
 
-    var current = new Date(year, month, 1);
+    var current = new Date(startTime);
+    var endTime = new Date(endTime);
 
     var count = 0;
-
-    while (current.getMonth() <= month) {
+    var increment = 1;
+    while (current.getTime() < endTime) {
         if (current.getDay() == dayOfWeek) {
             count += 1;
         }
-        current.setDate(current.getDate() + 1);
+        current.setDate(current.getDate() + increment);
     }
 
     return count;
