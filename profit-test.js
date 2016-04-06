@@ -29,7 +29,4 @@ test('projected net assets starting march 1 2016', function(t) {
     var projectedMonthNetIncome = -17535;
     var expect = projectedMonthNetIncome + savings[0].amount + savings[1].amount;
     t.equal(expect, 109627);
-
-    var netAssets = calc.getNetAssets(projectedMonthNetIncome, savings);
-    t.equal(netAssets, expect);
 });
