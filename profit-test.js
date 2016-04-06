@@ -1,4 +1,5 @@
 var test = require('tape');
+var cal = require('./calendar');
 var calc = require('./calculator');
 var data = require('./data');
 
@@ -8,8 +9,19 @@ test('profits for april 2016', function(t) {
     var oneTimeExpense = [{ amount: 320000 }];
 
     var netIncome = calc.getNetIncome(
-        data.aprilExpensesConfig,
-        data.aprilIncomeConfig(),
+        {
+            monthlyExpenses: data.monthlyExpenses,
+            weeklyExpenses: data.weeklyExpenses,
+            dayOfWeek: cal.FRIDAY,
+            month: cal.APRIL,
+            year: 2016
+        },
+        {
+            calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
+            rate: data.biweeklyRate,
+            startTime: new Date(2016, 2, 26).getTime(),
+            endTime: new Date(2016, 3, 30).getTime()
+        },
         oneTimeExpense
     );
 
