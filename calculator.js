@@ -17,7 +17,10 @@ exports.total = function (monthExpenseConfig) {
     return monthlyTotal + getWeeklyExpenses(monthExpenseConfig);
 }
 
-exports.getNetIncome = function (monthExpenseConfig, monthIncomeConfig, oneTimeExpenses) {
+exports.getNetIncome = function (monthExpenseConfig, monthIncomeConfig, oneTimeExpenses, timeRange) {
+
+    monthIncomeConfig.startTime = timeRange.startTime;
+    monthIncomeConfig.endTime = timeRange.endTime;
 
     var payrollCalendar = new PayrollCalendar(monthIncomeConfig.calendarConfig);
     var grossIncome = payrollCalendar.getRecurringIncome(monthIncomeConfig);

@@ -18,11 +18,13 @@ test('profits for april 2016', function(t) {
         },
         {
             calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
-            rate: data.biweeklyRate,
+            rate: data.biweeklyRate
+        },
+        oneTimeExpense,
+        {
             startTime: new Date(2016, 2, 26).getTime(),
             endTime: new Date(2016, 3, 30).getTime()
-        },
-        oneTimeExpense
+        }
     );
 
     var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
