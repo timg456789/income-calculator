@@ -21,13 +21,13 @@ test('profits for april 2016', function(t) {
         oneTimeExpense,
         {
             startTime: new Date(2016, 2, 26).getTime(),
-            endTime: new Date(2016, 3, 30).getTime()
+            endTime: new Date(2016, 3, 27).getTime()
         }
     );
 
-    var expectedNetIncome = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
+    var expectedNetIncome = 3200 * 100 - 165035;
     expectedNetIncome = expectedNetIncome - oneTimeExpense[0].amount;
-    t.equal(expectedNetIncome, -17535, 'profit or loss for month');
+    t.equal(expectedNetIncome, -165035, 'profit or loss for month');
     t.equal(netIncome, expectedNetIncome, 'profits for april 2016: ' + netIncome);
 
     var savings =  [
@@ -36,6 +36,6 @@ test('profits for april 2016', function(t) {
     ];
 
     var expect = netIncome + savings[0].amount + savings[1].amount;
-    t.equal(expect, 109627);
+    t.equal(expect, -37873);
 });
 
