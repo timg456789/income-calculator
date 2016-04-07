@@ -6,7 +6,7 @@ var data = require('./data');
 test('profits for april 2016', function(t) {
     t.plan(3);
 
-    var oneTimeExpense = [{ amount: 320000 }];
+    var oneTimeExpense = [{ amount: 143200 }];
 
     var netIncome = calc.getNetIncome(
         {
@@ -27,7 +27,7 @@ test('profits for april 2016', function(t) {
 
     var expectedNetIncome = 3200 * 100 - 165035;
     expectedNetIncome = expectedNetIncome - oneTimeExpense[0].amount;
-    t.equal(expectedNetIncome, -165035, 'profit or loss for month');
+    t.equal(expectedNetIncome, 11765, 'profit or loss for month');
     t.equal(netIncome, expectedNetIncome, 'profits for april 2016: ' + netIncome);
 
     var savings =  [
@@ -36,6 +36,6 @@ test('profits for april 2016', function(t) {
     ];
 
     var expect = netIncome + savings[0].amount + savings[1].amount;
-    t.equal(expect, -37873);
+    t.equal(expect, 138927);
 });
 
