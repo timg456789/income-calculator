@@ -28,7 +28,11 @@ test('profits for april 2016', function(t) {
     var expectedProfits = data.recurringIncomeApril2016 - data.recurringExpensesApril2016;
     expectedProfits = expectedProfits - oneTimeExpense[0].amount;
     t.equal(expectedProfits, -17535, 'profit or loss for month');
+
+    console.log(netIncome);
+
     t.equal(netIncome, expectedProfits, 'profits for april 2016: ' + netIncome);
+
 });
 
 test('projected net assets starting march 1 2016', function(t) {
