@@ -12,9 +12,7 @@ test('profits for april 2016', function(t) {
         {
             monthlyExpenses: data.monthlyExpenses,
             weeklyExpenses: data.weeklyExpenses,
-            dayOfWeek: cal.FRIDAY,
-            startTime: new Date(2016, 2, 26).getTime(),
-            endTime: new Date(2016, 3, 30).getTime()
+            dayOfWeek: cal.FRIDAY
         },
         {
             calendarConfig: cal.BIWEEKLY_CALENDAR_CONFIG,
