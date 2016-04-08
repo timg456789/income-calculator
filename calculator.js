@@ -17,20 +17,22 @@ exports.total = function (monthExpenseConfig) {
     return monthlyTotal + getWeeklyExpenses(monthExpenseConfig);
 }
 
-exports.getNetIncome = function (monthExpenseConfig, monthIncomeConfig, oneTimeExpenses, timeRange) {
+exports.getNetIncome = function (incomeAndExpenses) {
 
-    monthIncomeConfig.startTime = timeRange.startTime;
-    monthIncomeConfig.endTime = timeRange.endTime;
-    monthExpenseConfig.startTime = timeRange.startTime;
-    monthExpenseConfig.endTime = timeRange.endTime;
+    incomeAndExpenses.monthIncomeConfig.startTime = incomeAndExpenses.timeRange.startTime;
+    incomeAndExpenses.monthIncomeConfig.endTime = incomeAndExpenses.timeRange.endTime;
+    incomeAndExpenses.monthExpenseConfig.startTime = incomeAndExpenses.timeRange.startTime;
+    incomeAndExpenses.monthExpenseConfig.endTime = incomeAndExpenses.timeRange.endTime;
 
-    var payrollCalendar = new PayrollCalendar(monthIncomeConfig.calendarConfig);
-    var grossIncome = payrollCalendar.getRecurringIncome(monthIncomeConfig);
+    var payrollCalendar = new PayrollCalendar(incomeAndExpenses.monthIncomeConfig.calendarConfig);
+    var grossIncome = payrollCalendar.getRecurringIncome(incomeAndExpenses.monthIncomeConfig);
 
-    var expenses = exports.total(monthExpenseConfig);
-    expenses += getSum(oneTimeExpenses);
+    var expenses = exports.total(incomeAndExpenses.monthExpenseConfig);
+    expenses += getSum(incomeAndExpenses.oneTimeExpenses);
 
-    return grossIncome - expenses;
+    return grossIncome - expenses +
+        incomeAndExpenses.savings[0].amount +
+        incomeAndExpenses.savings[1].amount;
 }
 
 function getWeeklyExpenses(monthExpenseConfig) {
