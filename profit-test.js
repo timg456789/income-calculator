@@ -11,7 +11,7 @@ test('profits for april 2016', function(t) {
     var netIncome = calc.getNetIncome(
         {
             monthlyExpenses: [
-                { name: "rent", amount: 550 * 100 },
+                { name: "rent", amount: 550 * 100, date: 28 },
                 { name: "carInsurance", amount: 33535 },
                 { name: "utilities", amount: 165 * 100 },
                 { name: "phone", amount: 100 * 100 }
@@ -38,6 +38,6 @@ test('profits for april 2016', function(t) {
     ];
 
     var expect = netIncome + savings[0].amount + savings[1].amount;
-    t.equal(expect, 138927);
+    t.equal(expect, 83927);
 });
 
