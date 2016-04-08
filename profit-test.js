@@ -39,6 +39,6 @@ test('profits for april 2016', function(t) {
         ]
     });
 
-    t.equal(netIncome, 138927);
+    t.equal(netIncome, 83927); // rent shouldn't be included when ending on the 27th
 });
 
