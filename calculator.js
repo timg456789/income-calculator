@@ -14,7 +14,20 @@ exports.getThreePayCheckMonth = function (time, payDay, calConfig) {
 
 exports.total = function (monthExpenseConfig) {
     var monthlyTotal = getSum(monthExpenseConfig.monthlyExpenses);
-    return monthlyTotal + getWeeklyExpenses(monthExpenseConfig);
+    console.log("monthly total:" + monthlyTotal);
+
+    var weeklyBillingPeriodsInMonth = getWeekDaysBetween(
+        monthExpenseConfig.startTime,
+        monthExpenseConfig.endTime,
+        monthExpenseConfig.dayOfWeek
+    );
+    var oneWeekTotal = getSum(monthExpenseConfig.weeklyExpenses)
+    console.log("one week total: " + oneWeekTotal);
+
+    var weeklyTotal = weeklyBillingPeriodsInMonth * oneWeekTotal;
+    console.log("weekly total: " + weeklyTotal);
+
+    return monthlyTotal + weeklyTotal;
 }
 
 exports.getNetIncome = function (incomeAndExpenses) {
@@ -26,19 +39,16 @@ exports.getNetIncome = function (incomeAndExpenses) {
 
     var payrollCalendar = new PayrollCalendar(incomeAndExpenses.monthIncomeConfig.calendarConfig);
     var grossIncome = payrollCalendar.getRecurringIncome(incomeAndExpenses.monthIncomeConfig);
+    console.log("pay: " + grossIncome);
 
     var expenses = exports.total(incomeAndExpenses.monthExpenseConfig);
     expenses += getSum(incomeAndExpenses.oneTimeExpenses);
+    console.log("expenses: " + expenses);
 
-    return grossIncome - expenses +
-        incomeAndExpenses.savings[0].amount +
-        incomeAndExpenses.savings[1].amount;
-}
+    var savings = getSum(incomeAndExpenses.savings);
+    console.log("savings: " + savings);
 
-function getWeeklyExpenses(monthExpenseConfig) {
-    var weeklyBillingPeriodsInMonth = getWeekDaysBetween(monthExpenseConfig.startTime, monthExpenseConfig.endTime, monthExpenseConfig.dayOfWeek);
-    var weeklyTotal = getSum(monthExpenseConfig.weeklyExpenses) * weeklyBillingPeriodsInMonth;
-    return weeklyTotal
+    return grossIncome - expenses + savings;
 }
 
 function getWeekDaysBetween(startTime, endTime, dayOfWeek) {

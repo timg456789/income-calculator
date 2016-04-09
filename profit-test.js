@@ -5,19 +5,19 @@ var calc = require('./calculator');
 test('profits for april 2016', function(t) {
     t.plan(1);
 
-
-    console.log(new Date(2016, 2, 26).getTime());
-
     var netIncome = calc.getNetIncome({
         monthExpenseConfig: {
             monthlyExpenses: [
-                {name: "rent", amount: 550 * 100, date: 28},
-                {name: "carInsurance", amount: 33535},
-                {name: "utilities", amount: 165 * 100},
-                {name: "phone", amount: 100 * 100}
+                {name: "rent",              amount: 55000},
+                {name: "carInsurance",      amount: 33535},
+                {name: "utilities",         amount: 16500},
+                {name: "phone",             amount: 10000}
             ],
             weeklyExpenses: [
-                {name: "car", amount: 125 * 100}
+                {name: "car",               amount: 12500},
+                {name: "gas",               amount: 9000},
+                {name: "food",              amount: 10000},
+                {name: "misc",              amount:  5500}
             ],
             dayOfWeek: 5
         },
@@ -28,10 +28,13 @@ test('profits for april 2016', function(t) {
             },
             rate: 1600 * 100
         },
-        oneTimeExpenses: [{amount: 143200}],
+        oneTimeExpenses: [
+            { name: "dentist", amount: 143200},
+            { name: "taxes", amount: 42000 }
+        ],
         timeRange: {
-            startTime: new Date(2016, 2, 26).getTime(),
-            endTime: new Date(2016, 3, 27).getTime()
+            startTime: new Date(2016, 3, 1).getTime(),
+            endTime: new Date(2016, 4, 0).getTime()
         },
         savings: [
             {amount: 126341},
@@ -39,6 +42,6 @@ test('profits for april 2016', function(t) {
         ]
     });
 
-    t.equal(netIncome, 83927); // rent shouldn't be included when ending on the 27th
+    t.equal(netIncome, 121927, "apriil 2016 net income: " + netIncome);
 });
 
