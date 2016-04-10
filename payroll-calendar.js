@@ -19,9 +19,12 @@ function PayrollCallendar(config) {
         return currentPayPeriod;
     };
 
-    this.getRecurringIncome = function(incomeConfig) {
-        var numberOfPaychecks = getCount(incomeConfig.startTime, incomeConfig.endTime);
-        return numberOfPaychecks * incomeConfig.rate;
+    this.getRecurringIncome = function(timeRange, rate) {
+        var startTime = timeRange.startTime;
+        var endTime = timeRange.endTime;
+
+        var numberOfPaychecks = getCount(startTime, endTime);
+        return numberOfPaychecks * rate;
     }
 
     function dayDiff(startTime, endTime) {
