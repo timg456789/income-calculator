@@ -1,6 +1,5 @@
 var test = require('tape');
-var cal = require('./calendar');
-var calc = require('./calculator');
+var calc = require('../calculator');
 
 test('profits for april 2016', function(t) {
     t.plan(1);
@@ -26,22 +25,23 @@ test('profits for april 2016', function(t) {
                 firstPayDateTime: new Date(2016, 2, 18),
                 interval: 14
             },
-            rate: 1600 * 100
+            rate: 2000 * 100
         },
         oneTimeExpenses: [
             { name: "dentist", amount: 143200},
             { name: "taxes", amount: 42000 }
         ],
         timeRange: {
-            startTime: new Date(2016, 3, 1).getTime(),
-            endTime: new Date(2016, 4, 0).getTime()
+            startTime: new Date(2016, 3, 10).getTime(),
+            endTime: new Date(2016, 3, 25).getTime()
         },
         savings: [
-            {amount: 126341},
+            {amount: 137805},
+            {amount: 133841},
             {amount: 821}
         ]
     });
 
-    t.equal(netIncome, 121927, "apriil 2016 net income: " + netIncome);
+    t.equal(netIncome, 98232, "apriil 2016 net income: " + netIncome);
 });
 
