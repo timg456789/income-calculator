@@ -35,7 +35,7 @@ exports.getNetIncome = function (incomeAndExpenses) {
     incomeAndExpenses.monthIncomeConfig.startTime = incomeAndExpenses.timeRange.startTime;
     incomeAndExpenses.monthIncomeConfig.endTime = incomeAndExpenses.timeRange.endTime;
     incomeAndExpenses.monthExpenseConfig.startTime = incomeAndExpenses.timeRange.startTime;
-    incomeAndExpenses.monthExpenseConfig.endTime = incomeAndExpenses.timeRange.endTime;
+    //incomeAndExpenses.monthExpenseConfig.endTime = incomeAndExpenses.timeRange.endTime;
 
     var payrollCalendar = new PayrollCalendar(incomeAndExpenses.monthIncomeConfig.calendarConfig);
     var grossIncome = payrollCalendar.getRecurringIncome(
