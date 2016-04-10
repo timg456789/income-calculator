@@ -12,13 +12,13 @@ exports.getThreePayCheckMonth = function (time, payDay, calConfig) {
     return start;
 };
 
-exports.total = function (monthExpenseConfig) {
+exports.total = function (monthExpenseConfig, timeRange) {
     var monthlyTotal = getSum(monthExpenseConfig.monthlyExpenses);
     console.log("monthly expenses:" + monthlyTotal);
 
     var weeklyBillingPeriodsInMonth = getWeekDaysBetween(
-        monthExpenseConfig.startTime,
-        monthExpenseConfig.endTime,
+        timeRange.startTime,
+        timeRange.endTime,
         monthExpenseConfig.dayOfWeek
     );
     var oneWeekTotal = getSum(monthExpenseConfig.weeklyExpenses)
@@ -42,7 +42,7 @@ exports.getNetIncome = function (incomeAndExpenses) {
     );
     console.log("pay: " + grossIncome);
 
-    var expenses = exports.total(incomeAndExpenses.monthExpenseConfig);
+    var expenses = exports.total(incomeAndExpenses.monthExpenseConfig, incomeAndExpenses.timeRange);
     expenses += getSum(incomeAndExpenses.oneTimeExpenses);
     console.log("expenses: " + expenses);
 
