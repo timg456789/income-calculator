@@ -64,7 +64,7 @@ test('cash balance at 03:32AM EDT 04/22/2016', function(t) {
     var expenses = [
         33535, // car insurance
         10000, // phone
-        143200, // dentist
+        143200 // dentist
     ];
 
     var owed = balanceSheet.sum(expenses);
@@ -76,4 +76,32 @@ test('cash balance at 03:32AM EDT 04/22/2016', function(t) {
 
     t.equal(396.56, available / denom, ' expected cash available until next paycheck: ' + available / denom);
 });
+
+test('cash balance at 09:22AM EDT 04/25/2016', function(t) {
+    t.plan(3);
+
+    var denom = 100;
+
+    var assets = [821, 2074, 170346, 8600]
+
+    var cash = balanceSheet.sum(assets);
+    var sumDollars = (cash / denom);
+
+    t.equal(sumDollars, 1732.41, 'cash: ' + sumDollars);
+
+    var expenses = [
+        33535, // car insurance
+        143200 // dentist
+    ];
+
+    var owed = balanceSheet.sum(expenses);
+    var expenseDollars = owed / denom;
+
+    t.equal(expenseDollars, 1767.35, 'cash owed: ' + expenseDollars);
+
+    var available = cash - owed;
+
+    t.equal(51.06, available / denom, ' expected cash available until next paycheck: ' + available / denom);
+});
+
 
