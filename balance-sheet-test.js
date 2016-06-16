@@ -82,12 +82,12 @@ test('cash balance at 09:22AM EDT 04/25/2016', function(t) {
 
     var denom = 100;
 
-    var assets = [821, 2074, 170346, 8600]
+    var assets = [821, 2074, 170346, 8600];
 
     var cash = balanceSheet.sum(assets);
     var sumDollars = (cash / denom);
 
-    t.equal(sumDollars, 1732.41, 'cash: ' + sumDollars);
+    t.equal(sumDollars, 1818.41, 'cash: ' + sumDollars);
 
     var expenses = [
         33535, // car insurance
