@@ -1,4 +1,4 @@
-var balanceSheet = require('./balance-sheet');
+var balanceSheet = require('./../balance-sheet');
 var test = require('tape');
 
 test('cash balance at 09:11PM EDT 04/18/2016', function(t) {
@@ -19,8 +19,6 @@ test('cash balance at 09:11PM EDT 04/18/2016', function(t) {
 
     var sumPaid = balanceSheet.sum(paid);
     var paidDollars = (sumPaid / denom);
-
-    console.log('paid: ' + paidDollars);
 
     var expenses = [
         33535,
@@ -58,8 +56,6 @@ test('cash balance at 03:32AM EDT 04/22/2016', function(t) {
 
     var sumPaid = balanceSheet.sum(paid);
     var paidDollars = (sumPaid / denom);
-
-    console.log('paid: ' + paidDollars);
 
     var expenses = [
         33535, // car insurance
