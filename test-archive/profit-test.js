@@ -1,6 +1,6 @@
 var test = require('tape');
-var cal = require('./calendar');
-var calc = require('./calculator');
+var cal = require('./../calendar');
+var calc = require('./../calculator');
 
 test('profits for april 2016', function(t) {
     t.plan(1);

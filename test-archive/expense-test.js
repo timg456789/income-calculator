@@ -1,6 +1,6 @@
 var test = require('tape');
-var calc = require('./calculator');
-var data = require('./data');
+var calc = require('./../calculator');
+var data = require('./../data');
 
 test('calculate recurring expenses for april 2016', function(t) {
     t.plan(1);
