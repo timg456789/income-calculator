@@ -5,8 +5,8 @@ exports.biweeklyRate = 1600 * 100;
 exports.recurringExpensesApril2016 = 177535;
 exports.recurringExpensesMay2016 = 165035;
 
-exports.recurringIncomeApril2016 = 4800 * 100
-exports.recurringIncomeMay2016 = 3200 * 100
+exports.recurringIncomeApril2016 = 4800 * 100;
+exports.recurringIncomeMay2016 = 3200 * 100;
 
 exports.monthlyExpenses = [
     {

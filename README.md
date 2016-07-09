@@ -1,27 +1,15 @@
 # income-calculator
-This is where I sharpen my raw coding skills and stay technically sharp.
 
-In this project I will strive for perfect 100 line classes.
-A test for each production class.
-Adhering to the three rules of TDD.
+Features:
 
-Right now I'm starting with dates.
-I have a basic function and I'm going to see how far I can take it over the next few days.
-I'm eventually going to try and break it as well pushing it beyond its limit.
+- Project bi-weekly income
+- Calculate expenses for month
+    - Recurring monthly
+    - Recurring weekly
+    - One time
+    
+I can't yet justify projecting expenses beyond one month, so I have listed them as calculations. Technically the weekly expenses **are** capable of projecting, but only for one month. This limited expense projection feature is documented with expense-test.
 
-For now though, I want to find some interesting things in the calendar.
-The calendar is beginning to fascinate me with its complexity.
+I'm holding back here, because of concerns with the interface not being suitable for debugging or verifying the calculations. There is so much work done, and it really doesn't matter if all tests are passing. Each projection is unique and the values need to be justified.
 
-######2016-15-06
-Dates went pretty well. They work as I need coming back without remembering how they worked or even what I was trying to do.
-
-So right now, there could be an issue calculating weekly expenses. Weeks in a month fluctuate.
-The code looked weird and I'm not sure if I have a specific test for that, so it's probably not working.
-Either way it's acceptable. I want to tighten the interface and get a UI going.
-
-I think I can get a quick app going with S3, then I can change out the back-end to Dynamo db in another project.
-**It has ssl, a form, and it's using infrastructure as code (with tests of course - perfect documentation) with dynamodb**.
-When I put it there, then I will worry about perfecting the calculations and as well as the input data.
-The form will allow me to aggregate my expenses as I plug them in.
-
-Eventually I will have not only a running balance, but be able to project scenarios(purchases) on the fly.
+My thoughts to address this is to tweak the NetIncome function to return a list of named debits and credits. The result could easily be debugged by taking that list into excel, a calculator, or pen and paper. Of course if you want to project out, say 20 years, you are going to have to have some faith. But that faith needs to be justified with larger proven projections of say 1 year. Then it's not so much of a jump to be about 20x that. Then breaking those tests by expecting yearly expenses like taxes to be included. Then further breaking it with bi-yearly expenses like vehicle registration!
