@@ -2,7 +2,7 @@ var test = require('tape');
 var calc = require('./../calculator');
 var data = require('./../data');
 
-test('calculate recurring expenses for april 2016', function(t) {
+test('calculate recurring expenses for april, which has 5 full weeks, 2016', function(t) {
     t.plan(1);
 
     var timeRange = {
@@ -19,7 +19,7 @@ test('calculate recurring expenses for april 2016', function(t) {
     t.equal(actual, expected, msg);
 });
 
-test('calculate recurring expenses for may 2016', function(t) {
+test('calculate recurring expenses for may, which has 4 full weeks, 2016', function(t) {
     t.plan(1);
 
     var timeRange = {
