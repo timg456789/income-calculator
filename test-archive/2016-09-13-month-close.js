@@ -1,7 +1,7 @@
 var test = require('tape');
 var calc = require('../calculator');
 
-test('profits for july 2016', function(t) {
+test('profits for august 2016', function(t) {
     t.plan(1);
 
     var netIncome = calc.getNetIncome({
