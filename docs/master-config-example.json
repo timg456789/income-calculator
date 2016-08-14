@@ -1,0 +1,9 @@
+monthlyRecurringExpenses: [
+    { name: 'rent', amount: 550 },
+    { name: 'utilities', amount: 200 },
+    { name: 'student loan', amount: 117 },
+    { name: 'phone', amount: 100 },
+    { name: 'oil change', amount: 100 },
+    { name: 'gym', amount: 15 },
+    { name: 'music', amount: 10 }
+ ]
