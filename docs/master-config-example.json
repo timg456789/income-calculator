@@ -1,9 +1,27 @@
-monthlyRecurringExpenses: [
-    { name: 'rent', amount: 550 },
-    { name: 'utilities', amount: 200 },
-    { name: 'student loan', amount: 117 },
-    { name: 'phone', amount: 100 },
-    { name: 'oil change', amount: 100 },
-    { name: 'gym', amount: 15 },
-    { name: 'music', amount: 10 }
- ]
+{
+    monthlyRecurringExpenses: [
+        { name: 'rent', amount: 550 },
+        { name: 'car insurance' amount: 307 }
+        { name: 'utilities', amount: 200 },
+        { name: 'student loan', amount: 117 },
+        { name: 'phone', amount: 100 },
+        { name: 'oil change', amount: 100 },
+        { name: 'gym', amount: 15 },
+        { name: 'music', amount: 10 }
+    ],
+    monthlyRecurringExpensesExpected: 1399,
+    weeklyRecurringExpenses: [
+        { name: 'car', amount: 125 }
+        { name: 'gas', amount: 75 }
+        { name: 'food', amount: 75 }
+    ]
+    weeklyExpensesExpected: 275,
+    weeklyExpensesExpectedFourWeeks: 1100 // 336 days a year
+    weeklyExpensesExpectedFiveWeeks: 1375 // 420 days a year
+    income: {
+        amount: 1335,
+        type: 'bi-weekly',
+        expectedFourWeeks: 2670, // 10 months a year
+        expectedFiveWeeks: 4005  // 2 months a year
+    }
+}
