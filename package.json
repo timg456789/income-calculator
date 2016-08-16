@@ -4,7 +4,8 @@
   "author": "Timothy Scott Gonzalez",
   "license": "Apache 2.0",
   "scripts": {
-    "test": "tape *test.js ./test-archive/*.js"
+    "test": "tape *test.js ./test-archive/*.js",
+    "print-pay-dates": "node print-pay-dates"
   },
   "devDependencies": {
     "tape": "^4.5.1"

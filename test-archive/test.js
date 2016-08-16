@@ -6,7 +6,7 @@ var data = require('./../data');
 
 test('Test start date limitations', function(t) {
     t.plan(1);
-    var startDate = new Date(2016, 2, 17);
+    var startDate = new Date(2015, 2, 17);
 
     var payrollCalendar = new PayrollCalendar({
         firstPayDateTime: cal.BIWEEKLY_PAY_START_DATE.getTime()
