@@ -7,17 +7,17 @@ test('profits for july 2016', function(t) {
     var netIncome = calc.getNetIncome({
         monthExpenseConfig: {
             monthlyExpenses: [
-                {name: 'rent',              amount: 550 * 100},
-                {name: 'carInsurance',      amount: 300 * 100},
-                {name: 'utilities',         amount: 200 * 100},
-                {name: 'phone',             amount: 100 * 100},
-                {name: 'savings deposit',   amount:  42 * 100}
+                {name: 'rent',              amount: 550 * 100},//
+                {name: 'carInsurance',      amount: 300 * 100},//
+                {name: 'utilities',         amount: 200 * 100},//
+                {name: 'phone',             amount: 100 * 100},//
+                {name: 'savings deposit',   amount:  42 * 100}//
             ],
             weeklyExpenses: [
-                {name: 'car',               amount: 125 * 100},
-                {name: 'gas',               amount: 90  * 100},
-                {name: 'food',              amount: 100 * 100},
-                {name: 'petty cash',        amount: 55  * 100}
+                {name: 'car',               amount: 125 * 100},//
+                {name: 'gas',               amount: 90  * 100},//
+                {name: 'food',              amount: 100 * 100},//
+                {name: 'petty cash',        amount: 55  * 100}//
             ],
             dayOfWeek: 5
         },
@@ -46,6 +46,6 @@ test('profits for july 2016', function(t) {
 
     console.log(netIncome);
 
-    t.equal(netIncome, 157534, "july 2016 net income: $" + (netIncome) / 100);
+    t.equal(netIncome, 153334, "july 2016 net income: $" + (netIncome) / 100);
 });
 
