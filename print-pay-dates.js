@@ -21,7 +21,7 @@ if (process.argv.length != 4) {
 
         while(startDate < endDate) {
             startDate = payrollCalendar.getNextDate(startDate.getTime());
-            console.log(startDate);
+            console.log(startDate.toISOString());
         }
 
     } else {
