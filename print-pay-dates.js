@@ -1,21 +1,11 @@
 var cal = require ('./calendar');
 var PayrollCalendar = require('./payroll-calendar');
 
-
-if (process.argv.length != 6) {
+if (process.argv.length != 4) {
     console.log('start and end years are required e.g. --start 2016 --end 2017')
 } else {
-
-    var startYear;
-    var endYear;
-
-    process.argv.forEach(function (val, index, array) {
-        if (val == '--start') {
-            startYear = array[index+1];
-        } else if (val == '--end') {
-            endYear = array[index+1];
-        }
-    });
+    var startYear = process.argv[2];
+    var endYear = process.argv[3];
 
     if (startYear && endYear) {
 
