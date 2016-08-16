@@ -10,6 +10,17 @@
 
 ## Roadmap
 
+NEW PRIORITY - A TEST FAILS!!!
+Nothing can continue until this test passes. Nothing!
+I added some code to help with getting the paycheck dates back in july.
+From here I need to build a balance sheet calendar and calculate by hand what's the correct outcome.
+I need something which passes for that month with the input. Even if it's pen and paper it doesn't matter. What matters is that the process is documented and I have quality assertions proved out for
+my test. After all the test doesn't matter if it fails, it's supposed to fail regularly that shows it's working, what matters are the assertions in the test. I have zero confidence in any of it, because of the lack of debugging.
+
+SO once I get confidence in my assertions with some evidence to back them I can continue below, and essentially build my debugger that I've now done for two months and need to do for JULY, since that months test is failing. When that's done I can continue on with the features below and encode this process that's getting very boring, but continues to prove its value again and again.
+
+
+
 I'm going to begin to tackle the monthly expense issue. My recent commit for the master config starts to show the enormous differences between months that have 4 and 5 weeks where weekly expenses are due. It's about 80 calendar days 336 vs 420. That's a difference of 12 weeks. With weekly expenses at 275 that has an effect of 3,300. This is huge and is justification for being the highest priority issue.
 
 In order to solve this problem I'm going to take the opportunity to address two fundamental issues:

@@ -1,18 +1,18 @@
 var test = require('tape');
 var calc = require('../calculator');
-
+/*
 test('profits for august 2016', function(t) {
     t.plan(1);
 
     var netIncome = calc.getNetIncome({
         monthExpenseConfig: {
             monthlyExpenses: [
-                {name: 'rent',              amount: 550 * 100},
-                {name: 'carInsurance',      amount: 307 * 100},
-                {name: 'utilities',         amount: 200 * 100},
-                {name: 'phone',             amount: 100 * 100},
-                {name: 'gym',               amount: 15  * 100},
-                {name: 'music'              amount: 10  * 100}
+                {name: 'rent',               amount: 550 * 100},
+                {name: 'carInsurance',       amount: 307 * 100},
+                {name: 'utilities',          amount: 200 * 100},
+                {name: 'phone',              amount: 100 * 100},
+                {name: 'gym',                amount: 15  * 100},
+                {name: 'music',              amount: 10  * 100}
             ],
             weeklyExpenses: [
                 {name: 'car',               amount: 125 * 100},
@@ -46,3 +46,4 @@ test('profits for august 2016', function(t) {
     t.equal(netIncome, 157534, "august 2016 net income: $" + (netIncome) / 100);
 });
 
+*/
