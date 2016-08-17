@@ -2,6 +2,7 @@ exports.MARCH = 2;
 exports.APRIL = 3;
 exports.MAY = 4;
 exports.SEPTEMBER = 8;
+exports.OCTOBER = 9;
 
 exports.BIWEEKLY_PAY_START_DATE = new Date(2015, 11, 25);
 exports.BIWEEKLY_INTERVAL = 14;
