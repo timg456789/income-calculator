@@ -11,8 +11,8 @@ test('profits and losses for august 2016', function(t) {
             monthlyExpenses: [
                 {name: 'rent',               amount: 550 * 100},
                 {name: 'carInsurance',       amount: 307 * 100},
-                {name: 'utilities',          amount: 200 * 100},
-                {name: 'phone',              amount: 100 * 100},
+                //{name: 'utilities',          amount: 200 * 100},
+                //{name: 'phone',              amount: 100 * 100},
                 {name: 'gym',                amount: 15  * 100},
                 {name: 'music',              amount: 10  * 100}
             ],
