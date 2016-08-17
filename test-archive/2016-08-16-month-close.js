@@ -1,7 +1,9 @@
 var test = require('tape');
 var calc = require('../calculator');
-/*
-test('profits for august 2016', function(t) {
+
+console.log(new Date(2016, 7, 16));
+
+test('profits and losses for august 2016', function(t) {
     t.plan(1);
 
     var netIncome = calc.getNetIncome({
@@ -29,21 +31,26 @@ test('profits for august 2016', function(t) {
             rate: 1335 * 100
         },
         oneTimeExpenses: [
+            /*
+            I'm going to have to wait until september for an oil change even though I'm past 3k miles today.
             { name: 'full synthetic oil change',   amount: 100     * 100}
+            */
         ],
         timeRange: {
-            startTime: new Date(2016, 7, 13).getTime(),
+            startTime: new Date(2016, 7, 16).getTime(),
             endTime: new Date(2016, 8, 01).getTime()
         },
         savings: [
-            {amount: 55000 },
-            {amount: 15700 },
+            /* I'm really low here, because I had to pay 150 for glasses today,
+               and I needed to pay $200 for a cheap laptop so that I could keep working at home.
+             */
+            {amount: 1259 },
+            {amount: 915 },
+            {amount:  21 }
         ]
     });
 
     console.log(netIncome);
 
-    t.equal(netIncome, 157534, "august 2016 net income: $" + (netIncome) / 100);
+    t.equal(netIncome, -37505, "august 2016 net income: $" + (netIncome) / 100);
 });
-
-*/
