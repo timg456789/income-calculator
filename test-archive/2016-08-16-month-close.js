@@ -19,7 +19,7 @@ test('profits and losses for august 2016', function(t) {
             weeklyExpenses: [
                 {name: 'car',               amount: 125 * 100},
                 {name: 'gas',               amount: 75  * 100},
-                {name: 'food',              amount: 75 * 100}
+                {name: 'food',              amount: 50 * 100}
             ],
             dayOfWeek: 5
         },
