@@ -42,8 +42,8 @@ processor.process = function(config, startTime, endTime) {
 
 var septemberBreakdown = processor.process(
     config,
-    new Date(2016, cal.SEPTEMBER, 1).getTime(),
-    new Date(2016, cal.OCTOBER, 1).getTime());
+    new Date(2016, cal.SEPTEMBER, 1).getTime(), //start dae will be inclusive.
+    new Date(2016, cal.OCTOBER, 1).getTime()); //end date will be exclusive.
 
 //monthlyRecurringExpensesExpected: 1399  * 100,
 //weeklyExpensesExpected: 275  * 100,
