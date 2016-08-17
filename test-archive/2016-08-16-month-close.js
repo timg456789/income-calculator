@@ -44,13 +44,14 @@ test('profits and losses for august 2016', function(t) {
             /* I'm really low here, because I had to pay 150 for glasses today,
                and I needed to pay $200 for a cheap laptop so that I could keep working at home.
              */
-            {amount: 1259 },
-            {amount: 915 },
-            {amount:  21 }
+            {amount: 1259 }, // checking
+            {amount: 915  }, // money market
+            {amount:  21  }, // savings
+            {amount: 2600 } // all the cash I have
         ]
     });
 
     console.log(netIncome);
 
-    t.equal(netIncome, -37505, "august 2016 net income: $" + (netIncome) / 100);
+    t.equal(netIncome, 95, "august 2016 net income: $" + (netIncome) / 100);
 });
