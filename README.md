@@ -29,15 +29,3 @@ Payment of goods or services.
 ## Roadmap
 
 I've pretty much solved the UI potential and debugging capability issue in my last commit. The next highest priority issue once those problems are completed is data-entry. I've got the whole back-end ready and waiting in musical octo train which is test-driven with AWS dynamo db and continuous deployment so I'll be boosting through that part with perfect documentation on the technical components!
-
-Once I have a steady flow of data, next will be the output in a more human readable format like HTML.
-
-Testing email, for sha trail in case I lose local repo and someone changes history during that time since the repo is public.
-
-why isnt this working.
-
-piece of junk.
-
-this is pathetic.
-
-ok so it skipped one. really now it's down like 2000%, because i can't even document the piece of garbage service.
