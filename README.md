@@ -35,3 +35,5 @@ Once I have a steady flow of data, next will be the output in a more human reada
 Testing email, for sha trail in case I lose local repo and someone changes history during that time since the repo is public.
 
 why isnt this working.
+
+piece of junk.
