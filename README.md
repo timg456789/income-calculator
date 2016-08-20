@@ -5,6 +5,7 @@ Responsible for projecting net income. Net Income calculations are built on thre
  1. biweekly income
  2. weekly recurring expenses
  3. monthly recurring expenses
+ 4. one-time expenses
 
 ## Glossary
 
