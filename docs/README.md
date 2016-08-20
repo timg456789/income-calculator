@@ -1,25 +1,29 @@
 # Income and Expenses
 
-This documentation serves as justification and reference for income and expense configs. It's not enough that the numbers add up, they have to be meaningful and accurately model my life or it's just a game.
+Net Income calculations are built on three core pieces:
+
+ 1. biweekly income
+ 2. weekly recurring expenses
+ 3. monthly recurring expenses
+
+## Glossary
+
+### Biweekly Income
+Income incurred on a 14 day interval determined by an initial start date. The dates in the **Income** section detail biweekly income.
+
+### Net Income
+Income after expenses.
+
+### Monthly Recurring Expense (MRE)
+An expense that is incurred every calendar month. MRE's are incurred on the 28th by default.
+
+### Weekly Recurring Expense (WRE)
+An expense that is incurred every seven days. WRE's are incurred on Friday's by default.
 
 ## Income
 
-### Pay Dates 2016-2018
-2016-01-08T05:00:00.000Z
-2016-01-22T05:00:00.000Z
-2016-02-05T05:00:00.000Z
-2016-02-19T05:00:00.000Z
-2016-03-04T05:00:00.000Z
-2016-03-18T04:00:00.000Z
-2016-04-01T04:00:00.000Z
-2016-04-15T04:00:00.000Z
-2016-04-29T04:00:00.000Z
-2016-05-13T04:00:00.000Z
-2016-05-27T04:00:00.000Z
-2016-06-10T04:00:00.000Z
-2016-06-24T04:00:00.000Z
-2016-07-08T04:00:00.000Z
-2016-07-22T04:00:00.000Z
+### Accruals
+
 2016-08-05T04:00:00.000Z
 2016-08-19T04:00:00.000Z
 **2016-09-02T04:00:00.000Z**
@@ -66,13 +70,3 @@ This documentation serves as justification and reference for income and expense 
 [USDA Month by Month Cost of Food](http://www.cnpp.usda.gov/USDAFoodPlansCostofFood/reports)
 
 [USDA Cost of Food June 2016](http://www.cnpp.usda.gov/sites/default/files/CostofFoodMay2016.pdf)
-
-For the month of May the USDA shows $42.90 for a Male aged 19-50, per week. This breaks down to about $6.12 a day. This means I **need** to spend between $6-$7 a day if I want a chance at a nutritious diet every day. This is basically hitting my macro's, which isn't a pleasant experience although it's nutritionally wonderful if done correctly e.g. chicken and rice for every meal.
-
-I want to intake fruits and vegetables so I hit Daily Reference Intake (DRI) values for things beyond carbs, fats and proteins. For an additional $2 a day, $1 for fruit and $1 for vegetables, I can meet micronutrient dietary needs.
- 
- My calculations show this then to be $8.50 a day to hit both macro and micro nutrients. A week this is $59.50.
-
-This puts me right near the 'Low-cost' plan. The USDA has $55.40 listed per week for this plan. This still isn't pleasant as it's the very basics when spent cooking for a single person.
-
-For august, and going forward, I'm budgeting $75 per week for food. I can satisfy my dietary needs with a well balanced diet and eat out a few days or mix-it up with higher quality meats e.g. steak over chicken or flounder over tilapia. $75 per week puts me at the moderate plan according to the USDA.

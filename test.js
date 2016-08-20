@@ -8,7 +8,7 @@ const config = {
     weeklyRecurringExpenses: [
         { name: 'food', amount: 75  * 100 }
     ],
-    income: {
+    biWeeklyIncome: {
         amount: 1335  * 100,
         type: 'bi-weekly',
         expectedFourWeeks: 2670  * 100,
