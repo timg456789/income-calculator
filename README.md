@@ -1,22 +1,27 @@
-# income-calculator
+# Income Calculator
 
-##Features
+Responsible for projecting net income. Net Income calculations are built on three core pieces:
 
-- Project bi-weekly income
-- Calculate expenses for month
-    - Recurring monthly
-    - Recurring weekly
-    - One time
+ 1. biweekly income
+ 2. weekly recurring expenses
+ 3. monthly recurring expenses
+
+## Glossary
+
+### Biweekly Income
+Income incurred on a 14 day interval determined by an initial start date. Biweekly income is detailed in docs/README.md under the **Income - Accruals** section.
+
+### Net Income
+Income after expenses.
+
+### Monthly Recurring Expense (MRE)
+An expense that is incurred every calendar month. MRE's are incurred on the 28th by default.
+
+### Weekly Recurring Expense (WRE)
+An expense that is incurred every seven days. WRE's are incurred on Friday's by default.
 
 ## Roadmap
 
-I'm going to begin to tackle the monthly expense issue. My recent commit for the master config starts to show the enormous differences between months that have 4 and 5 weeks where weekly expenses are due. It's about 80 calendar days 336 vs 420. That's a difference of 12 weeks. With weekly expenses at 275 that has an effect of 3,300. This is huge and is justification for being the highest priority issue.
+I've pretty much solved the UI potential and debugging capability issue in my last commit. The next highest priority issue once those problems are completed is data-entry. I've got the whole back-end ready and waiting in musical octo train which is test-driven with AWS dynamo db and continuous deployment so I'll be boosting through that part with perfect documentation on the technical components!
 
-In order to solve this problem I'm going to take the opportunity to address two fundamental issues:
-
-1. Lack of UI potential
-2. Lack of debugging capabilities
-
-I'm going to output the config into days on a calendar. Each as a debit or credit. This raw low-level highly processed output provides the much needed debugging capabilities along with needed transparency. It's useless if I have tests that pass, without re-inforcing them. I must build confidence in the application. Finally I can just throw (yes literally place with little care) onto a calendar.
-
-The calendar will actually be quite impressive, because it will be a calendar that's also balance sheet! It's very simple, but I've never seen anything like it. I'll add a picture of what I have designed.
+Once I have a steady flow of data, next will be the output in a more human readable format like HTML.

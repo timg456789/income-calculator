@@ -1,24 +1,4 @@
-# Income and Expenses
-
-Net Income calculations are built on three core pieces:
-
- 1. biweekly income
- 2. weekly recurring expenses
- 3. monthly recurring expenses
-
-## Glossary
-
-### Biweekly Income
-Income incurred on a 14 day interval determined by an initial start date. The dates in the **Income** section detail biweekly income.
-
-### Net Income
-Income after expenses.
-
-### Monthly Recurring Expense (MRE)
-An expense that is incurred every calendar month. MRE's are incurred on the 28th by default.
-
-### Weekly Recurring Expense (WRE)
-An expense that is incurred every seven days. WRE's are incurred on Friday's by default.
+# Research Documentation
 
 ## Income
 
