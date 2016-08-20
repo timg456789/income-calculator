@@ -26,7 +26,7 @@ function PayrollCallendar(config) {
 
         var numberOfPaychecks = getCount(startTime, endTime);
         return numberOfPaychecks * rate;
-    }
+    };
 
     function dayDiff(startTime, endTime) {
         var diffMs = endTime - startTime;
