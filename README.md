@@ -37,3 +37,5 @@ Testing email, for sha trail in case I lose local repo and someone changes histo
 why isnt this working.
 
 piece of junk.
+
+this is pathetic.
