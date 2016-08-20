@@ -1,7 +1,8 @@
+const UtcDay = require('./utc-day');
+
 function PayrollCallendar(config) {
 
     var that = this;
-    var cal = require('./calendar');
 
     function checkTime(time) {
         if (time < config.firstPayDateTime) {
@@ -28,18 +29,13 @@ function PayrollCallendar(config) {
         return numberOfPaychecks * rate;
     };
 
-    function dayDiff(startTime, endTime) {
-        var diffMs = endTime - startTime;
-        var diff = diffMs / cal.UTC_DAY_MILLISECONDS;
-        return diff;
-    }
-
     function getCount(startTime, endTime) {
-        var calc = require('./calculator');
-        var diff = dayDiff(
+        var utcDay = new UtcDay();
+        var diff = utcDay.getDayDiff(
             getAdjustedStartDate(startTime),
             getAdjustedEndDate(endTime)
         );
+
         return diff / config.interval;
     }
 
