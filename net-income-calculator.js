@@ -34,7 +34,13 @@ function NetIncomeCalculator() {
 
             for (var i=0; i < config.oneTimeExpenses.length; i++) {
                 var potentialOneTimeExpense = config.oneTimeExpenses[i];
-                console.log(potentialOneTimeExpense);
+                if (current.getTime() == potentialOneTimeExpense.dateIncurred.getTime()) {
+                    var expense = {};
+                    expense.name = potentialOneTimeExpense.name;
+                    expense.amount = potentialOneTimeExpense.amount;
+                    expense.dateIncurred = new Date(current.getTime());
+                    breakdown.push(expense);
+                }
             }
 
             var incomeAccrual = getIncomeAccrual(config, current);
