@@ -8,6 +8,9 @@ Responsible for projecting net income. Net Income calculations are built on thre
 
 ## Glossary
 
+### Accrue
+To receive income.
+
 ### Biweekly Income
 Income accrued on a 14 day interval determined by an initial start date. Biweekly income is detailed in docs/README.md under the **Income - Accruals** section.
 
@@ -19,6 +22,9 @@ An expense that is incurred every calendar month. MRE's are incurred on the 28th
 
 ### Weekly Recurring Expense (WRE)
 An expense that is incurred every seven days. WRE's are incurred on Friday's by default.
+
+### Incur
+Payment of goods or services.
 
 ## Roadmap
 
