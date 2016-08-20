@@ -31,25 +31,21 @@ function PayrollCallendar(config) {
 
     function getCount(startTime, endTime) {
         var utcDay = new UtcDay();
+
         var diff = utcDay.getDayDiff(
             getAdjustedStartDate(startTime),
-            getAdjustedEndDate(endTime)
+            endTime
         );
 
-        return diff / config.interval;
+        var fullIntervals = Math.floor(diff / config.interval)
+
+        return fullIntervals;
     }
 
     function getAdjustedStartDate(startTime) {
         var adjustedStart = that.getNextDate(startTime - 1);
         adjustedStart.setDate(adjustedStart.getDate() - config.interval);
         return adjustedStart;
-    }
-
-    function getAdjustedEndDate(endTime) {
-        var adjustedEnd = new Date(endTime);
-        adjustedEnd.setDate(adjustedEnd.getDate() - config.interval);
-        adjustedEnd = that.getNextDate(adjustedEnd.getTime());
-        return adjustedEnd;
     }
 
 }
