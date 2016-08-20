@@ -13,7 +13,7 @@ function NetIncomeCalculator() {
         while (current.getTime() < endTime) {
 
             if (current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH) {
-                for (i = 0; i < mre.length; i++) {
+                for (var i = 0; i < mre.length; i++) {
                     var processed = {};
                     processed.name = mre[i].name;
                     processed.amount = mre[i].amount;
@@ -23,13 +23,17 @@ function NetIncomeCalculator() {
             }
 
             if (current.getDay() == cal.FRIDAY) {
-                for (i = 0; i < wre.length; i++) {
+                for (var i = 0; i < wre.length; i++) {
                     var processed = {};
                     processed.name = wre[i].name;
                     processed.amount = wre[i].amount;
                     processed.dateIncurred = new Date(current.getTime());
                     breakdown.push(processed);
                 }
+            }
+
+            for (var i=0; i < config.oneTimeExpenses.length; i++) {
+                
             }
 
             var incomeAccrual = getIncomeAccrual(config, current);

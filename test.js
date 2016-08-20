@@ -50,7 +50,7 @@ test('monthly expenses are being included', function(t) {
     t.equal(breakdown[4].amount, 400 * 100);
     t.equal(breakdown[4].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, 17).getTime());
 */
-    
+
     t.equal(breakdown[4].name, 'biweekly income');
     t.equal(breakdown[4].amount, 1335 * 100);
     t.equal(breakdown[4].dateAccrued.getTime(), new Date(2016, cal.SEPTEMBER, 16).getTime());
