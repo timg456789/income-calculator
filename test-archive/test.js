@@ -67,8 +67,8 @@ test('4800 from 03-26-2016 and 04-30-2016', function(t) {
         data.aprilIncomeConfig().rate
     );
 
-    t.equal(new Date(data.aprilIncomeConfig().startTime).toString(), 'Sat Mar 26 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(new Date(data.aprilIncomeConfig().endTime).toString(), 'Sat Apr 30 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(new Date(data.aprilIncomeConfig().startTime).toString(), new Date(2016, cal.MARCH, 26).toString());
+    t.equal(new Date(data.aprilIncomeConfig().endTime).toString(), new Date(2016, cal.APRIL, 30).toString());
     t.equal(biweeklyRecurringIncome, data.recurringIncomeApril2016);
 });
 
@@ -83,7 +83,7 @@ test('3200 from 05-01-2016 and 05-31-2016', function(t) {
         },
         data.mayIncomeConfig().rate);
 
-    t.equal(new Date(data.mayIncomeConfig().startTime).toString(), 'Sun May 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
-    t.equal(new Date(data.mayIncomeConfig().endTime).toString(), 'Tue May 31 2016 00:00:00 GMT-0400 (Eastern Daylight Time)');
+    t.equal(new Date(data.mayIncomeConfig().startTime).toString(), new Date(2016, cal.MAY, 1).toString());
+    t.equal(new Date(data.mayIncomeConfig().endTime).toString(), new Date(2016, cal.MAY, 31).toString());
     t.equal(biweeklyRecurringIncome, data.recurringIncomeMay2016);
 });
