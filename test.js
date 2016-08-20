@@ -100,4 +100,6 @@ test('monthly expenses are being included', function(t) {
     t.equal(breakdown[16].amount, 1335 * 100);
     t.equal(breakdown[16].dateAccrued.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
 
+    console.log(breakdown);
+
 });
