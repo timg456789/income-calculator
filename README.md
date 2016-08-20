@@ -9,7 +9,7 @@ Responsible for projecting net income. Net Income calculations are built on thre
 ## Glossary
 
 ### Biweekly Income
-Income incurred on a 14 day interval determined by an initial start date. Biweekly income is detailed in docs/README.md under the **Income - Accruals** section.
+Income accrued on a 14 day interval determined by an initial start date. Biweekly income is detailed in docs/README.md under the **Income - Accruals** section.
 
 ### Net Income
 Income after expenses.
