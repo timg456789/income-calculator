@@ -3,18 +3,9 @@ const test = require('tape');
 
 const config = {
     monthlyRecurringExpenses: [
-        { name: 'rent', amount: 550 * 100 },
-        { name: 'car insurance', amount: 307  * 100 },
-        { name: 'utilities', amount: 200  * 100 },
-        { name: 'student loan', amount: 117  * 100 },
-        { name: 'phone', amount: 100  * 100 },
-        { name: 'oil change', amount: 100  * 100 },
-        { name: 'gym', amount: 15  * 100 },
-        { name: 'music', amount: 10  * 100 }
+        { name: 'rent', amount: 550 * 100 }
     ],
     weeklyRecurringExpenses: [
-        { name: 'car', amount: 125  * 100 },
-        { name: 'gas', amount: 75  * 100 },
         { name: 'food', amount: 75  * 100 }
     ],
     income: {
@@ -28,22 +19,41 @@ const config = {
 var processor = {};
 processor.process = function(config, startTime, endTime) {
     var breakdown = [];
-    var mrr = config.monthlyRecurringExpenses;
+    var mre = config.monthlyRecurringExpenses;
+    var wre = config.weeklyRecurringExpenses;
 
-    for (i = 0; i < mrr.length; i++) {
-        breakdown.push({});
+    var current = new Date(startTime);
+    while (current.getTime() < endTime) {
+        if (current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH) {
+            for (i = 0; i < mre.length; i++) {
+                var processed = {};
+                processed.name = mre[i].name;
+                processed.amount = mre[i].amount;
+                processed.dateIncurred = new Date(current.getTime());
+                breakdown.push(processed);
+            }
+        }
+
+        if (current.getDay() == cal.FRIDAY) {
+            for (i = 0; i < wre.length; i++) {
+                var processed = {};
+                processed.name = wre[i].name;
+                processed.amount = wre[i].amount;
+                processed.dateIncurred = new Date(current.getTime());
+                breakdown.push(processed);
+            }
+        }
+
+        current.setDate(current.getDate() + 1);
     }
-
-    console.log(new Date(startTime));
-    console.log(new Date(endTime));
 
     return breakdown;
 };
 
-var septemberBreakdown = processor.process(
+var breakdown = processor.process(
     config,
     new Date(2016, cal.SEPTEMBER, 1).getTime(), //start dae will be inclusive.
-    new Date(2016, cal.OCTOBER, 1).getTime()); //end date will be exclusive.
+    new Date(2016, cal.NOVEMBER, 1).getTime()); //end date will be exclusive.
 
 //monthlyRecurringExpensesExpected: 1399  * 100,
 //weeklyExpensesExpected: 275  * 100,
@@ -54,7 +64,56 @@ var septemberBreakdown = processor.process(
 // before I approach this complexity, I want to describe the process,
 // which is more complex than the implementation of that process.
 test('monthly expenses are being included', function(t) {
-    t.plan(1);
+    t.plan(34);
 
-    t.equal(septemberBreakdown.length, 8);
+    //console.log(breakdown);
+
+    t.equal(breakdown.length, 11);
+
+    t.equal(breakdown[0].name, 'food');
+    t.equal(breakdown[0].amount, 75 * 100);
+    t.equal(breakdown[0].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, 2).getTime());
+
+    t.equal(breakdown[1].name, 'food');
+    t.equal(breakdown[1].amount, 75 * 100);
+    t.equal(breakdown[1].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, 9).getTime());
+
+    t.equal(breakdown[2].name, 'food');
+    t.equal(breakdown[2].amount, 75 * 100);
+    t.equal(breakdown[2].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, 16).getTime());
+
+    t.equal(breakdown[3].name, 'food');
+    t.equal(breakdown[3].amount, 75 * 100);
+    t.equal(breakdown[3].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, 23).getTime());
+
+    t.equal(breakdown[4].name, 'rent');
+    t.equal(breakdown[4].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
+    t.equal(breakdown[4].amount, 550 * 100);
+
+    t.equal(breakdown[5].name, 'food');
+    t.equal(breakdown[5].amount, 75 * 100);
+    t.equal(breakdown[5].dateIncurred.getTime(), new Date(2016, cal.SEPTEMBER, 30).getTime());
+
+    // OCTOBER
+
+    t.equal(breakdown[6].name, 'food');
+    t.equal(breakdown[6].amount, 75 * 100);
+    t.equal(breakdown[6].dateIncurred.getTime(), new Date(2016, cal.OCTOBER, 7).getTime());
+
+    t.equal(breakdown[7].name, 'food');
+    t.equal(breakdown[7].amount, 75 * 100);
+    t.equal(breakdown[7].dateIncurred.getTime(), new Date(2016, cal.OCTOBER, 14).getTime());
+
+    t.equal(breakdown[8].name, 'food');
+    t.equal(breakdown[8].amount, 75 * 100);
+    t.equal(breakdown[8].dateIncurred.getTime(), new Date(2016, cal.OCTOBER, 21).getTime());
+
+    t.equal(breakdown[9].name, 'rent');
+    t.equal(breakdown[9].amount, 550 * 100);
+    t.equal(breakdown[9].dateIncurred.getTime(), new Date(2016, cal.OCTOBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
+
+    t.equal(breakdown[10].name, 'food');
+    t.equal(breakdown[10].amount, 75 * 100);
+    t.equal(breakdown[10].dateIncurred.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
+
 });
