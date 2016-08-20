@@ -33,3 +33,5 @@ I've pretty much solved the UI potential and debugging capability issue in my la
 Once I have a steady flow of data, next will be the output in a more human readable format like HTML.
 
 Testing email, for sha trail in case I lose local repo and someone changes history during that time since the repo is public.
+
+why isnt this working.
