@@ -1,6 +1,7 @@
 function PayrollCallendar(config) {
 
     var that = this;
+    var cal = require('./calendar');
 
     function checkTime(time) {
         if (time < config.firstPayDateTime) {
@@ -28,15 +29,8 @@ function PayrollCallendar(config) {
     }
 
     function dayDiff(startTime, endTime) {
-        var start = new Date(startTime);
-        var end = new Date(endTime);
-        var diff = 0;
-
-        while (start.getTime() < end.getTime()) {
-            diff += 1;
-            start.setDate(start.getDate() + 1);
-        }
-
+        var diffMs = endTime - startTime;
+        var diff = diffMs / cal.UTC_DAY_MILLISECONDS;
         return diff;
     }
 

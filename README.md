@@ -14,6 +14,9 @@ To receive income.
 ### Biweekly Income
 Income accrued on a 14 day interval determined by an initial start date. Biweekly income is detailed in docs/README.md under the **Income - Accruals** section.
 
+### Day
+More formally known as a `UTC day` is a constant 86,400 seconds or 86,400,000 milliseconds.
+
 ### Net Income
 Income after expenses.
 
