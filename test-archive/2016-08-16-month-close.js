@@ -35,6 +35,7 @@ test('profits and losses for august 2016', function(t) {
             I'm going to have to wait until september for an oil change even though I'm past 3k miles today.
             { name: 'full synthetic oil change',   amount: 100     * 100}
             */
+            { name: 'other...', amount: 200 * 100 }
         ],
         timeRange: {
             startTime: new Date(2016, 7, 16).getTime(),
@@ -53,5 +54,5 @@ test('profits and losses for august 2016', function(t) {
 
     console.log(netIncome);
 
-    t.equal(netIncome, 95, "august 2016 net income: $" + (netIncome) / 100);
+    t.equal(netIncome, -19905, "august 2016 net income: $" + (netIncome) / 100);
 });
