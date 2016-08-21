@@ -6,6 +6,7 @@ function MonthlyTotals() {
         monthSummary.items = [];
         monthSummary.net = 0;
 
+        var weekSummary;
         var weekTotals;
         var weekTotalsIndex;
 
@@ -15,8 +16,8 @@ function MonthlyTotals() {
         var currentMonth;
 
         for (weekTotalsIndex = 0; weekTotalsIndex < weeklyTotals.length; weekTotalsIndex++) {
-            weekTotals = weeklyTotals[weekTotalsIndex].items;
-            firstWeeksItem = weekTotals[0];
+            weekSummary = weeklyTotals[weekTotalsIndex];
+            firstWeeksItem = weekSummary.items[0];
 
             currentMonth = firstWeeksItem.date.getMonth();
 
@@ -28,8 +29,8 @@ function MonthlyTotals() {
                 lastMonth = currentMonth;
             }
 
-            monthSummary.net += weeklyTotals[weekTotalsIndex].net;
-            monthSummary.items.push(weekTotals);
+            monthSummary.net += weekSummary.net;
+            monthSummary.items.push(weekSummary);
         }
 
         monthlyTotals.push(monthSummary);

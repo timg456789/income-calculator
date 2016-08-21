@@ -242,25 +242,35 @@ test('aggregation of income and expenses by week', function(t) {
 var totalsForMonth = monthlyTotals.getMonthlyTotals(weeklyTotals);
 
 test('aggregation of income and expenses by month', function(t) {
-    t.plan(14);
+    t.plan(23);
     t.equal(totalsForMonth.length, 2);
 
     t.equal(totalsForMonth[0].items.length, 5);
-    t.equal(totalsForMonth[0].net, 2680 * 100);
+    t.equal(totalsForMonth[0].net, 2680 * 100, 'september net income');
 
-    t.equal(totalsForMonth[0].items[0].length, 2);
-    t.equal(totalsForMonth[0].items[1].length, 1);
-    t.equal(totalsForMonth[0].items[2].length, 3);
-    t.equal(totalsForMonth[0].items[3].length, 1);
-    t.equal(totalsForMonth[0].items[4].length, 3);
+    t.equal(totalsForMonth[0].items[0].items.length, 2);
+    t.equal(totalsForMonth[0].items[0].net, 1260 * 100, 'september week 1 net income');
+    t.equal(totalsForMonth[0].items[1].items.length, 1);
+    t.equal(totalsForMonth[0].items[1].net, -75 * 100, 'september week 2 net income');
+    t.equal(totalsForMonth[0].items[2].items.length, 3);
+    t.equal(totalsForMonth[0].items[2].net, 860 * 100, 'september week 3 net income');
+    t.equal(totalsForMonth[0].items[3].items.length, 1);
+    t.equal(totalsForMonth[0].items[3].net, -75 * 100, 'september week 4 net income');
+    t.equal(totalsForMonth[0].items[4].items.length, 3);
+    t.equal(totalsForMonth[0].items[4].net, 710 * 100), 'september week 5 net income';
+
 
     t.equal(totalsForMonth[1].items.length, 4);
-    t.equal(totalsForMonth[1].net, 1820 * 100);
+    t.equal(totalsForMonth[1].net, 1820 * 100, 'october net income');
 
-    t.equal(totalsForMonth[1].items[0].length, 1);
-    t.equal(totalsForMonth[1].items[1].length, 2);
-    t.equal(totalsForMonth[1].items[2].length, 1);
-    t.equal(totalsForMonth[1].items[3].length, 3);
+    t.equal(totalsForMonth[1].items[0].items.length, 1);
+    t.equal(totalsForMonth[1].items[0].net, -75 * 100, 'october week 1 net income');
+    t.equal(totalsForMonth[1].items[1].items.length, 2);
+    t.equal(totalsForMonth[1].items[1].net, 1260 * 100, 'october week 2 net income');
+    t.equal(totalsForMonth[1].items[2].items.length, 1);
+    t.equal(totalsForMonth[1].items[2].net, -75 * 100, 'october week 3 net income');
+    t.equal(totalsForMonth[1].items[3].items.length, 3);
+    t.equal(totalsForMonth[1].items[3].net, 710 * 100, 'october week 4 net income');
 
 });
 
