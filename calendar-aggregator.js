@@ -13,7 +13,10 @@ function CalendarAggregator() {
     this.getWeeklyTotals = function(breakdown) {
         var weeklyTotals = [];
         var i;
-        var week = [];
+
+        var weekSummary = {};
+        weekSummary.items = [];
+
         var item;
         var lastStartWeek = this.getWeekStartForMonth(breakdown[0].date.getTime());
         var currentStartWeek;
@@ -22,15 +25,16 @@ function CalendarAggregator() {
             item = breakdown[i];
             currentStartWeek = this.getWeekStartForMonth(item.date.getTime());
             if (lastStartWeek.getDate() !== currentStartWeek.getDate()) {
-                weeklyTotals.push(week);
-                week = [];
+                weeklyTotals.push(weekSummary);
+                weekSummary = {};
+                weekSummary.items = [];
                 lastStartWeek = currentStartWeek;
             }
 
-            week.push(item);
+            weekSummary.items.push(item);
         }
 
-        weeklyTotals.push(week);
+        weeklyTotals.push(weekSummary);
 
         return weeklyTotals;
     };
@@ -44,11 +48,11 @@ function CalendarAggregator() {
 
         var firstWeeksItem;
 
-        var lastMonth = weeklyTotals[0][0].date.getMonth();
+        var lastMonth = weeklyTotals[0].items[0].date.getMonth();
         var currentMonth;
 
         for (weekTotalsIndex = 0; weekTotalsIndex < weeklyTotals.length; weekTotalsIndex++) {
-            weekTotals = weeklyTotals[weekTotalsIndex];
+            weekTotals = weeklyTotals[weekTotalsIndex].items;
             firstWeeksItem = weekTotals[0];
 
             currentMonth = firstWeeksItem.date.getMonth();
