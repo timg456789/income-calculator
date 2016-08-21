@@ -125,7 +125,8 @@ test('breakdown of income and expenses for a time period', function(t) {
 var weeklyTotals = calendarAggregator.getWeeklyTotals(breakdown);
 
 test('aggregation of income and expenses by week', function(t) {
-    t.plan(1);
+    t.plan(2);
 
     t.equal(weeklyTotals.length, 9);
+    t.equal(weeklyTotals[0].length, 2);
 });
