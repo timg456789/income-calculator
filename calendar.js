@@ -1,6 +1,8 @@
+exports.JANUARY = 1;
 exports.MARCH = 2;
 exports.APRIL = 3;
 exports.MAY = 4;
+exports.AUGUST = 7;
 exports.SEPTEMBER = 8;
 exports.OCTOBER = 9;
 exports.NOVEMBER = 10;

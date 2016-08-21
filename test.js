@@ -7,6 +7,9 @@ const netIncomeCalculator = new NetIncomeCalculator();
 const CalendarAggregator = require('./calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
+const MonthlyTotals = require('./monthly-totals');
+const monthlyTotals = new MonthlyTotals();
+
 const config = {
     monthlyRecurringExpenses: [
         { name: 'rent', amount: 550 * 100 }
@@ -236,28 +239,28 @@ test('aggregation of income and expenses by week', function(t) {
 
 });
 
-var monthlyTotals = calendarAggregator.getMonthlyTotals(weeklyTotals);
+var totalsForMonth = monthlyTotals.getMonthlyTotals(weeklyTotals);
 
 test('aggregation of income and expenses by month', function(t) {
     t.plan(14);
-    t.equal(monthlyTotals.length, 2);
+    t.equal(totalsForMonth.length, 2);
 
-    t.equal(monthlyTotals[0].items.length, 5);
-    t.equal(monthlyTotals[0].net, 2680 * 100);
+    t.equal(totalsForMonth[0].items.length, 5);
+    t.equal(totalsForMonth[0].net, 2680 * 100);
 
-    t.equal(monthlyTotals[0].items[0].length, 2);
-    t.equal(monthlyTotals[0].items[1].length, 1);
-    t.equal(monthlyTotals[0].items[2].length, 3);
-    t.equal(monthlyTotals[0].items[3].length, 1);
-    t.equal(monthlyTotals[0].items[4].length, 3);
+    t.equal(totalsForMonth[0].items[0].length, 2);
+    t.equal(totalsForMonth[0].items[1].length, 1);
+    t.equal(totalsForMonth[0].items[2].length, 3);
+    t.equal(totalsForMonth[0].items[3].length, 1);
+    t.equal(totalsForMonth[0].items[4].length, 3);
 
-    t.equal(monthlyTotals[1].items.length, 4);
-    t.equal(monthlyTotals[1].net, 1820 * 100);
+    t.equal(totalsForMonth[1].items.length, 4);
+    t.equal(totalsForMonth[1].net, 1820 * 100);
 
-    t.equal(monthlyTotals[1].items[0].length, 1);
-    t.equal(monthlyTotals[1].items[1].length, 2);
-    t.equal(monthlyTotals[1].items[2].length, 1);
-    t.equal(monthlyTotals[1].items[3].length, 3);
+    t.equal(totalsForMonth[1].items[0].length, 1);
+    t.equal(totalsForMonth[1].items[1].length, 2);
+    t.equal(totalsForMonth[1].items[2].length, 1);
+    t.equal(totalsForMonth[1].items[3].length, 3);
 
 });
 
