@@ -17,7 +17,8 @@ function NetIncomeCalculator() {
                     var processed = {};
                     processed.name = mre[i].name;
                     processed.amount = mre[i].amount;
-                    processed.dateIncurred = new Date(current.getTime());
+                    processed.date = new Date(current.getTime());
+                    processed.type = 'expense';
                     breakdown.push(processed);
                 }
             }
@@ -27,7 +28,8 @@ function NetIncomeCalculator() {
                     var processed = {};
                     processed.name = wre[i].name;
                     processed.amount = wre[i].amount;
-                    processed.dateIncurred = new Date(current.getTime());
+                    processed.date = new Date(current.getTime());
+                    processed.type = 'expense';
                     breakdown.push(processed);
                 }
             }
@@ -38,7 +40,8 @@ function NetIncomeCalculator() {
                     var expense = {};
                     expense.name = potentialOneTimeExpense.name;
                     expense.amount = potentialOneTimeExpense.amount;
-                    expense.dateIncurred = new Date(current.getTime());
+                    expense.date = new Date(current.getTime());
+                    expense.type = 'expense';
                     breakdown.push(expense);
                 }
             }
@@ -67,7 +70,8 @@ function NetIncomeCalculator() {
             var accrual = {};
             accrual.name = 'biweekly income';
             accrual.amount = config.biWeeklyIncome.amount;
-            accrual.dateAccrued = new Date(date.getTime());
+            accrual.date = new Date(date.getTime());
+            accrual.type = 'income';
         }
 
         return accrual;
