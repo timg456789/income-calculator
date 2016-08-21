@@ -125,11 +125,12 @@ test('breakdown of income and expenses for a time period', function(t) {
 var weeklyTotals = calendarAggregator.getWeeklyTotals(breakdown);
 
 test('aggregation of income and expenses by week', function(t) {
-    t.plan(78);
+    t.plan(80);
 
     t.equal(weeklyTotals.length, 9, 'september and october weeks');
 
-    t.equal(weeklyTotals[0].items.length, 2, 'september week 1 income and expenses');
+    t.equal(weeklyTotals[0].items.length, 2, 'september week 1 income and expense transactions');
+    t.equal(weeklyTotals[0].netIncome, 1260 * 100, 'september week 1 net income');
 
     t.equal(weeklyTotals[0].items[0].name, 'food');
     t.equal(weeklyTotals[0].items[0].amount, 75 * 100);
@@ -141,6 +142,8 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[0].items[1].type, 'income');
 
     t.equal(weeklyTotals[1].items.length, 1);
+    t.equal(weeklyTotals[1].netIncome, -75 * 100, 'september week 2 net income');
+
     t.equal(weeklyTotals[1].items[0].name, 'food');
     t.equal(weeklyTotals[1].items[0].amount, 75 * 100);
     t.equal(weeklyTotals[1].items[0].date.getTime(), new Date(2016, cal.SEPTEMBER, 9).getTime());
