@@ -16,7 +16,7 @@ function CalendarAggregator() {
 
         var weekSummary = {};
         weekSummary.items = [];
-        weekSummary.netIncome = 0;
+        weekSummary.net = 0;
 
         var item;
         var lastStartWeek = this.getWeekStartForMonth(breakdown[0].date.getTime());
@@ -29,14 +29,14 @@ function CalendarAggregator() {
                 weeklyTotals.push(weekSummary);
                 weekSummary = {};
                 weekSummary.items = [];
-                weekSummary.netIncome = 0;
+                weekSummary.net = 0;
                 lastStartWeek = currentStartWeek;
             }
 
             if (item.type === 'expense') {
-                weekSummary.netIncome -= item.amount;
+                weekSummary.net -= item.amount;
             } else {
-                weekSummary.netIncome += item.amount;
+                weekSummary.net += item.amount;
             }
 
             weekSummary.items.push(item);
