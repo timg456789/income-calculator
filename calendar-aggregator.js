@@ -6,7 +6,7 @@ function CalendarAggregator() {
         if (startWeekDate < 1) {
             startWeekDate = 1;
         }
-        date.setDate(startWeekDate)
+        date.setDate(startWeekDate);
         return date;
     };
 
