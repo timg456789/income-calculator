@@ -37,6 +37,32 @@ function CalendarAggregator() {
 
     this.getMonthlyTotals = function(weeklyTotals) {
         var monthlyTotals = [];
+        var month = [];
+
+        var weekTotals;
+        var weekTotalsIndex;
+
+        var firstWeeksItem;
+
+        var lastMonth = weeklyTotals[0][0].date.getMonth();
+        var currentMonth;
+
+        for (weekTotalsIndex = 0; weekTotalsIndex < weeklyTotals.length; weekTotalsIndex++) {
+            weekTotals = weeklyTotals[weekTotalsIndex];
+            firstWeeksItem = weekTotals[0];
+
+            currentMonth = firstWeeksItem.date.getMonth();
+
+            if (currentMonth !== lastMonth) {
+                monthlyTotals.push(month);
+                month = [];
+                lastMonth = currentMonth;
+            }
+
+            month.push(weekTotals);
+        }
+
+        monthlyTotals.push(month);
 
         return monthlyTotals;
     };
