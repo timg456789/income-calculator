@@ -203,19 +203,17 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[7][0].type, 'expense');
 
     t.equal(weeklyTotals[8].length, 3);
-    t.equal(breakdown[14].name, 'rent');
-    t.equal(breakdown[14].amount, 550 * 100);
-    t.equal(breakdown[14].date.getTime(), new Date(2016, cal.OCTOBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
-    t.equal(breakdown[14].type, 'expense');
-
-    t.equal(breakdown[15].name, 'food');
-    t.equal(breakdown[15].amount, 75 * 100);
-    t.equal(breakdown[15].date.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
-    t.equal(breakdown[15].type, 'expense');
-
-    t.equal(breakdown[16].name, 'biweekly income');
-    t.equal(breakdown[16].amount, 1335 * 100);
-    t.equal(breakdown[16].date.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
-    t.equal(breakdown[16].type, 'income');
+    t.equal(weeklyTotals[8][0].name, 'rent');
+    t.equal(weeklyTotals[8][0].amount, 550 * 100);
+    t.equal(weeklyTotals[8][0].date.getTime(), new Date(2016, cal.OCTOBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
+    t.equal(weeklyTotals[8][0].type, 'expense');
+    t.equal(weeklyTotals[8][1].name, 'food');
+    t.equal(weeklyTotals[8][1].amount, 75 * 100);
+    t.equal(weeklyTotals[8][1].date.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
+    t.equal(weeklyTotals[8][1].type, 'expense');
+    t.equal(weeklyTotals[8][2].name, 'biweekly income');
+    t.equal(weeklyTotals[8][2].amount, 1335 * 100);
+    t.equal(weeklyTotals[8][2].date.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
+    t.equal(weeklyTotals[8][2].type, 'income');
 
 });
