@@ -241,19 +241,19 @@ var monthlyTotals = calendarAggregator.getMonthlyTotals(weeklyTotals);
 test('aggregation of income and expenses by month', function(t) {
     t.plan(12);
     t.equal(monthlyTotals.length, 2);
-    t.equal(monthlyTotals[0].length, 5);
-    t.equal(monthlyTotals[1].length, 4);
+    t.equal(monthlyTotals[0].items.length, 5);
+    t.equal(monthlyTotals[1].items.length, 4);
 
-    t.equal(monthlyTotals[0][0].length, 2);
-    t.equal(monthlyTotals[0][1].length, 1);
-    t.equal(monthlyTotals[0][2].length, 3);
-    t.equal(monthlyTotals[0][3].length, 1);
-    t.equal(monthlyTotals[0][4].length, 3);
+    t.equal(monthlyTotals[0].items[0].length, 2);
+    t.equal(monthlyTotals[0].items[1].length, 1);
+    t.equal(monthlyTotals[0].items[2].length, 3);
+    t.equal(monthlyTotals[0].items[3].length, 1);
+    t.equal(monthlyTotals[0].items[4].length, 3);
 
-    t.equal(monthlyTotals[1][0].length, 1);
-    t.equal(monthlyTotals[1][1].length, 2);
-    t.equal(monthlyTotals[1][2].length, 1);
-    t.equal(monthlyTotals[1][3].length, 3);
+    t.equal(monthlyTotals[1].items[0].length, 1);
+    t.equal(monthlyTotals[1].items[1].length, 2);
+    t.equal(monthlyTotals[1].items[2].length, 1);
+    t.equal(monthlyTotals[1].items[3].length, 3);
 
 });
 

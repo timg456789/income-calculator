@@ -1,20 +1,23 @@
 # Income Calculator
 
-Responsible for projecting net income. Net Income calculations are built on four core pieces:
+Responsible for projecting net income with the following transaction types:
 
  1. biweekly income
  2. weekly recurring expenses
  3. monthly recurring expenses
  4. one-time expenses
-
-These core pieces provide a list of expenses incurred and income accruals with:
-
- 1. name
- 2. amount
- 3. type: income or expense
- 4. date
  
-This is essentially a system of debits (expenses) and credits(accruals). It provides complete transparency into the projections. With a breakdown of each type of transaction, the transactions get grouped by week (for the month), then month (for weeks in the month). This allows a budget to be put onto a calendar with totals for each week and a grand total for the month. Groups are exclusive for the month. When a week spans two months, some transactions will be shown in the first part of the week for one month and the rest in the second part of the week for the following month. Transaction exclusivity for a week, prevents overlap for the week and allows totals to be made for a month, which is the core of a budget. This allows the groupings to continually be accumulated even into a yearly total without any historical knowledge.
+ 
+Starting with an income configuration with a name and amount for each transction type, a projection is performed from a start and end date. The result of the projection is a detailed breakdown of:
+
+ - name
+ - amount
+ - type: income or expense
+ - date
+ 
+In only **three minutes** one can enter their income and expense transactions to project a budget for an entire year through weekly, monthly and one time expenses. From here one can review the detailed income and expense transactions or view them in a calendar report which summarizes weekly totals and monthly net income.
+
+Weekly totals only take into account the days in the week for the month being considered. For example if a week spans across september and october, portions of the week's transactions will be in september and portions of the week's transactions will be in october. No transaction in the week will overlap and be repeated in both september and october. This methodology supports transparent monthly totals. 
 
 ## Glossary
 
@@ -27,11 +30,14 @@ Income accrued on a 14 day interval determined by an initial start date. Biweekl
 ### Day
 More formally known as a `UTC day` is a constant 86,400 seconds or 86,400,000 milliseconds.
 
+### Monthly Recurring Expense (MRE)
+An expense that is incurred every calendar month on a specific day. MRE's are incurred on the 28th by default.
+
 ### Net Income
 Income after expenses.
 
-### Monthly Recurring Expense (MRE)
-An expense that is incurred every calendar month. MRE's are incurred on the 28th by default.
+### Transaction
+The action of incurring an expense or accruing income.
 
 ### Weekly Recurring Expense (WRE)
 An expense that is incurred every seven days. WRE's are incurred on Friday's by default.
