@@ -35,6 +35,12 @@ function CalendarAggregator() {
         return weeklyTotals;
     };
 
+    this.getMonthlyTotals = function(weeklyTotals) {
+        var monthlyTotals = [];
+
+        return monthlyTotals;
+    };
+
 }
 
 module.exports = CalendarAggregator;

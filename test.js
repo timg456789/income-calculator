@@ -217,3 +217,11 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[8][2].type, 'income');
 
 });
+
+var monthlyTotals = calendarAggregator.getMonthlyTotals(weeklyTotals);
+
+test('aggregation of income and expenses by month', function(t) {
+    t.plan(1);
+    
+    t.equal(monthlyTotals.length, 2);
+});
