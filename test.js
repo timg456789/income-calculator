@@ -237,4 +237,6 @@ test('aggregation of income and expenses by month', function(t) {
     t.equal(monthlyTotals[1][2].length, 1);
     t.equal(monthlyTotals[1][3].length, 3);
 
+    console.log(monthlyTotals);
+
 });
