@@ -166,7 +166,7 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[2].items[2].type, 'expense');
 
     t.equal(weeklyTotals[3].items.length, 1);
-    t.equal(weeklyTotals[3].net, -75 * 100);
+    t.equal(weeklyTotals[3].net, -75 * 100, 'september week 4 net income');
 
     t.equal(weeklyTotals[3].items[0].name, 'food');
     t.equal(weeklyTotals[3].items[0].amount, 75 * 100);
@@ -174,7 +174,7 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[3].items[0].type, 'expense');
 
     t.equal(weeklyTotals[4].items.length, 3);
-    t.equal(weeklyTotals[4].net, 710 * 100);
+    t.equal(weeklyTotals[4].net, 710 * 100), 'september week 5 net income';
 
     t.equal(weeklyTotals[4].items[0].name, 'rent');
     t.equal(weeklyTotals[4].items[0].date.getTime(), new Date(2016, cal.SEPTEMBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
@@ -190,7 +190,7 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[4].items[2].type, 'income');
 
     t.equal(weeklyTotals[5].items.length, 1);
-    t.equal(weeklyTotals[5].net, -75 * 100);
+    t.equal(weeklyTotals[5].net, -75 * 100, 'october week 1 net income');
 
     t.equal(weeklyTotals[5].items[0].name, 'food');
     t.equal(weeklyTotals[5].items[0].amount, 75 * 100);
@@ -198,7 +198,7 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[5].items[0].type, 'expense');
 
     t.equal(weeklyTotals[6].items.length, 2);
-    t.equal(weeklyTotals[6].net, 1260 * 100);
+    t.equal(weeklyTotals[6].net, 1260 * 100, 'october week 2 net income');
 
     t.equal(weeklyTotals[6].items[0].name, 'food');
     t.equal(weeklyTotals[6].items[0].amount, 75 * 100);
@@ -211,7 +211,7 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[6].items[1].type, 'income');
 
     t.equal(weeklyTotals[7].items.length, 1);
-    t.equal(weeklyTotals[7].net, -75 * 100);
+    t.equal(weeklyTotals[7].net, -75 * 100, 'october week 3 net income');
 
     t.equal(weeklyTotals[7].items[0].name, 'food');
     t.equal(weeklyTotals[7].items[0].amount, 75 * 100);
@@ -219,7 +219,7 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[7].items[0].type, 'expense');
 
     t.equal(weeklyTotals[8].items.length, 3);
-    t.equal(weeklyTotals[8].net, 710 * 100);
+    t.equal(weeklyTotals[8].net, 710 * 100, 'october week 4 net income');
 
     t.equal(weeklyTotals[8].items[0].name, 'rent');
     t.equal(weeklyTotals[8].items[0].amount, 550 * 100);
@@ -239,16 +239,20 @@ test('aggregation of income and expenses by week', function(t) {
 var monthlyTotals = calendarAggregator.getMonthlyTotals(weeklyTotals);
 
 test('aggregation of income and expenses by month', function(t) {
-    t.plan(12);
+    t.plan(14);
     t.equal(monthlyTotals.length, 2);
+
     t.equal(monthlyTotals[0].items.length, 5);
-    t.equal(monthlyTotals[1].items.length, 4);
+    t.equal(monthlyTotals[0].net, 2680 * 100);
 
     t.equal(monthlyTotals[0].items[0].length, 2);
     t.equal(monthlyTotals[0].items[1].length, 1);
     t.equal(monthlyTotals[0].items[2].length, 3);
     t.equal(monthlyTotals[0].items[3].length, 1);
     t.equal(monthlyTotals[0].items[4].length, 3);
+
+    t.equal(monthlyTotals[1].items.length, 4);
+    t.equal(monthlyTotals[1].net, 1820 * 100);
 
     t.equal(monthlyTotals[1].items[0].length, 1);
     t.equal(monthlyTotals[1].items[1].length, 2);
@@ -257,8 +261,3 @@ test('aggregation of income and expenses by month', function(t) {
 
 });
 
-test('calculate net income by week', function(t) {
-    t.plan(1);
-
-    t.equal(1, 1);
-});

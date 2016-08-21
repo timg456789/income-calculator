@@ -49,7 +49,9 @@ function CalendarAggregator() {
 
     this.getMonthlyTotals = function(weeklyTotals) {
         var monthlyTotals = [];
-        var month = [];
+        var monthSummary = {};
+        monthSummary.items = [];
+        monthSummary.net = 0;
 
         var weekTotals;
         var weekTotalsIndex;
@@ -66,15 +68,18 @@ function CalendarAggregator() {
             currentMonth = firstWeeksItem.date.getMonth();
 
             if (currentMonth !== lastMonth) {
-                monthlyTotals.push(month);
-                month = [];
+                monthlyTotals.push(monthSummary);
+                monthSummary = {};
+                monthSummary.items = [];
+                monthSummary.net = 0;
                 lastMonth = currentMonth;
             }
 
-            month.push(weekTotals);
+            monthSummary.net += weeklyTotals[weekTotalsIndex].net;
+            monthSummary.items.push(weekTotals);
         }
 
-        monthlyTotals.push(month);
+        monthlyTotals.push(monthSummary);
 
         return monthlyTotals;
     };
