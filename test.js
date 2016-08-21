@@ -222,6 +222,6 @@ var monthlyTotals = calendarAggregator.getMonthlyTotals(weeklyTotals);
 
 test('aggregation of income and expenses by month', function(t) {
     t.plan(1);
-    
+
     t.equal(monthlyTotals.length, 2);
 });
