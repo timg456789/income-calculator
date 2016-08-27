@@ -17,7 +17,8 @@ const EXAMPLE_BUDGET = [
                         "type": "income"
                     }
                 ],
-                "net": 126000
+                "net": 126000,
+                "date": "2016-09-01T00:00:00.000Z"
             },
             {
                 "items": [
@@ -28,7 +29,8 @@ const EXAMPLE_BUDGET = [
                         "type": "expense"
                     }
                 ],
-                "net": -7500
+                "net": -7500,
+                "date": "2016-09-04T00:00:00.000Z"
             },
             {
                 "items": [
@@ -51,7 +53,8 @@ const EXAMPLE_BUDGET = [
                         "type": "expense"
                     }
                 ],
-                "net": 86000
+                "net": 86000,
+                "date": "2016-09-11T00:00:00.000Z"
             },
             {
                 "items": [
@@ -68,7 +71,8 @@ const EXAMPLE_BUDGET = [
                         "type": "expense"
                     }
                 ],
-                "net": -17500
+                "net": -17500,
+                "date": "2016-09-18T00:00:00.000Z"
             },
             {
                 "items": [
@@ -91,7 +95,8 @@ const EXAMPLE_BUDGET = [
                         "type": "income"
                     }
                 ],
-                "net": 71000
+                "net": 71000,
+                "date": "2016-09-25T00:00:00.000Z"
             }
         ],
         "net": 258000
@@ -108,7 +113,8 @@ const EXAMPLE_BUDGET = [
                         "type": "expense"
                     }
                 ],
-                "net": -7500
+                "net": -7500,
+                "date": "2016-10-02T00:00:00.000Z"
             },
             {
                 "items": [
@@ -125,7 +131,8 @@ const EXAMPLE_BUDGET = [
                         "type": "income"
                     }
                 ],
-                "net": 126000
+                "net": 126000,
+                "date": "2016-10-09T00:00:00.000Z"
             },
             {
                 "items": [
@@ -142,7 +149,8 @@ const EXAMPLE_BUDGET = [
                         "type": "expense"
                     }
                 ],
-                "net": -17500
+                "net": -17500,
+                "date": "2016-10-16T00:00:00.000Z"
             },
             {
                 "items": [
@@ -165,28 +173,50 @@ const EXAMPLE_BUDGET = [
                         "type": "income"
                     }
                 ],
-                "net": 71000
+                "net": 71000,
+                "date": "2016-10-23T00:00:00.000Z"
             }
         ],
         "net": 172000
     }
 ];
 
+$(document).ready(load);
+
+function load() {
+    var months = EXAMPLE_BUDGET.length;
+    for (var monthIndex = 0; monthIndex < months; monthIndex++) {
+        var month = EXAMPLE_BUDGET[monthIndex];
+        month.date = new Date(month.date);
+        var monthDescrip =
+            month.date.getFullYear() +
+            '-' +
+            month.date.getMonth() +
+            ' net: ' + month.net / 100;
+        $('#months-container').append('<div class="month-heading">' + monthDescrip + '</div>' +
+            '<div class="items-container-for-month" id="items-container-for-month-' + new Date(month.date).getMonth() + '"></div>');
+
+        var monthTarget = '#items-container-for-month-' + new Date(month.date).getMonth();
+
+        for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
+            var week = month.items[weekInMonth]
 
 
-var months = EXAMPLE_BUDGET.length;
-for (var monthIndex = 0; monthIndex < months; monthIndex++) {
-    var month = EXAMPLE_BUDGET[monthIndex];
-    console.log(month.date + ' net: ' + month.net / 100);
+            $(monthTarget).append('<div class="week-heading">week of ' + week.date + ' net: ' + week.net/100 + '</div>');
 
-    for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
-        var week = month.items[weekInMonth]
-        console.log('week net: ' + week.net / 100);
-        console.log(week.items.length);
+            for (var transactionInMonth = 0; transactionInMonth < week.items.length; transactionInMonth++) {
+                var transaction = week.items[transactionInMonth];
 
-        for (var transactionInMonth = 0; transactionInMonth < week.items.length; transactionInMonth++) {
-            var transaction = week.items[transactionInMonth];
-            console.log(transaction.name);
+                var transactionView =
+                    '<div>' +
+                    transaction.name + ' - ' +
+                    new Date(transaction.date).toISOString() + ': ' +
+                    '$' + (transaction.amount / 100) +
+                    '</div>';
+
+
+               $(monthTarget).append(transactionView);
+            }
         }
     }
 }
