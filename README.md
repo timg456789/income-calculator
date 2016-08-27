@@ -17,7 +17,15 @@ Starting with an income configuration with a name and amount for each transction
  
 In only **three minutes** one can enter their income and expense transactions to project a budget for an entire year through weekly, monthly and one time expenses. From here one can review the detailed income and expense transactions or view them in a calendar report which summarizes weekly totals and monthly net income.
 
-Weekly totals only take into account the days in the week for the month being considered. For example if a week spans across september and october, portions of the week's transactions will be in september and portions of the week's transactions will be in october. No transaction in the week will overlap and be repeated in both september and october. This methodology supports transparent monthly totals. 
+Weekly totals only take into account the days in the week for the month being considered. For example if a week spans across september and october, portions of the week's transactions will be in september and portions of the week's transactions will be in october. No transaction in the week will overlap and be repeated in both september and october. This methodology supports transparent monthly totals.
+
+## Unsupported Expense Schedules
+
+### Greater Than One Month
+Expense schedules that are over a month are best handled by breaking down the expense to a month or as a one-time expense. For example vehicle registration is done once per year, this should be listed as a one-time expense per year. Oil changes can vary and can be broken down either by week or by month. For example if an oil change is needed once every two months and costs $90, budget $45 per month. Handling expenses this way reinforces good saving habits by avoiding incurring the full cost all at once.
+
+### Interest Bearing Expenses
+Currently the best option is to use an external payment calculator and plug in the first payment amount as recurring weekly or monthly. One can even document the precise amounts as one-time payments.
 
 ## Glossary
 
@@ -47,15 +55,9 @@ Payment of goods or services.
 
 ## Roadmap
 
-I'm one test away from having the data for my calendar. I'm not sure if I want to bother with a UI anymore. I really need to strongly consider what I want from it. Do I want a fancy page to show off my work? Do I want an interface for data entry? Do I want accessibility to support decision making? I strongly need to think about it, otherwise I can't justify any investment in any architecture. I dabbled in what I have and I'm getting nowhere, because I don't know what the needs are.
+Two features I want from usage:
 
-The more I think about it, I may just say screw the whole web server, setup a static page in s3 then setup three endpoints in api gateway with lambda functions:
- - view config
- - create/update config
- - process config
- 
- Sure learning express wouldn't be bad, but I want maximum return on any investment made. I want a solution to my problem, not a solution to any problem. It would really be silly to create a web server for my current needs. The complexity isn't justified.
- 
- API gateway gives me security, simplicity, and topped onto s3 reliability. All I need is a little investment to create/deploy the API gateway/lambda stack.
- 
- I don't want to manage a web server. I want to write tests and make them pass for processes not web servers. If I use a web server I'm going to have to test it's and that's a shit load of code. I can't provide that level of assurance without sacrificing on the core processes and I'll start to take short-cuts.
+1. ability to override the default date for monthly recurring expenses e.g. what's the expense spread like if insurance is paid on the 25th?
+2. abiliity to view net income across multiple months e.g what's my yearly net income?
+
+Before deliver I want is to nail down my process, then deploy it in a REST API. I want the API to be able to scale massively and be highly reliable. Then I will just build a few HTML pages to connect to that API in a rock solid web server. I'm talking like static content for the web server. Effectively just a CDN would be optimal. No fragile web server architecture. Instead I want durable microservices.
