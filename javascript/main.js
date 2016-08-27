@@ -171,9 +171,18 @@ const EXAMPLE_BUDGET = [
 ];
 
 var months = EXAMPLE_BUDGET.length;
-var weeksInFirstMonth = EXAMPLE_BUDGET[0].items.length;
-var itemsInFirstWeekOfFirstMonth = EXAMPLE_BUDGET[0].items[0].items.length;
+for (var monthIndex = 0; monthIndex < months; monthIndex++) {
+    var month = EXAMPLE_BUDGET[monthIndex];
+    console.log('monthIndex net: ' + month.net / 100);
 
-console.log(months);
-console.log(weeksInFirstMonth);
-console.log(itemsInFirstWeekOfFirstMonth);
+    for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
+        var week = month.items[weekInMonth]
+        console.log('week net: ' + week.net / 100);
+        console.log(week.items.length);
+
+        for (var transactionInMonth = 0; transactionInMonth < week.items.length; transactionInMonth++) {
+            var transaction = week.items[transactionInMonth];
+            console.log(transaction.name);
+        }
+    }
+}
