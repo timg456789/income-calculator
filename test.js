@@ -161,7 +161,7 @@ test('aggregation of income and expenses by week', function(t) {
 var totalsForMonth = monthlyTotals.getMonthlyTotals(weeklyTotals);
 
 test('aggregation of income and expenses by month', function(t) {
-    t.plan(25);
+    t.plan(27);
     t.equal(totalsForMonth.length, 2);
 
     //console.log(JSON.stringify(totalsForMonth[0], 0, 4));
@@ -172,9 +172,12 @@ test('aggregation of income and expenses by month', function(t) {
 
     t.equal(totalsForMonth[0].items[0].items.length, 2);
     t.equal(totalsForMonth[0].items[0].net, 1260 * 100, 'september week 1 net income');
+    t.equal(totalsForMonth[0].items[0].date.getTime(), new Date(2016, cal.SEPTEMBER, 1).getTime());
 
     t.equal(totalsForMonth[0].items[1].items.length, 1);
     t.equal(totalsForMonth[0].items[1].net, -75 * 100, 'september week 2 net income');
+    t.equal(totalsForMonth[0].items[1].date.getTime(), new Date(2016, cal.SEPTEMBER, 4).getTime());
+
     t.equal(totalsForMonth[0].items[2].items.length, 3);
     t.equal(totalsForMonth[0].items[2].net, 860 * 100, 'september week 3 net income');
     t.equal(totalsForMonth[0].items[3].items.length, 2);
