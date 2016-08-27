@@ -12,8 +12,9 @@ function NetIncomeCalculator() {
         var current = new Date(startTime);
         while (current.getTime() < endTime) {
 
-            if (current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH) {
-                for (var i = 0; i < mre.length; i++) {
+            for (var i = 0; i < mre.length; i++) {
+                if ((current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
+                    (mre[i].date && mre[i].date.getDate() === current.getDate())) {
                     var processed = {};
                     processed.name = mre[i].name;
                     processed.amount = mre[i].amount;
