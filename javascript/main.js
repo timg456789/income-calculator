@@ -1,5 +1,6 @@
 const EXAMPLE_BUDGET = [
     {
+        "date": "2016-09-01T00:00:00.000Z",
         "items": [
             {
                 "items": [
@@ -96,6 +97,7 @@ const EXAMPLE_BUDGET = [
         "net": 258000
     },
     {
+        "date": "2016-10-01T00:00:00.000Z",
         "items": [
             {
                 "items": [
@@ -170,10 +172,12 @@ const EXAMPLE_BUDGET = [
     }
 ];
 
+
+
 var months = EXAMPLE_BUDGET.length;
 for (var monthIndex = 0; monthIndex < months; monthIndex++) {
     var month = EXAMPLE_BUDGET[monthIndex];
-    console.log('monthIndex net: ' + month.net / 100);
+    console.log(month.date + ' net: ' + month.net / 100);
 
     for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
         var week = month.items[weekInMonth]
