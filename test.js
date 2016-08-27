@@ -164,7 +164,7 @@ test('aggregation of income and expenses by month', function(t) {
     t.plan(27);
     t.equal(totalsForMonth.length, 2);
 
-    console.log(JSON.stringify(totalsForMonth[0], 0, 4));
+    //console.log(JSON.stringify(totalsForMonth, 0, 4));
 
     t.equal(totalsForMonth[0].items.length, 5);
     t.equal(totalsForMonth[0].net, 2580 * 100, 'september net income');
