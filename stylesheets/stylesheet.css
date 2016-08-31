@@ -2,9 +2,13 @@ html, body {
   height: 100%;
 }
 
+#months-container {
+    height: 80%;
+}
+
 body {
-  font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
-  font-size: 1em;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: .9em;
   line-height: 1.5;
 }
 
@@ -22,10 +26,34 @@ body {
     border-bottom: 2px solid #2aab2a;
 }
 
-.month-heading {
+.week-heading {
+    font-size: 1.1em;
+    margin-bottom: .5%;
+    border-bottom: 1px solid #999;
+}
+
+.transactions-for-week {
+    border: 1px solid black;
+    min-height: 150px;
+}
+
+.transaction-view > .amount {
+    text-align: right;
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.day-view {
+    width: 13%;
+    float: left;
+    min-height: 1px;
+}
+
+.day-view-heading {
+    text-align: center;
+    border-bottom: 1px solid black;
 }
 
 .week-heading {
-    margin-bottom: .5%;
-    border-bottom: 1px solid #999;
+    clear: left;
 }

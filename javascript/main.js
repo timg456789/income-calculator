@@ -183,39 +183,77 @@ const EXAMPLE_BUDGET = [
 
 $(document).ready(load);
 
-function load() {
+const DAYS = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
+
+function getTransactionView (transaction) {
+    var transactionView =
+        '<div class="transaction-view ' + transaction.type + '">' +
+            '<div class="name">' + transaction.name + '</div>' +
+            '<div class="amount">$' + transaction.amount/100 + '</div>' +
+        '</div>';
+
+    return transactionView;
+}
+
+function build() {
     var months = EXAMPLE_BUDGET.length;
     for (var monthIndex = 0; monthIndex < months; monthIndex++) {
         var month = EXAMPLE_BUDGET[monthIndex];
         month.date = new Date(month.date);
+
         var monthDescrip =
             month.date.getFullYear() +
             '-' +
             month.date.getMonth() +
             ' net: ' + month.net / 100;
+
         $('#months-container').append('<div class="month-heading">' + monthDescrip + '</div>' +
             '<div class="items-container-for-month" id="items-container-for-month-' + new Date(month.date).getMonth() + '"></div>');
+    }
+}
+
+function load() {
+    build();
+    var months = EXAMPLE_BUDGET.length;
+    for (var monthIndex = 0; monthIndex < months; monthIndex++) {
+        var month = EXAMPLE_BUDGET[monthIndex];
+        month.date = new Date(month.date);
 
         var monthTarget = '#items-container-for-month-' + new Date(month.date).getMonth();
 
         for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
-            var week = month.items[weekInMonth]
+            var week = month.items[weekInMonth];
+            week.date = new Date(week.date);
 
+            // Week net - move to its own column.
+            // ' net: ' + week.net/100
 
-            $(monthTarget).append('<div class="week-heading">week of ' + week.date + ' net: ' + week.net/100 + '</div>');
+            var dateClassName =  week.date.getFullYear() + '-' + week.date.getMonth() + '-' + week.date.getDate();
 
-            for (var transactionInMonth = 0; transactionInMonth < week.items.length; transactionInMonth++) {
-                var transaction = week.items[transactionInMonth];
+            var transactionsForWeekTarget = 'week-of-' + dateClassName;
+            var dayViewContainer = ('<div class="transactions-for-week ' + transactionsForWeekTarget + ' "></div>');
+            $(monthTarget).append(dayViewContainer);
 
-                var transactionView =
-                    '<div>' +
-                    transaction.name + ' - ' +
-                    new Date(transaction.date).toISOString() + ': ' +
-                    '$' + (transaction.amount / 100) +
-                    '</div>';
+            var currentDate = new Date(week.date);
+            currentDate.setDate(currentDate.getDate() - currentDate.getDay());
 
+            for (var dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek++) {
 
-               $(monthTarget).append(transactionView);
+                var transactionsForDayTarget = 'day-of-' + currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
+                $('.' + transactionsForWeekTarget).append('<div class="day-view ' + transactionsForDayTarget + '"></div>');
+                $('.' + transactionsForDayTarget).append('<div class="day-view-heading">' + DAYS[dayInWeek] + '</div>');
+
+                for (var transactionInWeek = 0; transactionInWeek < week.items.length; transactionInWeek++) {
+                    var transaction = week.items[transactionInWeek];
+                    transaction.date = new Date(transaction.date);
+
+                    if (transaction.date.getDate() == currentDate.getDate()) {
+                        $('.' + transactionsForDayTarget).append(getTransactionView(transaction));
+                    }
+
+                }
+
+                currentDate.setDate(currentDate.getDate() + 1);
             }
         }
     }
