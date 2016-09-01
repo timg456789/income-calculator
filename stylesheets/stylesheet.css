@@ -8,8 +8,7 @@ html, body {
 
 body {
   font-family: Tahoma, Verdana, Arial, sans-serif;
-  font-size: .9em;
-  line-height: 1.5;
+  font-size: 1em;
 }
 
 .projected-budget {
@@ -18,12 +17,14 @@ body {
 }
 
 .items-container-for-month {
+    height: 100%;
 }
 
 .month-heading {
     margin-bottom: 2%;
     font-size: 1.5em;
     border-bottom: 2px solid #2aab2a;
+    clear: both;
 }
 
 .week-heading {
@@ -33,27 +34,10 @@ body {
 }
 
 .transactions-for-week {
-    border: 1px solid black;
-    min-height: 150px;
 }
 
 .transaction-view > .amount {
     text-align: right;
     background-color: cornflowerblue;
     color: white;
-}
-
-.day-view {
-    width: 13%;
-    float: left;
-    min-height: 1px;
-}
-
-.day-view-heading {
-    text-align: center;
-    border-bottom: 1px solid black;
-}
-
-.week-heading {
-    clear: left;
 }

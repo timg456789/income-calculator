@@ -208,10 +208,29 @@ function build() {
             ' net: ' + month.net / 100;
 
         $('#months-container').append('<div class="month-heading">' + monthDescrip + '</div>' +
-            '<div class="items-container-for-month" id="items-container-for-month-' + new Date(month.date).getMonth() + '"></div>');
+            '<div class="items-container-for-month row" id="items-container-for-month-' + month.date.getMonth() + '"></div>');
+
+
+        var monthTarget = '#items-container-for-month-' + month.date.getMonth();
+
+        $(monthTarget).append('<div class="weeks"></div>');
+
+        for (var d = 0; d < 7; d++) {
+            $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1">' + DAYS[d] + '</div>');
+        }
+
+        $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1">Totals</div>');
+
     }
 }
 
+function getLastDayOfMonth(time) {
+    var dt = new Date(time);
+    dt.setMonth(dt.getMonth() + 1);
+    dt.setDate(0);
+
+    return dt;
+}
 function load() {
     build();
     var months = EXAMPLE_BUDGET.length;
@@ -220,6 +239,10 @@ function load() {
         month.date = new Date(month.date);
 
         var monthTarget = '#items-container-for-month-' + new Date(month.date).getMonth();
+
+        //var lastDayOfMonth = getLastDayOfMonth(month.date.getTime()).getDate();
+        //console.log(lastDayOfMonth);
+
 
         for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
             var week = month.items[weekInMonth];
@@ -234,6 +257,7 @@ function load() {
             var dayViewContainer = ('<div class="transactions-for-week ' + transactionsForWeekTarget + ' "></div>');
             $(monthTarget).append(dayViewContainer);
 
+
             var currentDate = new Date(week.date);
             currentDate.setDate(currentDate.getDate() - currentDate.getDay());
 
@@ -241,7 +265,6 @@ function load() {
 
                 var transactionsForDayTarget = 'day-of-' + currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
                 $('.' + transactionsForWeekTarget).append('<div class="day-view ' + transactionsForDayTarget + '"></div>');
-                $('.' + transactionsForDayTarget).append('<div class="day-view-heading">' + DAYS[dayInWeek] + '</div>');
 
                 for (var transactionInWeek = 0; transactionInWeek < week.items.length; transactionInWeek++) {
                     var transaction = week.items[transactionInWeek];
@@ -258,3 +281,7 @@ function load() {
         }
     }
 }
+
+/*
+
+ */
