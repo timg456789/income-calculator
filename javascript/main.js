@@ -185,14 +185,11 @@ $(document).ready(load);
 
 const DAYS = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
 
-function getTransactionView (transaction) {
-    var transactionView =
-        '<div class="transaction-view ' + transaction.type + '">' +
-            '<div class="name">' + transaction.name + '</div>' +
-            '<div class="amount">$' + transaction.amount/100 + '</div>' +
-        '</div>';
-
-    return transactionView;
+function getTransactionView(name, amount, type) {
+    return '<div class="transaction-view ' + type + '">' +
+        '<div class="name">' + name + '</div>' +
+        '<div class="amount">$' + amount/100 + '</div>' +
+    '</div>';
 }
 
 function build() {
@@ -208,29 +205,22 @@ function build() {
             ' net: ' + month.net / 100;
 
         $('#months-container').append('<div class="month-heading">' + monthDescrip + '</div>' +
-            '<div class="items-container-for-month row" id="items-container-for-month-' + month.date.getMonth() + '"></div>');
+            '<div class="items-container-for-month" id="items-container-for-month-' + month.date.getMonth() + '"></div>');
 
 
         var monthTarget = '#items-container-for-month-' + month.date.getMonth();
 
-        $(monthTarget).append('<div class="weeks"></div>');
+        $(monthTarget).append('<div class="weeks row"></div>');
 
         for (var d = 0; d < 7; d++) {
-            $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1">' + DAYS[d] + '</div>');
+            $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1 week-name">' + DAYS[d] + '</div>');
         }
 
-        $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1">Totals</div>');
+        $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1 week-name">Totals</div>');
 
     }
 }
 
-function getLastDayOfMonth(time) {
-    var dt = new Date(time);
-    dt.setMonth(dt.getMonth() + 1);
-    dt.setDate(0);
-
-    return dt;
-}
 function load() {
     build();
     var months = EXAMPLE_BUDGET.length;
@@ -248,15 +238,16 @@ function load() {
             var week = month.items[weekInMonth];
             week.date = new Date(week.date);
 
+            $()
+
             // Week net - move to its own column.
             // ' net: ' + week.net/100
 
             var dateClassName =  week.date.getFullYear() + '-' + week.date.getMonth() + '-' + week.date.getDate();
 
             var transactionsForWeekTarget = 'week-of-' + dateClassName;
-            var dayViewContainer = ('<div class="transactions-for-week ' + transactionsForWeekTarget + ' "></div>');
+            var dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
             $(monthTarget).append(dayViewContainer);
-
 
             var currentDate = new Date(week.date);
             currentDate.setDate(currentDate.getDate() - currentDate.getDay());
@@ -264,20 +255,25 @@ function load() {
             for (var dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek++) {
 
                 var transactionsForDayTarget = 'day-of-' + currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
-                $('.' + transactionsForWeekTarget).append('<div class="day-view ' + transactionsForDayTarget + '"></div>');
+                $('.' + transactionsForWeekTarget).append('<div class="day-view col-xs-1 ' + transactionsForDayTarget + '"></div>');
 
                 for (var transactionInWeek = 0; transactionInWeek < week.items.length; transactionInWeek++) {
                     var transaction = week.items[transactionInWeek];
                     transaction.date = new Date(transaction.date);
 
                     if (transaction.date.getDate() == currentDate.getDate()) {
-                        $('.' + transactionsForDayTarget).append(getTransactionView(transaction));
+                        $('.' + transactionsForDayTarget).append(getTransactionView(transaction.name, transaction.amount, transaction.type));
                     }
 
                 }
 
                 currentDate.setDate(currentDate.getDate() + 1);
             }
+
+            $('.' + transactionsForWeekTarget).append('<div class="day-view col-xs-1">' +
+                getTransactionView('', week.net) +
+            '</div>');
+
         }
     }
 }
