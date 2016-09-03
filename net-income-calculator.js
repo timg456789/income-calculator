@@ -2,80 +2,77 @@ function NetIncomeCalculator() {
 
     const cal = require('./calendar');
     const UtcDay = require('./utc-day');
+    const CalendarIterator = require('./calendar-iterator');
+
     const utcDay = new UtcDay();
+    const calendarIterator = new CalendarIterator();
 
     this.getBreakdown = function(config, startTime, endTime) {
         var breakdown = [];
         var mre = config.monthlyRecurringExpenses;
         var wre = config.weeklyRecurringExpenses;
 
-        var current = new Date(startTime);
-        while (current.getTime() < endTime) {
+        calendarIterator.iterateDaily(startTime, endTime, 1, function (current) {
 
-            for (var i = 0; i < mre.length; i++) {
-                if ((current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
-                    (mre[i].date && mre[i].date.getDate() === current.getDate())) {
-                    var processed = {};
-                    processed.name = mre[i].name;
-                    processed.amount = mre[i].amount;
-                    processed.date = new Date(current.getTime());
-                    processed.type = 'expense';
-                    breakdown.push(processed);
-                }
+            if (current.getDay() !== cal.FRIDAY) {
+                return;
             }
 
-            if (current.getDay() == cal.FRIDAY) {
-                for (var i = 0; i < wre.length; i++) {
-                    var processed = {};
-                    processed.name = wre[i].name;
-                    processed.amount = wre[i].amount;
-                    processed.date = new Date(current.getTime());
-                    processed.type = 'expense';
-                    breakdown.push(processed);
-                }
+            for (var i = 0; i < wre.length; i++) {
+                breakdown.push(
+                    getTransaction(wre[i].name, wre[i].amount, new Date(current), 'expense')
+                );
             }
 
-            for (var i=0; i < config.oneTimeExpenses.length; i++) {
-                var potentialOneTimeExpense = config.oneTimeExpenses[i];
-                if (current.getTime() == potentialOneTimeExpense.dateIncurred.getTime()) {
-                    var expense = {};
-                    expense.name = potentialOneTimeExpense.name;
-                    expense.amount = potentialOneTimeExpense.amount;
-                    expense.date = new Date(current.getTime());
-                    expense.type = 'expense';
-                    breakdown.push(expense);
-                }
-            }
+        });
 
-            var incomeAccrual = getIncomeAccrual(config, current);
-            if (incomeAccrual) {
-                breakdown.push(incomeAccrual);
-            }
+        for (var i = 0; i < mre.length; i++) {
 
-            current.setDate(current.getDate() + 1);
+            calendarIterator.iterateMonthly(mre[i].date.getTime(), endTime, 1, function (current) {
+                    breakdown.push(getTransaction(mre[i].name, mre[i].amount, new Date(current), 'expense'));
+            });
+
         }
 
-        return breakdown;
+        var ote = config.oneTimeExpenses;
+        for (var i=0; i < ote.length; i++) {
+            calendarIterator.iterateDaily(startTime, endTime, 1, function (current) {
+                if (current.getTime() == ote[i].dateIncurred.getTime()) {
+                    breakdown.push(getTransaction(ote[i].name, ote[i].amount, new Date(current), 'expense'));
+                }
+            });
+        }
+
+        var biweeklyStartTime = new Date(startTime);
+        var diffFromFirst = utcDay.getDayDiff(cal.BIWEEKLY_PAY_START_DATE.getTime(), startTime);
+        biweeklyStartTime.setDate(biweeklyStartTime.getDate() - (diffFromFirst % cal.BIWEEKLY_INTERVAL) + cal.BIWEEKLY_INTERVAL);
+
+        calendarIterator.iterateDaily(biweeklyStartTime.getTime(), endTime, cal.BIWEEKLY_INTERVAL, function (current) {
+            breakdown.push(getTransaction('biweekly income', config.biWeeklyIncome.amount, new Date(current), 'income'));
+        });
+
+        return breakdown.sort(sort);
     };
 
-    function getIncomeAccrual(config, date) {
-        var accrual;
-        var diffFromFirstPayDate = utcDay.getDayDiff(
-            cal.BIWEEKLY_PAY_START_DATE.getTime(),
-            date.getTime()
-        );
-
-        var modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
-
-        if (modulusIntervalsFromFirstPayDate === 0) {
-            var accrual = {};
-            accrual.name = 'biweekly income';
-            accrual.amount = config.biWeeklyIncome.amount;
-            accrual.date = new Date(date.getTime());
-            accrual.type = 'income';
+    function sort (transactionA, transactionB) {
+        var a = transactionA;
+        var b = transactionB;
+        if (a.date.getTime() !== b.date.getTime()) {
+            return a.date.getTime() - b.date.getTime();
         }
 
-        return accrual;
+        return a.type.localeCompare(b.type);
+    }
+
+    function getTransaction(name, amount, date, type) {
+        var processed = {};
+
+        processed.name = name;
+        processed.amount = amount;
+        processed.date = date;
+        processed.type = type;
+
+        return processed;
     }
 
 }

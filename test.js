@@ -12,7 +12,7 @@ const monthlyTotals = new MonthlyTotals();
 
 const config = {
     monthlyRecurringExpenses: [
-        { name: 'rent', amount: 550 * 100 },
+        { name: 'rent', amount: 550 * 100, date: new Date(2016, cal.SEPTEMBER, cal.SAFE_LAST_DAY_OF_MONTH) },
         { name: 'utilities', amount: 100 * 100, date: new Date(2016, cal.SEPTEMBER, 20)  }
     ],
     weeklyRecurringExpenses: [
@@ -143,13 +143,13 @@ test('aggregation of income and expenses by week', function(t) {
     t.equal(weeklyTotals[8].items.length, 3);
     t.equal(weeklyTotals[8].net, 710 * 100, 'october week 4 net income');
 
-    t.equal(weeklyTotals[8].items[0].name, 'rent');
-    t.equal(weeklyTotals[8].items[0].amount, 550 * 100);
-    t.equal(weeklyTotals[8].items[0].date.getTime(), new Date(2016, cal.OCTOBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
+    t.equal(weeklyTotals[8].items[0].name, 'food');
+    t.equal(weeklyTotals[8].items[0].amount, 75 * 100);
+    t.equal(weeklyTotals[8].items[0].date.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
     t.equal(weeklyTotals[8].items[0].type, 'expense');
-    t.equal(weeklyTotals[8].items[1].name, 'food');
-    t.equal(weeklyTotals[8].items[1].amount, 75 * 100);
-    t.equal(weeklyTotals[8].items[1].date.getTime(), new Date(2016, cal.OCTOBER, 28).getTime());
+    t.equal(weeklyTotals[8].items[1].name, 'rent');
+    t.equal(weeklyTotals[8].items[1].amount, 550 * 100);
+    t.equal(weeklyTotals[8].items[1].date.getTime(), new Date(2016, cal.OCTOBER, cal.SAFE_LAST_DAY_OF_MONTH).getTime());
     t.equal(weeklyTotals[8].items[1].type, 'expense');
     t.equal(weeklyTotals[8].items[2].name, 'biweekly income');
     t.equal(weeklyTotals[8].items[2].amount, 1335 * 100);
