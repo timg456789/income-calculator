@@ -9,6 +9,8 @@ function getTransactionView(name, amount, type) {
 
 exports.build = function (totalsForMonth) {
 
+    $('#months-container').empty();
+
     var months = totalsForMonth.length;
     for (var monthIndex = 0; monthIndex < months; monthIndex++) {
         var month = totalsForMonth[monthIndex];
@@ -29,10 +31,10 @@ exports.build = function (totalsForMonth) {
         $(monthTarget).append('<div class="weeks row"></div>');
 
         for (var d = 0; d < 7; d++) {
-            $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
+            $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
         }
 
-        $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1 week-name">Totals</div>');
+        $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');
 
     }
 }
@@ -61,7 +63,7 @@ exports.load = function (totalsForMonth) {
             for (var dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek++) {
 
                 var transactionsForDayTarget = 'day-of-' + currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
-                $('.' + transactionsForWeekTarget).append('<div class="day-view col-xs-1 ' + transactionsForDayTarget + '"></div>');
+                $('.' + transactionsForWeekTarget).append('<div class="day-view day-col col-xs-1 ' + transactionsForDayTarget + '"></div>');
 
                 for (var transactionInWeek = 0; transactionInWeek < week.items.length; transactionInWeek++) {
                     var transaction = week.items[transactionInWeek];
@@ -76,8 +78,10 @@ exports.load = function (totalsForMonth) {
                 currentDate.setDate(currentDate.getDate() + 1);
             }
 
-            $('.' + transactionsForWeekTarget).append('<div class="day-view col-xs-1">' +
-                getTransactionView('', week.net) +
+            var transactionNetClass = week.net > 0 ? 'positive' : 'negative'
+
+            $('.' + transactionsForWeekTarget).append('<div class="day-view day-col col-xs-1">' +
+                getTransactionView('', week.net, 'net ' + transactionNetClass) +
                 '</div>');
 
         }

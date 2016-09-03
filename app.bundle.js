@@ -10321,6 +10321,7 @@ return jQuery;
 },{}],8:[function(require,module,exports){
 const $ = require('jquery');
 const calendarView = require('./calendar-view');
+const budgetParser = require('./budget-parser');
 
 const cal = require('income-calculator/calendar');
 const NetIncomeCalculator = require('income-calculator/net-income-calculator');
@@ -10332,7 +10333,7 @@ const calendarAggregator = new CalendarAggregator();
 const MonthlyTotals = require('income-calculator/monthly-totals');
 const monthlyTotals = new MonthlyTotals();
 
-const config = {
+const EXAMPLE_BUDGET = {
     monthlyRecurringExpenses: [
         { name: 'rent', amount: 550 * 100, date: new Date(2016, cal.SEPTEMBER, cal.SAFE_LAST_DAY_OF_MONTH - 1) },
         { name: 'utilities', amount: 100 * 100, date: new Date(2016, cal.SEPTEMBER, 20)  }
@@ -10349,19 +10350,51 @@ const config = {
     ]
 };
 
-var breakdown = netIncomeCalculator.getBreakdown(
-    config,
-    new Date(2016, cal.SEPTEMBER, 1).getTime(), //start is inclusive.
-    new Date(2016, cal.NOVEMBER, 1).getTime()); //end is exclusive.
 
-var weeklyTotals = calendarAggregator.getWeeklyTotals(breakdown);
-var totalsForMonth = monthlyTotals.getMonthlyTotals(weeklyTotals);
 
 $(document).ready(function() {
+    $('#config-input').val(JSON.stringify(EXAMPLE_BUDGET, 0, 4));
+    $('#project').click(function () {
+        project();
+    });
+});
+
+function project() {
+
+    var budget = budgetParser.parse($('#config-input').val());
+
+    var startDate = new Date($('#start-date-input').val());
+    var endDate = new Date($('#end-date-input').val());
+
+    var breakdown = netIncomeCalculator.getBreakdown(
+        budget,
+        startDate.getTime(), //start is inclusive.
+        endDate.getTime()); //end is exclusive.
+
+    var weeklyTotals = calendarAggregator.getWeeklyTotals(breakdown);
+    var totalsForMonth = monthlyTotals.getMonthlyTotals(weeklyTotals);
+
     calendarView.build(totalsForMonth);
     calendarView.load(totalsForMonth);
-});
-},{"./calendar-view":9,"income-calculator/calendar":3,"income-calculator/calendar-aggregator":1,"income-calculator/monthly-totals":4,"income-calculator/net-income-calculator":5,"jquery":7}],9:[function(require,module,exports){
+}
+
+
+
+},{"./budget-parser":9,"./calendar-view":10,"income-calculator/calendar":3,"income-calculator/calendar-aggregator":1,"income-calculator/monthly-totals":4,"income-calculator/net-income-calculator":5,"jquery":7}],9:[function(require,module,exports){
+exports.parse = function (budget) {
+    return JSON.parse(budget, function (k,v) {
+
+        if (v.length === 24) {
+            var endLetter = v.toLowerCase().substr(23, 1);
+            if (endLetter === 'z') {
+                return new Date(v);
+            }
+        }
+
+        return v;
+    });
+}
+},{}],10:[function(require,module,exports){
 const cal = require('income-calculator/calendar');
 
 function getTransactionView(name, amount, type) {
@@ -10372,6 +10405,8 @@ function getTransactionView(name, amount, type) {
 }
 
 exports.build = function (totalsForMonth) {
+
+    $('#months-container').empty();
 
     var months = totalsForMonth.length;
     for (var monthIndex = 0; monthIndex < months; monthIndex++) {
@@ -10393,10 +10428,10 @@ exports.build = function (totalsForMonth) {
         $(monthTarget).append('<div class="weeks row"></div>');
 
         for (var d = 0; d < 7; d++) {
-            $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
+            $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
         }
 
-        $(monthTarget + '>' + '.weeks').append('<div class="col-xs-1 week-name">Totals</div>');
+        $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');
 
     }
 }
@@ -10425,7 +10460,7 @@ exports.load = function (totalsForMonth) {
             for (var dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek++) {
 
                 var transactionsForDayTarget = 'day-of-' + currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
-                $('.' + transactionsForWeekTarget).append('<div class="day-view col-xs-1 ' + transactionsForDayTarget + '"></div>');
+                $('.' + transactionsForWeekTarget).append('<div class="day-view day-col col-xs-1 ' + transactionsForDayTarget + '"></div>');
 
                 for (var transactionInWeek = 0; transactionInWeek < week.items.length; transactionInWeek++) {
                     var transaction = week.items[transactionInWeek];
@@ -10440,8 +10475,10 @@ exports.load = function (totalsForMonth) {
                 currentDate.setDate(currentDate.getDate() + 1);
             }
 
-            $('.' + transactionsForWeekTarget).append('<div class="day-view col-xs-1">' +
-                getTransactionView('', week.net) +
+            var transactionNetClass = week.net > 0 ? 'positive' : 'negative'
+
+            $('.' + transactionsForWeekTarget).append('<div class="day-view day-col col-xs-1">' +
+                getTransactionView('', week.net, 'net ' + transactionNetClass) +
                 '</div>');
 
         }

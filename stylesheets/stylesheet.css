@@ -1,6 +1,10 @@
 body {
   font-family: Tahoma, Verdana, Arial, sans-serif;
-  font-size: 1em;
+  font-size: 1.4em;
+}
+
+#config-input {
+    height: 150px;
 }
 
 .month-heading {
@@ -11,28 +15,40 @@ body {
     clear: both;
 }
 
+.week-name {
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.transaction-view > .name {
+    display: inline-block;
+    float: left;
+}
+
 .transaction-view > .amount {
     text-align: right;
     font-weight: bold;
     padding-right: 3px;
+    box-shadow: 0px 0px 3px #999;
 }
 
-.transaction-view.expense > .amount {
-    background-color: #f2dede;
-    box-shadow: 1px 0 2px #777;
+.transaction-view.expense > .amount,
+.transaction-view.net.negative > .amount {
+    background-color: #ffcccc;
 }
 
-.transaction-view.income > .amount {
-    background-color: #dff0d8;
-    box-shadow: 1px 0 2px #777;
-}
-
-.weeks .week-name {
-    border-bottom: 1px solid black;
+.transaction-view.income > .amount,
+.transaction-view.net.positive > .amount {
+    background-color: #ccffb6;
 }
 
 .day-view {
-    border-bottom: 1px solid black;
+    box-shadow: -1px -1px 2px #888;
     height: 100px;
-    border-right: 1px solid black;
+}
+
+.day-col {
+    width: 12.5%;
+    padding-left: 0px;
+    padding-right: 0px;
 }
