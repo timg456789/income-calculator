@@ -17,3 +17,5 @@ exports.BIWEEKLY_CALENDAR_CONFIG = {
     firstPayDateTime: exports.BIWEEKLY_PAY_START_DATE.getTime(),
     interval: exports.BIWEEKLY_INTERVAL
 };
+
+exports.DAY_NAMES = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
