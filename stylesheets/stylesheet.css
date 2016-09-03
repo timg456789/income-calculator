@@ -7,15 +7,10 @@ body {
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 1.5em;
-    border-bottom: 2px solid #2aab2a;
+    border-bottom: 1px solid #2aab2a;
     clear: both;
 }
 
-.week-heading {
-    font-size: 1.1em;
-    margin-bottom: .5%;
-    border-bottom: 1px solid #999;
-}
 .transaction-view > .amount {
     text-align: right;
     font-weight: bold;

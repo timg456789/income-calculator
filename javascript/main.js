@@ -230,18 +230,9 @@ function load() {
 
         var monthTarget = '#items-container-for-month-' + new Date(month.date).getMonth();
 
-        //var lastDayOfMonth = getLastDayOfMonth(month.date.getTime()).getDate();
-        //console.log(lastDayOfMonth);
-
-
         for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
             var week = month.items[weekInMonth];
             week.date = new Date(week.date);
-
-            $()
-
-            // Week net - move to its own column.
-            // ' net: ' + week.net/100
 
             var dateClassName =  week.date.getFullYear() + '-' + week.date.getMonth() + '-' + week.date.getDate();
 
@@ -277,7 +268,3 @@ function load() {
         }
     }
 }
-
-/*
-
- */
