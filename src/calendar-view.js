@@ -7,6 +7,19 @@ function getTransactionView(name, amount, type) {
         '</div>';
 }
 
+function getMonthContainerId(date) {
+    return 'items-container-for-month-' +
+        date.getFullYear() + '-' +
+        date.getMonth();
+}
+
+function getMonthHeading(month) {
+    return cal.MONTH_NAMES[month.date.getMonth()] +
+        ' ' +
+        month.date.getFullYear() +
+        ': ' + month.net / 100;
+}
+
 exports.build = function (totalsForMonth) {
 
     $('#months-container').empty();
@@ -16,16 +29,10 @@ exports.build = function (totalsForMonth) {
         var month = totalsForMonth[monthIndex];
         month.date = new Date(month.date);
 
-        var monthDescrip =
-            month.date.getFullYear() +
-            '-' +
-            month.date.getMonth() +
-            ' net: ' + month.net / 100;
-
         var monthContainerId = getMonthContainerId(month.date);
 
         $('#months-container').append(
-            '<div class="month-heading">' + monthDescrip + '</div>' +
+            '<div class="month-heading">' + getMonthHeading(month) + '</div>' +
             '<div class="items-container-for-month" id="' +
                 monthContainerId +
             '"></div>');
@@ -36,18 +43,13 @@ exports.build = function (totalsForMonth) {
         $(monthTarget).append('<div class="weeks row"></div>');
 
         for (var d = 0; d < 7; d++) {
-            $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
+            $(monthTarget + '>' + '.weeks').append(
+                '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
         }
 
         $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');
 
     }
-}
-
-function getMonthContainerId(date) {
-    return 'items-container-for-month-' +
-        date.getFullYear() + '-' +
-        date.getMonth();
 }
 
 exports.load = function (totalsForMonth) {

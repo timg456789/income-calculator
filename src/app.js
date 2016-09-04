@@ -29,12 +29,11 @@ const EXAMPLE_BUDGET = {
     ]
 };
 
-
-
 $(document).ready(function() {
     $('#config-input').val(JSON.stringify(EXAMPLE_BUDGET, 0, 4));
     $('#project').click(function () {
         project();
+        $('#input-form').remove();
     });
 });
 

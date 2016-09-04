@@ -8,10 +8,11 @@ body {
 }
 
 .month-heading {
+    font-family: "Trebuchet MS";
+    font-weight: 700;
+    font-size: 1.5em;
     margin-top: 15px;
     margin-bottom: 15px;
-    font-size: 1.5em;
-    border-bottom: 1px solid #2aab2a;
     clear: both;
 }
 
