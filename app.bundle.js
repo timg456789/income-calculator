@@ -58,28 +58,6 @@ function CalendarAggregator() {
 module.exports = CalendarAggregator;
 
 },{}],2:[function(require,module,exports){
-function CalendarIterator() {
-
-    this.iterateDaily = function (startTime, endTime, iterationDays, run) {
-        var current = new Date(startTime);
-        while (current.getTime() < endTime) {
-            run(current);
-            current.setDate(current.getDate() + iterationDays);
-        }
-    };
-
-    this.iterateMonthly = function (startTime, endTime, iterationDays, run) {
-        var current = new Date(startTime);
-        while (current.getTime() < endTime) {
-            run(current);
-            current.setMonth(current.getMonth() + iterationDays);
-        }
-    };
-
-}
-
-module.exports = CalendarIterator;
-},{}],3:[function(require,module,exports){
 exports.JANUARY = 1;
 exports.MARCH = 2;
 exports.APRIL = 3;
@@ -102,7 +80,7 @@ exports.BIWEEKLY_CALENDAR_CONFIG = {
 
 exports.DAY_NAMES = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 function MonthlyTotals() {
 
     function createMonth(time) {
@@ -147,88 +125,91 @@ function MonthlyTotals() {
 }
 
 module.exports = MonthlyTotals;
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 function NetIncomeCalculator() {
 
     const cal = require('./calendar');
     const UtcDay = require('./utc-day');
-    const CalendarIterator = require('./calendar-iterator');
-
     const utcDay = new UtcDay();
-    const calendarIterator = new CalendarIterator();
 
     this.getBreakdown = function(config, startTime, endTime) {
         var breakdown = [];
         var mre = config.monthlyRecurringExpenses;
         var wre = config.weeklyRecurringExpenses;
 
-        calendarIterator.iterateDaily(startTime, endTime, 1, function (current) {
+        var current = new Date(startTime);
+        while (current.getTime() < endTime) {
 
-            if (current.getDay() !== cal.FRIDAY) {
-                return;
-            }
-
-            for (var i = 0; i < wre.length; i++) {
-                breakdown.push(
-                    getTransaction(wre[i].name, wre[i].amount, new Date(current), 'expense')
-                );
-            }
-
-        });
-
-        for (var i = 0; i < mre.length; i++) {
-
-            calendarIterator.iterateMonthly(mre[i].date.getTime(), endTime, 1, function (current) {
-                    breakdown.push(getTransaction(mre[i].name, mre[i].amount, new Date(current), 'expense'));
-            });
-
-        }
-
-        var ote = config.oneTimeExpenses;
-        for (var i=0; i < ote.length; i++) {
-            calendarIterator.iterateDaily(startTime, endTime, 1, function (current) {
-                if (current.getTime() == ote[i].dateIncurred.getTime()) {
-                    breakdown.push(getTransaction(ote[i].name, ote[i].amount, new Date(current), 'expense'));
+            for (var i = 0; i < mre.length; i++) {
+                if ((current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
+                    (mre[i].date && mre[i].date.getDate() === current.getDate())) {
+                    var processed = {};
+                    processed.name = mre[i].name;
+                    processed.amount = mre[i].amount;
+                    processed.date = new Date(current.getTime());
+                    processed.type = 'expense';
+                    breakdown.push(processed);
                 }
-            });
+            }
+
+            if (current.getDay() == cal.FRIDAY) {
+                for (var i = 0; i < wre.length; i++) {
+                    var processed = {};
+                    processed.name = wre[i].name;
+                    processed.amount = wre[i].amount;
+                    processed.date = new Date(current.getTime());
+                    processed.type = 'expense';
+                    breakdown.push(processed);
+                }
+            }
+
+            for (var i=0; i < config.oneTimeExpenses.length; i++) {
+                var potentialOneTimeExpense = config.oneTimeExpenses[i];
+                if (current.getTime() == potentialOneTimeExpense.dateIncurred.getTime()) {
+                    var expense = {};
+                    expense.name = potentialOneTimeExpense.name;
+                    expense.amount = potentialOneTimeExpense.amount;
+                    expense.date = new Date(current.getTime());
+                    expense.type = 'expense';
+                    breakdown.push(expense);
+                }
+            }
+
+            var incomeAccrual = getIncomeAccrual(config, current);
+            if (incomeAccrual) {
+                breakdown.push(incomeAccrual);
+            }
+
+            current.setDate(current.getDate() + 1);
         }
 
-        var biweeklyStartTime = new Date(startTime);
-        var diffFromFirst = utcDay.getDayDiff(cal.BIWEEKLY_PAY_START_DATE.getTime(), startTime);
-        biweeklyStartTime.setDate(biweeklyStartTime.getDate() - (diffFromFirst % cal.BIWEEKLY_INTERVAL) + cal.BIWEEKLY_INTERVAL);
-
-        calendarIterator.iterateDaily(biweeklyStartTime.getTime(), endTime, cal.BIWEEKLY_INTERVAL, function (current) {
-            breakdown.push(getTransaction('biweekly income', config.biWeeklyIncome.amount, new Date(current), 'income'));
-        });
-
-        return breakdown.sort(sort);
+        return breakdown;
     };
 
-    function sort (transactionA, transactionB) {
-        var a = transactionA;
-        var b = transactionB;
-        if (a.date.getTime() !== b.date.getTime()) {
-            return a.date.getTime() - b.date.getTime();
+    function getIncomeAccrual(config, date) {
+        var accrual;
+        var diffFromFirstPayDate = utcDay.getDayDiff(
+            cal.BIWEEKLY_PAY_START_DATE.getTime(),
+            date.getTime()
+        );
+
+        var modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
+
+        if (modulusIntervalsFromFirstPayDate === 0) {
+            var accrual = {};
+            accrual.name = 'biweekly income';
+            accrual.amount = config.biWeeklyIncome.amount;
+            accrual.date = new Date(date.getTime());
+            accrual.type = 'income';
         }
 
-        return a.type.localeCompare(b.type);
-    }
-
-    function getTransaction(name, amount, date, type) {
-        var processed = {};
-
-        processed.name = name;
-        processed.amount = amount;
-        processed.date = date;
-        processed.type = type;
-
-        return processed;
+        return accrual;
     }
 
 }
 
 module.exports = NetIncomeCalculator;
-},{"./calendar":3,"./calendar-iterator":2,"./utc-day":6}],6:[function(require,module,exports){
+},{"./calendar":2,"./utc-day":5}],5:[function(require,module,exports){
 exports.UTC_DAY_MILLISECONDS = 86400000;
 
 function UtcDay() {
@@ -242,7 +223,7 @@ function UtcDay() {
 }
 
 module.exports = UtcDay;
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /*eslint-disable no-unused-vars*/
 /*!
  * jQuery JavaScript Library v3.1.0
@@ -10318,7 +10299,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 const $ = require('jquery');
 const calendarView = require('./calendar-view');
 const budgetParser = require('./budget-parser');
@@ -10371,6 +10352,8 @@ function project() {
         startDate.getTime(), //start is inclusive.
         endDate.getTime()); //end is exclusive.
 
+    console.log(breakdown);
+
     var weeklyTotals = calendarAggregator.getWeeklyTotals(breakdown);
     var totalsForMonth = monthlyTotals.getMonthlyTotals(weeklyTotals);
 
@@ -10380,7 +10363,7 @@ function project() {
 
 
 
-},{"./budget-parser":9,"./calendar-view":10,"income-calculator/calendar":3,"income-calculator/calendar-aggregator":1,"income-calculator/monthly-totals":4,"income-calculator/net-income-calculator":5,"jquery":7}],9:[function(require,module,exports){
+},{"./budget-parser":8,"./calendar-view":9,"income-calculator/calendar":2,"income-calculator/calendar-aggregator":1,"income-calculator/monthly-totals":3,"income-calculator/net-income-calculator":4,"jquery":6}],8:[function(require,module,exports){
 exports.parse = function (budget) {
     return JSON.parse(budget, function (k,v) {
 
@@ -10394,7 +10377,7 @@ exports.parse = function (budget) {
         return v;
     });
 }
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 const cal = require('income-calculator/calendar');
 
 function getTransactionView(name, amount, type) {
@@ -10419,11 +10402,16 @@ exports.build = function (totalsForMonth) {
             month.date.getMonth() +
             ' net: ' + month.net / 100;
 
-        $('#months-container').append('<div class="month-heading">' + monthDescrip + '</div>' +
-            '<div class="items-container-for-month" id="items-container-for-month-' + month.date.getMonth() + '"></div>');
+        var monthContainerId = getMonthContainerId(month.date);
+
+        $('#months-container').append(
+            '<div class="month-heading">' + monthDescrip + '</div>' +
+            '<div class="items-container-for-month" id="' +
+                monthContainerId +
+            '"></div>');
 
 
-        var monthTarget = '#items-container-for-month-' + month.date.getMonth();
+        var monthTarget = '#' + monthContainerId;
 
         $(monthTarget).append('<div class="weeks row"></div>');
 
@@ -10436,13 +10424,19 @@ exports.build = function (totalsForMonth) {
     }
 }
 
+function getMonthContainerId(date) {
+    return 'items-container-for-month-' +
+        date.getFullYear() + '-' +
+        date.getMonth();
+}
+
 exports.load = function (totalsForMonth) {
     var months = totalsForMonth.length;
     for (var monthIndex = 0; monthIndex < months; monthIndex++) {
         var month = totalsForMonth[monthIndex];
         month.date = new Date(month.date);
 
-        var monthTarget = '#items-container-for-month-' + new Date(month.date).getMonth();
+        var monthTarget = '#' + getMonthContainerId(new Date(month.date));
 
         for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
             var week = month.items[weekInMonth];
@@ -10485,4 +10479,4 @@ exports.load = function (totalsForMonth) {
     }
 
 }
-},{"income-calculator/calendar":3}]},{},[8]);
+},{"income-calculator/calendar":2}]},{},[7]);

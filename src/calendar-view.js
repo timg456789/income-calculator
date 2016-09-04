@@ -22,11 +22,16 @@ exports.build = function (totalsForMonth) {
             month.date.getMonth() +
             ' net: ' + month.net / 100;
 
-        $('#months-container').append('<div class="month-heading">' + monthDescrip + '</div>' +
-            '<div class="items-container-for-month" id="items-container-for-month-' + month.date.getMonth() + '"></div>');
+        var monthContainerId = getMonthContainerId(month.date);
+
+        $('#months-container').append(
+            '<div class="month-heading">' + monthDescrip + '</div>' +
+            '<div class="items-container-for-month" id="' +
+                monthContainerId +
+            '"></div>');
 
 
-        var monthTarget = '#items-container-for-month-' + month.date.getMonth();
+        var monthTarget = '#' + monthContainerId;
 
         $(monthTarget).append('<div class="weeks row"></div>');
 
@@ -39,13 +44,19 @@ exports.build = function (totalsForMonth) {
     }
 }
 
+function getMonthContainerId(date) {
+    return 'items-container-for-month-' +
+        date.getFullYear() + '-' +
+        date.getMonth();
+}
+
 exports.load = function (totalsForMonth) {
     var months = totalsForMonth.length;
     for (var monthIndex = 0; monthIndex < months; monthIndex++) {
         var month = totalsForMonth[monthIndex];
         month.date = new Date(month.date);
 
-        var monthTarget = '#items-container-for-month-' + new Date(month.date).getMonth();
+        var monthTarget = '#' + getMonthContainerId(new Date(month.date));
 
         for (var weekInMonth = 0; weekInMonth < month.items.length; weekInMonth++) {
             var week = month.items[weekInMonth];
