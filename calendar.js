@@ -18,4 +18,7 @@ exports.BIWEEKLY_CALENDAR_CONFIG = {
     interval: exports.BIWEEKLY_INTERVAL
 };
 
+exports.MONTH_NAMES = [ 'January', 'February', 'March', 'April',
+    'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+
 exports.DAY_NAMES = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
