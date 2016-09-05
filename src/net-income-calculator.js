@@ -4,7 +4,7 @@ function NetIncomeCalculator() {
     const UtcDay = require('./utc-day');
     const utcDay = new UtcDay();
 
-    this.getBreakdown = function(config, startTime, endTime) {
+    this.getBudget = function(config, startTime, endTime) {
         var breakdown = [];
         var mre = config.monthlyRecurringExpenses;
         var wre = config.weeklyRecurringExpenses;
@@ -30,6 +30,8 @@ function NetIncomeCalculator() {
                     processed.name = wre[i].name;
                     processed.amount = wre[i].amount;
                     processed.date = new Date(current.getTime());
+                    processed.endDate = new Date(current.getTime());
+                    processed.endDate.setDate(processed.endDate.getDate() + 7);
                     processed.type = 'expense';
                     breakdown.push(processed);
                 }
@@ -37,7 +39,7 @@ function NetIncomeCalculator() {
 
             for (var i=0; i < config.oneTimeExpenses.length; i++) {
                 var potentialOneTimeExpense = config.oneTimeExpenses[i];
-                if (current.getTime() == potentialOneTimeExpense.dateIncurred.getTime()) {
+                if (current.getTime() == potentialOneTimeExpense.date.getTime()) {
                     var expense = {};
                     expense.name = potentialOneTimeExpense.name;
                     expense.amount = potentialOneTimeExpense.amount;
