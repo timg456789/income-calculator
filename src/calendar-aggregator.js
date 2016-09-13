@@ -1,95 +1,93 @@
 function CalendarAggregator() {
 
-    var that = this;
+    const calendar = require('./calendar');
 
-    this.getWeekStartForMonth = function(time) {
-        var date = new Date(time);
-        var startWeekDate = date.getDate() - date.getDay();
-        if (startWeekDate < 1) {
-            startWeekDate = 1;
-        }
-        date.setDate(startWeekDate);
-        return date;
+    const CalendarSearch = require('./calendar-search');
+    const calendarSearch = new CalendarSearch();
+
+    this.getSummary = function (start, end, budget, actual) {
+        var summary = {};
+
+        summary.budgetItems = calendarSearch.find(start, end, budget);
+        summary.budgeted = getSimpleTotal(summary.budgetItems);
+        summary.actualsForWeek = calendarSearch.find(start, end, actual);
+        summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
+        summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
+        summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
+        summary.net = getNet(summary.budgeted, summary.totalOverBudget, summary.actualsUnbudgeted);
+
+        return summary;
     };
 
-    function createWeek(time) {
-        var weekSummary = {};
-        weekSummary.items = [];
-        weekSummary.net = 0;
-        weekSummary.date = that.getWeekStartForMonth(time);
-        weekSummary.budgets = {};
-        return weekSummary;
-    };
+    function getTotalAmountsByBudget(transactions) {
+        var amounts = [];
 
-    function getTransactionsUnderBudget(actual, item) {
-        var transactions = [];
-        for (var actualIndex = 0; actualIndex < actual.length; actualIndex++) {
-            var actualTransaction = actual[actualIndex];
-
-            if (item.name !== actualTransaction.budget) {
-                continue;
+        for (var i = 0; i < transactions.length; i++) {
+            var t = transactions[i];
+            if (!amounts[t.budget]) {
+                amounts[t.budget] = 0;
             }
 
-            if (actualTransaction.date.getTime() >= item.date.getTime() &&
-                actualTransaction.date.getTime() < item.endDate.getTime()) {
-                transactions.push(actualTransaction);
+            amounts[t.budget] += t.amount;
+        }
+
+        return amounts;
+    };
+
+    function getTotalAmountUnbudgeted(transactions) {
+        var total = 0;
+
+        for (var i = 0; i < transactions.length; i++) {
+            var t = transactions[i];
+            if (!t.budget) {
+                total += t.amount;
             }
         }
 
-        return transactions;
+        return total;
     }
 
-    this.getWeeklyTotals = function(breakdown, actual) {
-        var weeklyTotals = [];
-        var i;
-
+    function getSimpleTotal(budget) {
+        var net = 0;
         var item;
-        var lastStartWeek = this.getWeekStartForMonth(breakdown[0].date.getTime());
-        var weekSummary = createWeek(breakdown[0].date.getTime());
-        var currentStartWeek;
 
-        for (i = 0; i < breakdown.length; i++) {
-            item = breakdown[i];
-            currentStartWeek = this.getWeekStartForMonth(item.date.getTime());
-            if (lastStartWeek.getDate() !== currentStartWeek.getDate()) {
-                weeklyTotals.push(weekSummary);
-                weekSummary = createWeek(currentStartWeek.getTime());
-                lastStartWeek = currentStartWeek;
-            }
-            weekSummary.items.push(item);
-
+        for (var i = 0; i < budget.length; i++) {
+            var item = budget[i];
             if (item.type === 'expense') {
-                weekSummary.net -= item.amount;
+                net -= item.amount;
             } else {
-                weekSummary.net += item.amount;
+                net += item.amount;
             }
-
-            if (!weekSummary.budgets[item.name]) {
-                weekSummary.budgets[item.name] = item.amount;
-            }
-
-            var transactionsUnderBudget = getTransactionsUnderBudget(actual, item);
-            if (transactionsUnderBudget.length > 0) {
-
-                for (var budgetedTransactionIndex = 0; budgetedTransactionIndex < transactionsUnderBudget.length; budgetedTransactionIndex++) {
-                    var budgetedTransaction = transactionsUnderBudget[budgetedTransactionIndex];
-
-                    weekSummary.budgets[item.name] -= budgetedTransaction.amount;
-
-                    if (weekSummary.budgets[item.name] < 0) {
-                        var variance = budgetedTransaction.amount + weekSummary.budgets[item.name];
-                        weekSummary.net -= variance;
-                    }
-
-                    weekSummary.items.push(budgetedTransaction);
-                }
-            }
-
         }
 
-        weeklyTotals.push(weekSummary);
+        return net;
+    };
 
-        return weeklyTotals;
+    function getNet(budgeted, totalOverBudget, unbudgeted) {
+        return budgeted - totalOverBudget - unbudgeted;
+    };
+
+    function getAmountOverBudget(budget, actuals) {
+        var total = 0;
+
+        for (var bI = 0; bI < budget.length; bI++) {
+            var budgetBalance = budget[bI].amount;
+            for (var aI = 0; aI < actuals.length; aI++) {
+
+                if (actuals[aI].budget === budget[bI].name &&
+                    calendarSearch.within(budget[bI].date, budget[bI].endDate, actuals[aI].date)) {
+                    budgetBalance -= actuals[aI].amount;
+                }
+
+                if (aI === actuals.length - 1) {
+                    if (budgetBalance < 0) {
+                        total += budgetBalance * -1;
+                    }
+                }
+            }
+        }
+
+        return total;
     };
 
 }

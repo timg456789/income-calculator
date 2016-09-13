@@ -12,6 +12,7 @@ exports.SAFE_LAST_DAY_OF_MONTH = 28;
 exports.BIWEEKLY_PAY_START_DATE = new Date(2015, 11, 25);
 exports.BIWEEKLY_INTERVAL = 14;
 exports.FRIDAY = 5;
+exports.DAYS_IN_WEEK = 7;
 
 exports.BIWEEKLY_CALENDAR_CONFIG = {
     firstPayDateTime: exports.BIWEEKLY_PAY_START_DATE.getTime(),
