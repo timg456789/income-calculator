@@ -1,10 +1,14 @@
 body {
-  font-family: Tahoma, Verdana, Arial, sans-serif;
-  font-size: 1.4em;
+    font-family: Tahoma, Verdana, Arial, sans-serif;
+    font-size: 1.1em;
 }
 
 #config-input {
     height: 150px;
+}
+
+.exclusivity {
+    font-weight: normal;
 }
 
 .month-heading {
@@ -18,7 +22,7 @@ body {
 
 .week-name {
     text-align: center;
-    font-size: 1.3em;
+    font-size: 1.2em;
 }
 
 .transaction-view > .name {
@@ -28,7 +32,6 @@ body {
 
 .transaction-view > .amount {
     text-align: right;
-    font-weight: bold;
     padding-right: 3px;
     box-shadow: 0px 0px 3px #999;
 }
@@ -36,6 +39,14 @@ body {
 .transaction-view.expense > .amount,
 .transaction-view.net.negative > .amount {
     background-color: #ffcccc;
+}
+
+.transaction-view.expense.budgeted > .amount {
+    background-color: #fbfbba;
+}
+
+.transaction-view.expense.unbudgeted > .amount {
+    border-bottom: 2px solid rgb(255, 69, 0);
 }
 
 .transaction-view.income > .amount,
@@ -46,6 +57,10 @@ body {
 .day-view {
     box-shadow: -1px -1px 2px #888;
     min-height: 100px;
+}
+
+.totals-view {
+    font-weight: bold;
 }
 
 .day-col {
