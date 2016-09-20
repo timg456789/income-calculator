@@ -46,7 +46,7 @@ body {
 }
 
 .transaction-view.expense.unbudgeted > .amount {
-    border-bottom: 2px solid rgb(255, 69, 0);
+    border-bottom: 1px solid rgb(255, 69, 0);
 }
 
 .transaction-view.income > .amount,
