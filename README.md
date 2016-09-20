@@ -1,3 +1,17 @@
+# Fixes Required
+
+## Transaction HTML
+The name and amount of each transaction needs to be in the same div so there is no more of the awkward overlap. Then spans can be used.
+
+## Totals
+The totals need a name. I'm going to be putting the budgeted net in addition to the final net so it will get confusing.
+
+## Legend
+Desperately need a legend in order to describe the various transaction types that are described only by style.
+
+## Offending budget item
+Maybe maybe maybe add something to identify when an expenditure went over budget. It should be outlined like an unbudgeted expense. It could be a little softer like the soft red used for expenses. The items in yellow are meant to be excluded and an over budget contributes to the variance between budgeted and actual so these become important.
+
 # Supported Browsers
 
 The latest version of chrome is be supported.
