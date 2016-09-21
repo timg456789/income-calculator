@@ -10564,6 +10564,9 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 
 exports.load = function (budgetSettings, actual, start, end) {
 
+    $('#debug-console').append('<div>' + start + '</div>');
+    $('#debug-console').append('<div>' + end + '</div>');
+
     var budget = netIncomeCalculator.getBudget(
         budgetSettings,
         start.getTime(),
