@@ -155,6 +155,8 @@ exports.MONTH_NAME_ABBRS = [ 'Jan', 'Feb', 'Mar', 'Apr',
 
 exports.DAY_NAMES = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
 
+exports.DAY_NAME_ABBRS = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+
 },{}],4:[function(require,module,exports){
 function NetIncomeCalculator() {
 
@@ -10513,7 +10515,7 @@ exports.build = function (date) {
 
     for (var d = 0; d < 7; d++) {
         $(monthTarget + '>' + '.weeks').append(
-            '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
+            '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAME_ABBRS[d] + '</div>');
     }
 
     $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');

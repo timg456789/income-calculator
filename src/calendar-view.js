@@ -77,7 +77,7 @@ exports.build = function (date) {
 
     for (var d = 0; d < 7; d++) {
         $(monthTarget + '>' + '.weeks').append(
-            '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAMES[d] + '</div>');
+            '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAME_ABBRS[d] + '</div>');
     }
 
     $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');
