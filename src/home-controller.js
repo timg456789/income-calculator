@@ -6,14 +6,21 @@ function HomeController() {
     this.init = function () {
         loadDateInput('#start-year', '#start-month', '#start-day');
         loadDateInput('#end-year', '#end-month', '#end-day');
+
+        var defaultEnd = new Date();
+        defaultEnd.setMonth(defaultEnd.getMonth() + 1, 1);
+
+        $('#start-month').val(new Date().getMonth()).change();
+        $('#end-month').val(defaultEnd.getMonth()).change();
+
+        $('#start-day').val(1);
+        $('#end-day').val(1);
     };
 
     function loadDateInput(yearTarget, monthTarget, dayTarget) {
         loadYears(yearTarget);
         loadMonths(monthTarget);
         listenForDateChange(yearTarget, monthTarget, dayTarget);
-        $(yearTarget).change();
-        $(dayTarget).val(new Date().getDate());
     }
 
     function loadYears(target) {
