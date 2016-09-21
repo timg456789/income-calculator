@@ -1,3 +1,4 @@
+const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 
 const NetIncomeCalculator = require('income-calculator/src/net-income-calculator');

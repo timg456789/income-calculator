@@ -2,6 +2,8 @@ const $ = require('jquery');
 const calendarView = require('./calendar-view');
 const budgetParser = require('./budget-parser');
 const cal = require('income-calculator/src/calendar');
+var HomeController = require('./home-controller');
+var homeController = new HomeController();
 
 const EXAMPLE_BUDGET = {
     monthlyRecurringExpenses: [
@@ -56,14 +58,22 @@ $(document).ready(function() {
         project();
         $('#input-form').remove();
     });
+    homeController.init();
 });
 
 function project() {
 
     var budgetSettings = budgetParser.parse($('#config-input').val());
 
-    var start = new Date($('#start-date-input').val());
-    var end = new Date($('#end-date-input').val());
+    var start = new Date(
+        $('#start-year').val(),
+        $('#start-month').val(),
+        $('#start-day').val());
+
+    var end = new Date(
+        $('#end-year').val(),
+        $('#end-month').val(),
+        $('#end-day').val());
 
     calendarView.build(start);
     calendarView.load(budgetSettings, actual, start, end);
