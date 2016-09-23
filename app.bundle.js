@@ -169,7 +169,11 @@ function NetIncomeCalculator() {
         var mre = config.monthlyRecurringExpenses;
         var wre = config.weeklyRecurringExpenses;
 
-        var current = new Date(startTime);
+		$('#debug-console').append('<div>' + current + '</div>');
+		$('#debug-console').append('<div>' + new Date(endTime) + '</div>');
+
+
+		var current = new Date(startTime);
         while (current.getTime() < endTime) {
 
             for (var i = 0; i < mre.length; i++) {
