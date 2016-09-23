@@ -5,23 +5,6 @@ const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
-const EXAMPLE_BUDGET = {
-    monthlyRecurringExpenses: [
-        { name: 'rent', amount: 550 * 100, date: new Date(2016, cal.SEPTEMBER, cal.SAFE_LAST_DAY_OF_MONTH - 1) },
-        { name: 'utilities', amount: 100 * 100, date: new Date(2016, cal.SEPTEMBER, 20)  }
-    ],
-    weeklyRecurringExpenses: [
-        { name: 'food', amount: 75  * 100 }
-    ],
-    biWeeklyIncome: {
-        amount: 1335  * 100
-    },
-    oneTimeExpenses: [
-        { name: 'taxes', amount: 300 * 100, date: new Date(2016, cal.APRIL, 17) },
-        { name: 'taxes', amount: 400 * 100, date: new Date(2016, cal.SEPTEMBER, 17) }
-    ]
-};
-
 var actual = [
     {
         name: 'groceries',
@@ -53,7 +36,6 @@ var actual = [
 ];
 
 $(document).ready(function() {
-    $('#config-input').val(JSON.stringify(EXAMPLE_BUDGET, 0, 4));
     $('#project').click(function () {
         project();
         $('#input-form').remove();
@@ -63,7 +45,12 @@ $(document).ready(function() {
 
 function project() {
 
-    var budgetSettings = budgetParser.parse($('#config-input').val());
+    var budgetSettings = {};
+    budgetSettings.monthlyRecurringExpenses = budgetParser.parse($('#monthly-input').val());
+    budgetSettings.weeklyRecurringExpenses = budgetParser.parse($('#weekly-input').val());
+    budgetSettings.oneTimeExpenses = budgetParser.parse($('#one-time-input').val());
+    budgetSettings.biWeeklyIncome = {};
+    budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val()) * 100;
 
     var start = new Date(
         $('#start-year').val(),
@@ -77,6 +64,19 @@ function project() {
 
     calendarView.build(start);
     calendarView.load(budgetSettings, actual, start, end);
+
+    checkNet();
 }
 
+function checkNet() {
+    var displayedNet = parseInt($('#month-net-header-value').html());
+    var expectedNet = 2545;
+    if (displayedNet !== expectedNet) {
+        log('expected net of ' + expectedNet + ', but was: ' + displayedNet);
+    }
+}
 
+function log(error) {
+    console.log(error);
+    $('#debug-console').append('<div>' + error + '</div>');
+}

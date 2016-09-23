@@ -165,7 +165,7 @@ exports.load = function (budgetSettings, actual, start, end) {
     loadTransactions(summary.budgetItems);
     loadTransactions(summary.actualsForWeek, true);
 
-    $('#' + 'month-net-header-value').append(summary.net/100);
+    $('#month-net-header-value').append(summary.net/100);
 
     loadWeeklyTotals(budgetSettings, actual, start);
 };
