@@ -10391,12 +10391,10 @@ function project() {
     var start = new Date(
         $('#start-year').val(),
         $('#start-month').val(),
-        $('#start-day').val());
+        1);
 
-    var end = new Date(
-        $('#end-year').val(),
-        $('#end-month').val(),
-        $('#end-day').val());
+    var end = new Date(start);
+    end.setMonth(end.getMonth() + 1);
 
     calendarView.build(start);
     calendarView.load(budgetSettings, actual, start, end);
