@@ -169,11 +169,7 @@ function NetIncomeCalculator() {
         var mre = config.monthlyRecurringExpenses;
         var wre = config.weeklyRecurringExpenses;
 
-		$('#debug-console').append('<div>' + current + '</div>');
-		$('#debug-console').append('<div>' + new Date(endTime) + '</div>');
-
-
-		var current = new Date(startTime);
+        var current = new Date(startTime);
         while (current.getTime() < endTime) {
 
             for (var i = 0; i < mre.length; i++) {
@@ -225,6 +221,8 @@ function NetIncomeCalculator() {
     };
 
     function getIncomeAccrual(config, date) {
+        $('#debug-console').append('<div>checking date for accrual' + date + '</div>');
+
         var accrual;
         var diffFromFirstPayDate = utcDay.getDayDiff(
             cal.BIWEEKLY_PAY_START_DATE.getTime(),
@@ -240,6 +238,8 @@ function NetIncomeCalculator() {
             accrual.date = new Date(date.getTime());
             accrual.type = 'income';
         }
+
+        $('#debug-console').append('<div>has accrual: ' + (modulusIntervalsFromFirstPayDate === 0) + '</div>');
 
         return accrual;
     }
@@ -10568,9 +10568,6 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
             budgetSettings,
             currentDate.getTime(),
             weekEnd.getTime());
-
-        $('#debug-console').append('<div>' + JSON.stringify(budget, 0, 4) + '</div>');
-
 
         var summary = calendarAggregator.getSummary(
             currentDate,
