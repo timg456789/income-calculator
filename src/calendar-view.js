@@ -130,6 +130,9 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
             currentDate.getTime(),
             weekEnd.getTime());
 
+        $('#debug-console').append('<div>' + JSON.stringify(budget, 0, 4) + '</div>');
+
+
         var summary = calendarAggregator.getSummary(
             currentDate,
             weekEnd,
