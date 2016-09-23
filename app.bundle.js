@@ -221,7 +221,7 @@ function NetIncomeCalculator() {
     };
 
     function getIncomeAccrual(config, date) {
-        $('#debug-console').append('<div>checking date for accrual' + date + '</div>');
+        $('#debug-console').append('<div>checking date for accrual' + date + ': ' + date.getTime() + '</div>');
 
         var accrual;
         var diffFromFirstPayDate = utcDay.getDayDiff(
