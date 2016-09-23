@@ -12,48 +12,49 @@
     <script type="text/javascript" src="app.bundle.js"></script>
   </head>
   <body>
-  <div id="input-form" class="container-fluid form">
-      <div class="form-group">
-          <label class="form-label">Year</label>
-          <select class="form-control inline-group" id="start-year"></select>
-          <label class="form-label">Month</label>
-          <select class="form-control inline-group" id="start-month"></select>
-      </div>
-      <div id="monthly-input-group" class="form-group">
-          <label class="form-label">Monthly Expenses</label>
-          <textarea id="monthly-input" class="form-control" rows="6">[
-    {
-        "name": "rent",
-        "amount": 55000,
-        "date": "2016-09-27T00:00:00.000Z"
-    },
-    {
-        "name": "utilities",
-        "amount": 10000,
-        "date": "2016-09-20T00:00:00.000Z"
-    }
-]</textarea>
-      </div>
-      <div id="weekly-input-group" class="form-group">
-          <label class="form-label">Weekly Expenses</label>
-          <textarea id="weekly-input" class="form-control" rows="6">[
-    {
-        "name": "food",
-        "amount": 7500
-    }
-]</textarea>
-      </div>
-      <div id="one-time-input-group" class="form-group">
-          <label class="form-label">One time expenses</label>
-          <textarea id="one-time-input" class="form-control" rows="6">[
-    {
-        "name": "taxes",
-        "amount": 40000,
-        "date": "2016-09-17T00:00:00.000Z"
-    }
-]</textarea>
-      </div>
-      <form class="form-inline">
+  <div class="container">
+      <form id="input-form" class="container-fluid form">
+          <div class="form-group">
+              <label class="form-label">Year</label>
+              <select class="form-control inline-group" id="start-year"></select>
+              <label class="form-label">Month</label>
+              <select class="form-control inline-group" id="start-month"></select>
+          </div>
+          <div id="monthly-input-group" class="form-group">
+              <label class="form-label">Monthly Expenses</label>
+              <textarea id="monthly-input" class="form-control" rows="6">[
+        {
+            "name": "rent",
+            "amount": 55000,
+            "date": "2016-09-27T00:00:00.000Z"
+        },
+        {
+            "name": "utilities",
+            "amount": 10000,
+            "date": "2016-09-20T00:00:00.000Z"
+        }
+    ]</textarea>
+          </div>
+          <div id="weekly-input-group" class="form-group">
+              <label class="form-label">Weekly Expenses</label>
+              <textarea id="weekly-input" class="form-control" rows="6">[
+        {
+            "name": "food",
+            "amount": 7500
+        }
+    ]</textarea>
+          </div>
+            <div id="one-time-input-group" class="form-group">
+                <label class="form-label">One time expenses</label>
+                <textarea id="one-time-input" class="form-control" rows="6">[
+        {
+            "name": "taxes",
+            "amount": 40000,
+            "date": "2016-09-17T00:00:00.000Z"
+        }
+    ]
+              </textarea>
+          </div>
           <div id="biweekly-input-group" class="form-group">
               <label class="form-label">Biweekly income</label>
               <div class="input-group">
@@ -62,8 +63,8 @@
                   <div class="input-group-addon">.00</div>
               </div>
           </div>
+        <input id="project" type="button" value="Project" class="btn btn-primary" />
       </form>
-      <input id="project" type="button" value="Project" class="btn btn-primary" />
   </div>
   <div id="months-container" class="container-fluid"></div>
   <div id="debug-console"></div>

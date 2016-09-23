@@ -3,6 +3,10 @@ body {
     font-size: 1.1em;
 }
 
+#input-form {
+    margin-top: 15px;
+}
+
 .month-heading {
     font-family: "Trebuchet MS";
     font-weight: 700;
