@@ -7,9 +7,6 @@ const netIncomeCalculator = new NetIncomeCalculator();
 const CalendarAggregator = require('./src/calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
-const MonthlyTotals = require('./src/monthly-totals');
-const monthlyTotals = new MonthlyTotals();
-
 const CalendarSearch = require('./src/calendar-search');
 const calendarSearch = new CalendarSearch();
 
