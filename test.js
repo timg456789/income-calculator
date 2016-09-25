@@ -13,7 +13,7 @@ const calendarSearch = new CalendarSearch();
 const budgetSettings = {
     monthlyRecurringExpenses: [
         { name: 'rent', amount: 550 * 100 },
-        { name: 'utilities', amount: 100 * 100, date: new Date(2016, cal.SEPTEMBER, 20)  }
+        { name: 'utilities', amount: 100 * 100, date: new Date(Date.UTC(2016, cal.SEPTEMBER, 20))  }
     ],
     weeklyRecurringExpenses: [
         { name: 'food', amount: 75  * 100 }
@@ -22,42 +22,42 @@ const budgetSettings = {
         amount: 1335  * 100
     },
     oneTimeExpenses: [
-        { name: 'taxes', amount: 300 * 100, date: new Date(2016, cal.APRIL, 17) },
-        { name: 'taxes', amount: 400 * 100, date: new Date(2016, cal.SEPTEMBER, 17) }
+        { name: 'taxes', amount: 300 * 100, date: new Date(Date.UTC(2016, cal.APRIL, 17)) },
+        { name: 'taxes', amount: 400 * 100, date: new Date(Date.UTC(2016, cal.SEPTEMBER, 17)) }
     ]
 };
 
 var budget = netIncomeCalculator.getBudget(
     budgetSettings,
-    new Date(2016, cal.SEPTEMBER, 1).getTime(), //start date shall be inclusive.
-    new Date(2016, cal.NOVEMBER, 1).getTime()); //end date shall be exclusive.
+    Date.UTC(2016, cal.SEPTEMBER, 1), //start date shall be inclusive.
+    Date.UTC(2016, cal.NOVEMBER, 1)); //end date shall be exclusive.
 
 var actual = [
     {
         name: 'groceries',
         amount: 50 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 2),
+        date: new Date(Date.UTC(2016, cal.SEPTEMBER, 2)),
         type: 'expense',
         budget: 'food'
     },
     {
         name: 'groceries',
         amount: 50 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 3),
+        date: new Date(Date.UTC(2016, cal.SEPTEMBER, 3)),
         type: 'expense',
         budget: 'food'
     },
     {
         name: 'groceries',
         amount: 50 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 17),
+        date: new Date(Date.UTC(2016, cal.SEPTEMBER, 17)),
         type: 'expense',
         budget: 'food'
     },
     {
         name: 'ice cream',
         amount: 10 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 22),
+        date: new Date(Date.UTC(2016, cal.SEPTEMBER, 22)),
         type: 'expense'
     }
 ];
@@ -65,8 +65,8 @@ var actual = [
 test('september week 1', function(t) {
     t.plan(6);
 
-    var start = new Date(2016, cal.SEPTEMBER, 1);
-    var end = new Date(2016, cal.SEPTEMBER, 4);
+    var start = Date.UTC(2016, cal.SEPTEMBER, 1);
+    var end = Date.UTC(2016, cal.SEPTEMBER, 4);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
     t.equal(summary.budgetItems.length, 2, 'september week 1 budgeted income, expenses and actual expenses');
@@ -83,8 +83,8 @@ test('september week 1', function(t) {
 test('september week 2', function(t) {
     t.plan(3);
 
-    var start = new Date(2016, cal.SEPTEMBER, 4);
-    var end = new Date(2016, cal.SEPTEMBER, 11);
+    var start = Date.UTC(2016, cal.SEPTEMBER, 4);
+    var end = Date.UTC(2016, cal.SEPTEMBER, 11);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
     t.equal(summary.budgetItems.length, 1, 'september week 2 transactions');
@@ -93,12 +93,16 @@ test('september week 2', function(t) {
 });
 
 test('september week 3', function(t) {
-    t.plan(4);
+    t.plan(7);
 
-    var start = new Date(2016, cal.SEPTEMBER, 11);
-    var end = new Date(2016, cal.SEPTEMBER, 18);
+    var start = Date.UTC(2016, cal.SEPTEMBER, 11);
+    var end = Date.UTC(2016, cal.SEPTEMBER, 18);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
+
+    t.equal(summary.budgetItems[0].name, 'food', 'september week 3 food expense');
+    t.equal(summary.budgetItems[1].name, 'biweekly income', 'september week 3 income');
+    t.equal(summary.budgetItems[2].name, 'taxes', 'september week 3 taxes expense');
     t.equal(summary.budgetItems.length, 3, 'september week 3 budgeted income, expense and actual expenses');
     t.equal(summary.budgeted, 860 * 100, 'september week 3 net income');
     t.equal(summary.actualsForWeek.length, 1, 'september week 3 actual expenses.');
@@ -109,8 +113,8 @@ test('september week 3', function(t) {
 test('september week 4', function(t) {
     t.plan(6);
 
-    var start = new Date(2016, cal.SEPTEMBER, 18);
-    var end = new Date(2016, cal.SEPTEMBER, 25);
+    var start = Date.UTC(2016, cal.SEPTEMBER, 18);
+    var end = Date.UTC(2016, cal.SEPTEMBER, 25);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
 
@@ -126,8 +130,8 @@ test('september week 4', function(t) {
 test('september week 5', function(t) {
     t.plan(2);
 
-    var start = new Date(2016, cal.SEPTEMBER, 25);
-    var end = new Date(2016, cal.OCTOBER, 1);
+    var start = Date.UTC(2016, cal.SEPTEMBER, 25);
+    var end = Date.UTC(2016, cal.OCTOBER, 1);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
     t.equal(summary.budgetItems.length, 3, 'september week 5 transactions');
@@ -138,8 +142,8 @@ test('september week 5', function(t) {
 test('september total', function(t) {
     t.plan(6);
 
-    var start = new Date(2016, cal.SEPTEMBER, 1);
-    var end = new Date(2016, cal.OCTOBER, 1);
+    var start = Date.UTC(2016, cal.SEPTEMBER, 1);
+    var end = Date.UTC(2016, cal.OCTOBER, 1);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
     t.equal(summary.budgeted, 2580 * 100, 'september budgeted net income');

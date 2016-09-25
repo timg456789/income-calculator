@@ -5,12 +5,12 @@ function CalendarAggregator() {
     const CalendarSearch = require('./calendar-search');
     const calendarSearch = new CalendarSearch();
 
-    this.getSummary = function (start, end, budget, actual) {
+    this.getSummary = function (startTime, endTime, budget, actual) {
         var summary = {};
 
-        summary.budgetItems = calendarSearch.find(start, end, budget);
+        summary.budgetItems = calendarSearch.find(startTime, endTime, budget);
         summary.budgeted = getSimpleTotal(summary.budgetItems);
-        summary.actualsForWeek = calendarSearch.find(start, end, actual);
+        summary.actualsForWeek = calendarSearch.find(startTime, endTime, actual);
         summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
         summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
         summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
@@ -75,7 +75,7 @@ function CalendarAggregator() {
             for (var aI = 0; aI < actuals.length; aI++) {
 
                 if (actuals[aI].budget === budget[bI].name &&
-                    calendarSearch.within(budget[bI].date, budget[bI].endDate, actuals[aI].date)) {
+                    calendarSearch.within(budget[bI].date.getTime(), budget[bI].endDate.getTime(), actuals[aI].date.getTime())) {
                     budgetBalance -= actuals[aI].amount;
                 }
 

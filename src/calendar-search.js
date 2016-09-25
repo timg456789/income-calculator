@@ -1,11 +1,11 @@
 function CalendarSearch() {
 
-    this.find = function (start, end, transactions) {
+    this.find = function (startTime, endTime, transactions) {
         var matches = [];
 
         for (i = 0; i < transactions.length; i++) {
             var transaction = transactions[i];
-            if (this.within(start, end, transaction.date)) {
+            if (this.within(startTime, endTime, transaction.date.getTime())) {
                 matches.push(transaction);
             }
         }
@@ -13,9 +13,9 @@ function CalendarSearch() {
         return matches;
     };
 
-    this.within = function (start, end, sample) {
-        return sample.getTime() >= start.getTime() &&
-            sample.getTime() < end.getTime();
+    this.within = function (startTime, endTime, sampleTime) {
+        return sampleTime >= startTime &&
+            sampleTime < endTime;
     };
 
 }
