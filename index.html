@@ -4,66 +4,15 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="screen">
     <title>Net Income Calculator</title>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="app.bundle.js"></script>
   </head>
   <body>
   <div class="container">
-      <h2>Load a Budget</h2>
-      <form id="existing-budget-form" class="container-fluid form">
-          <div class="form-group">
-              <label class="form-label">URL</label>
-              <input class="form-control" disabled="disabled" type="text" />
-          </div>
-          <input id="load-budget" type="button" value="Load" class="disabled btn btn-primary" />
-      </form>
-      <h2>Or Create a Budget</h2>
       <form id="input-form" class="container-fluid form">
-          <div class="form-group">
-              <label class="form-label">Year</label>
-              <select class="form-control inline-group" id="start-year"></select>
-              <label class="form-label">Month</label>
-              <select class="form-control inline-group" id="start-month"></select>
-          </div>
-          <div id="monthly-input-group" class="form-group">
-              <label class="form-label">Monthly Expenses</label>
-              <textarea id="monthly-input" class="form-control" rows="6">[
-        {
-            "name": "rent",
-            "amount": 55000,
-            "date": "2016-09-27T00:00:00.000Z"
-        },
-        {
-            "name": "utilities",
-            "amount": 10000,
-            "date": "2016-09-20T00:00:00.000Z"
-        }
-    ]</textarea>
-          </div>
-          <div id="weekly-input-group" class="form-group">
-              <label class="form-label">Weekly Expenses</label>
-              <textarea id="weekly-input" class="form-control" rows="6">[
-        {
-            "name": "food",
-            "amount": 7500
-        }
-    ]</textarea>
-          </div>
-            <div id="one-time-input-group" class="form-group">
-                <label class="form-label">One time expenses</label>
-                <textarea id="one-time-input" class="form-control" rows="6">[
-        {
-            "name": "taxes",
-            "amount": 40000,
-            "date": "2016-09-17T00:00:00.000Z"
-        }
-    ]
-              </textarea>
-          </div>
+          <h2>Budget</h2>
           <div id="biweekly-input-group" class="form-group">
               <label class="form-label">Biweekly income</label>
               <div class="input-group">
@@ -72,7 +21,37 @@
                   <div class="input-group-addon">.00</div>
               </div>
           </div>
-        <input id="project" type="button" value="Create" class="btn btn-primary" />
+          <div id="monthly-input-group" class="form-group">
+              <label class="form-label">Monthly Expenses</label>
+              <textarea id="monthly-input" class="hide form-control" rows="6"></textarea>
+          </div>
+          <div id="weekly-input-group" class="form-group">
+              <label class="form-label">Weekly Expenses</label>
+              <textarea id="weekly-input" class="form-control" rows="6"></textarea>
+          </div>
+          <div id="one-time-input-group" class="form-group">
+              <label class="form-label">One time expenses</label>
+              <textarea id="one-time-input" class="form-control" rows="6">
+          </textarea>
+          </div>
+          <div id="actuals-input-group" class="form-group">
+              <label class="form-label">Actual Expenses</label>
+              <textarea id="actuals" class="form-control" rows="6"></textarea>
+          </div>
+          <input id="project" type="button" value="Create" class="btn btn-primary" />
+          <h2 class="month-header hide">Pick a Month</h2>
+          <div class="hide month-group form-group">
+              <label class="form-label">Year</label>
+              <select class="form-control" id="start-year"></select>
+              <label class="form-label">Month</label>
+              <select class="form-control" id="start-month"></select>
+          </div>
+          <h2 class="hide">Then Load a Budget</h2>
+          <div class="hide form-group">
+              <label class="form-label">URL</label>
+              <input id="budget-url" class="form-control" type="text" />
+          </div>
+          <input id="load-budget" type="button" value="Load" class="hide btn btn-primary" />
       </form>
   </div>
   <div id="months-container" class="container-fluid"></div>

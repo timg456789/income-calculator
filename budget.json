@@ -1,0 +1,59 @@
+{
+    "monthlyRecurringExpenses": [
+        {
+            "name": "rent",
+            "amount": 55000,
+            "date": "2016-09-27T00:00:00.000Z"
+        },
+        {
+            "name": "utilities",
+            "amount": 10000,
+            "date": "2016-09-20T00:00:00.000Z"
+        }
+    ],
+    "weeklyRecurringExpenses": [
+        {
+            "name": "food",
+            "amount": 7500
+        }
+        ],
+        "oneTimeExpenses": [
+        {
+            "name": "taxes",
+            "amount": 40000,
+            "date": "2016-09-17T00:00:00.000Z"
+        }
+    ],
+    "biWeeklyIncome": {
+        "amount": 133500
+    },
+    "actual": [
+        {
+            "name": "groceries",
+            "amount": 5000,
+            "date": "2016-09-02T00:00:00.000Z",
+            "type": "expense",
+            "budget": "food"
+        },
+        {
+            "name": "groceries",
+            "amount": 5000,
+            "date": "2016-09-03T00:00:00.000Z",
+            "type": "expense",
+            "budget": "food"
+        },
+        {
+            "name": "groceries",
+            "amount": 5000,
+            "date": "2016-09-17T00:00:00.000Z",
+            "type": "expense",
+            "budget": "food"
+        },
+        {
+            "name": "ice cream",
+            "amount": 1000,
+            "date": "2016-09-22T00:00:00.000Z",
+            "type": "expense"
+        }
+    ]
+}

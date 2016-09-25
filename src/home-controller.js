@@ -1,30 +1,68 @@
 function HomeController() {
 
-    var cal = require('income-calculator/src/calendar');
     var $ = require('jquery');
+    var cal = require('income-calculator/src/calendar');
+    const calendarView = require('./calendar-view');
+    const budgetParser = require('./budget-parser');
+    const homeView = require('./home-view');
 
-    this.init = function () {
-        loadDateInput('#start-year', '#start-month', '#start-day');
-        loadDateInput('#end-year', '#end-month', '#end-day');
+    this.init = function (data) {
+        loadDateInput('#start-year', '#start-month');
+        $('#start-month').val(new Date().getUTCMonth());
+        homeView.setBudget(data);
 
-        var defaultEnd = new Date();
-        defaultEnd.setMonth(defaultEnd.getMonth() + 1, 1);
+        $('#load-budget').click(function () {
+            $.getJSON($('#budget-url').val().trim(), {}, function (data) {
+                homeView.setBudget(data);
+            });
+        });
 
-        $('#start-month').val(new Date().getMonth()).change();
-        $('#end-month').val(defaultEnd.getMonth()).change();
-
-        $('#start-day').val(1);
-        $('#end-day').val(1);
+        $('#project').click(function () {
+            project();
+        });
     };
 
-    function loadDateInput(yearTarget, monthTarget, dayTarget) {
+    function project() {
+
+        var budgetSettings = {};
+        budgetSettings.monthlyRecurringExpenses = [];
+
+        $('.monthly-expense-item').each(function() {
+            var tran = {};
+
+            var amountInput = $(this).children('input.amount');
+            var dateInput = $(this).children('input.date');
+            var nameInput = $(this).children('input.name');
+
+            tran.amount = parseInt(amountInput.val().trim()) * 100;
+            tran.date = new Date(dateInput.val().trim());
+            tran.name = nameInput.val().trim();
+
+            budgetSettings.monthlyRecurringExpenses.push(tran);
+        });
+
+        budgetSettings.weeklyRecurringExpenses = budgetParser.parse($('#weekly-input').val().trim());
+        budgetSettings.oneTimeExpenses = budgetParser.parse($('#one-time-input').val().trim());
+        budgetSettings.biWeeklyIncome = {};
+        budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
+        var year = parseInt($('#start-year').val().trim());
+        var month = parseInt($('#start-month').val().trim());
+        var start = new Date(Date.UTC(year, month, 1));
+        var end = new Date(start.getTime());
+        end.setUTCMonth(end.getUTCMonth() + 1);
+        calendarView.build(year, month);
+        calendarView.load(budgetSettings, budgetParser.parse($('#actuals').val().trim()), start, end);
+        checkNet();
+        $('#input-form').remove();
+    }
+
+    function loadDateInput(yearTarget, monthTarget) {
         loadYears(yearTarget);
         loadMonths(monthTarget);
-        listenForDateChange(yearTarget, monthTarget, dayTarget);
     }
 
     function loadYears(target) {
-        var startYear = new Date().getFullYear();
+        var startYear = new Date().getUTCFullYear();
         for (var year = startYear; year < startYear + 10; year++) {
             $(target).append('<option value="' + year + '">' + year + '</option>');
         }
@@ -39,38 +77,17 @@ function HomeController() {
         }
     }
 
-    function loadDays(target, endDay) {
-        for (var day = 1; day < endDay + 1; day++) {
-            $(target).append('<option value="' + day + '">' + day + '</option>');
+    function checkNet() {
+        var displayedNet = parseInt($('#month-net-header-value').html());
+        var expectedNet = 2545;
+        if (displayedNet !== expectedNet) {
+            log('expected net of ' + expectedNet + ', but was: ' + displayedNet);
         }
     }
 
-    function listenForDateChange(yearTarget, monthTarget, dayTarget) {
-
-        $(yearTarget).change(function() {
-            loadDays(dayTarget,
-                getDaysByTarget(yearTarget, monthTarget))
-        });
-
-        $(monthTarget).change(function() {
-            loadDays(dayTarget,
-                getDaysByTarget(yearTarget, monthTarget))
-
-        });
-
-    }
-
-    function getDaysByTarget(yearTarget, monthTarget) {
-        return getDays(
-            parseInt($(yearTarget).val()),
-            parseInt($(monthTarget).val())
-        );
-    }
-
-    function getDays(year, month) {
-        var dt = new Date(year, month + 1);
-        dt.setDate(0);
-        return dt.getDate();
+    function log(error) {
+        console.log(error);
+        $('#debug-console').append('<div>' + error + '</div>');
     }
 
 }

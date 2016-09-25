@@ -10349,85 +10349,21 @@ return jQuery;
 
 },{}],7:[function(require,module,exports){
 const $ = require('jquery');
-const calendarView = require('./calendar-view');
-const budgetParser = require('./budget-parser');
 const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
-var actual = [
-    {
-        name: 'groceries',
-        amount: 50 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 2),
-        type: 'expense',
-        budget: 'food'
-    },
-    {
-        name: 'groceries',
-        amount: 50 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 3),
-        type: 'expense',
-        budget: 'food'
-    },
-    {
-        name: 'groceries',
-        amount: 50 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 17),
-        type: 'expense',
-        budget: 'food'
-    },
-    {
-        name: 'ice cream',
-        amount: 10 * 100,
-        date: new Date(2016, cal.SEPTEMBER, 22),
-        type: 'expense'
-    }
-];
-
 $(document).ready(function() {
-    $('#project').click(function () {
-        project();
-        $('#input-form').remove();
+
+    $('#budget-url').val('https://s3.amazonaws.com/income-calculator/budget.json');
+    $.getJSON($('#budget-url').val().trim(), {}, function (data) {
+        homeController.init(data);
     });
-    homeController.init();
+
 });
 
-function project() {
 
-    var budgetSettings = {};
-    budgetSettings.monthlyRecurringExpenses = budgetParser.parse($('#monthly-input').val());
-    budgetSettings.weeklyRecurringExpenses = budgetParser.parse($('#weekly-input').val());
-    budgetSettings.oneTimeExpenses = budgetParser.parse($('#one-time-input').val());
-    budgetSettings.biWeeklyIncome = {};
-    budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val()) * 100;
-
-    var year = parseInt($('#start-year').val());
-    var month = parseInt($('#start-month').val());
-
-    var start = new Date(Date.UTC(year, month, 1));
-    var end = new Date(start.getTime());
-    end.setUTCMonth(end.getUTCMonth() + 1);
-    
-    calendarView.build(year, month);
-    calendarView.load(budgetSettings, actual, start, end);
-
-    checkNet();
-}
-
-function checkNet() {
-    var displayedNet = parseInt($('#month-net-header-value').html());
-    var expectedNet = 2545;
-    if (displayedNet !== expectedNet) {
-        log('expected net of ' + expectedNet + ', but was: ' + displayedNet);
-    }
-}
-
-function log(error) {
-    console.log(error);
-    $('#debug-console').append('<div>' + error + '</div>');
-}
-},{"./budget-parser":8,"./calendar-view":9,"./home-controller":10,"income-calculator/src/calendar":3,"jquery":6}],8:[function(require,module,exports){
+},{"./home-controller":10,"income-calculator/src/calendar":3,"jquery":6}],8:[function(require,module,exports){
 // Used to detect and convert iso strings to date objects.
 // Allows a JS object with a date property to be serialized
 // and deserialized. Normally this breaks, since the date is
@@ -10623,31 +10559,72 @@ exports.load = function (budgetSettings, actual, start, end) {
 },{"income-calculator/src/calendar":3,"income-calculator/src/calendar-aggregator":1,"income-calculator/src/net-income-calculator":4,"jquery":6}],10:[function(require,module,exports){
 function HomeController() {
 
-    var cal = require('income-calculator/src/calendar');
     var $ = require('jquery');
+    var cal = require('income-calculator/src/calendar');
+    const calendarView = require('./calendar-view');
+    const budgetParser = require('./budget-parser');
+    const homeView = require('./home-view');
 
-    this.init = function () {
-        loadDateInput('#start-year', '#start-month', '#start-day');
-        loadDateInput('#end-year', '#end-month', '#end-day');
+    this.init = function (data) {
+        loadDateInput('#start-year', '#start-month');
+        $('#start-month').val(new Date().getUTCMonth());
+        homeView.setBudget(data);
 
-        var defaultEnd = new Date();
-        defaultEnd.setMonth(defaultEnd.getMonth() + 1, 1);
+        $('#load-budget').click(function () {
+            $.getJSON($('#budget-url').val().trim(), {}, function (data) {
+                homeView.setBudget(data);
+            });
+        });
 
-        $('#start-month').val(new Date().getMonth()).change();
-        $('#end-month').val(defaultEnd.getMonth()).change();
-
-        $('#start-day').val(1);
-        $('#end-day').val(1);
+        $('#project').click(function () {
+            project();
+        });
     };
 
-    function loadDateInput(yearTarget, monthTarget, dayTarget) {
+    function project() {
+
+        var budgetSettings = {};
+        budgetSettings.monthlyRecurringExpenses = [];
+
+        // budgetParser.parse($('#monthly-input').val().trim());
+
+        $('.monthly-expense-item').each(function() {
+            var tran = {};
+
+            var amountInput = $(this).children('input.amount');
+            var dateInput = $(this).children('input.date');
+            var nameInput = $(this).children('input.name');
+
+            tran.amount = parseInt(amountInput.val().trim()) * 100;
+            tran.date = new Date(dateInput.val().trim());
+            tran.name = nameInput.val().trim();
+
+            budgetSettings.monthlyRecurringExpenses.push(tran);
+        });
+
+
+        budgetSettings.weeklyRecurringExpenses = budgetParser.parse($('#weekly-input').val().trim());
+        budgetSettings.oneTimeExpenses = budgetParser.parse($('#one-time-input').val().trim());
+        budgetSettings.biWeeklyIncome = {};
+        budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
+        var year = parseInt($('#start-year').val().trim());
+        var month = parseInt($('#start-month').val().trim());
+        var start = new Date(Date.UTC(year, month, 1));
+        var end = new Date(start.getTime());
+        end.setUTCMonth(end.getUTCMonth() + 1);
+        calendarView.build(year, month);
+        calendarView.load(budgetSettings, budgetParser.parse($('#actuals').val().trim()), start, end);
+        checkNet();
+        $('#input-form').remove();
+    }
+
+    function loadDateInput(yearTarget, monthTarget) {
         loadYears(yearTarget);
         loadMonths(monthTarget);
-        listenForDateChange(yearTarget, monthTarget, dayTarget);
     }
 
     function loadYears(target) {
-        var startYear = new Date().getFullYear();
+        var startYear = new Date().getUTCFullYear();
         for (var year = startYear; year < startYear + 10; year++) {
             $(target).append('<option value="' + year + '">' + year + '</option>');
         }
@@ -10662,41 +10639,52 @@ function HomeController() {
         }
     }
 
-    function loadDays(target, endDay) {
-        for (var day = 1; day < endDay + 1; day++) {
-            $(target).append('<option value="' + day + '">' + day + '</option>');
+    function checkNet() {
+        var displayedNet = parseInt($('#month-net-header-value').html());
+        var expectedNet = 2545;
+        if (displayedNet !== expectedNet) {
+            log('expected net of ' + expectedNet + ', but was: ' + displayedNet);
         }
     }
 
-    function listenForDateChange(yearTarget, monthTarget, dayTarget) {
-
-        $(yearTarget).change(function() {
-            loadDays(dayTarget,
-                getDaysByTarget(yearTarget, monthTarget))
-        });
-
-        $(monthTarget).change(function() {
-            loadDays(dayTarget,
-                getDaysByTarget(yearTarget, monthTarget))
-
-        });
-
-    }
-
-    function getDaysByTarget(yearTarget, monthTarget) {
-        return getDays(
-            parseInt($(yearTarget).val()),
-            parseInt($(monthTarget).val())
-        );
-    }
-
-    function getDays(year, month) {
-        var dt = new Date(year, month + 1);
-        dt.setDate(0);
-        return dt.getDate();
+    function log(error) {
+        console.log(error);
+        $('#debug-console').append('<div>' + error + '</div>');
     }
 
 }
 
 module.exports = HomeController;
-},{"income-calculator/src/calendar":3,"jquery":6}]},{},[7]);
+},{"./budget-parser":8,"./calendar-view":9,"./home-view":11,"income-calculator/src/calendar":3,"jquery":6}],11:[function(require,module,exports){
+const $ = require('jquery');
+
+function getJson(object) {
+    return JSON.stringify(object, 0, 4);
+}
+
+function insertTransactionView(transaction) {
+    return $('#monthly-input-group').append('<div class="monthly-expense-item input-group">' +
+        '<div class="input-group-addon">$</div>' +
+        '<input class="amount form-control inline-group" type="text" value="' + transaction.amount/100 + '" /> ' +
+        '<div class="input-group-addon">&#64;</div>' +
+        '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
+        '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
+        '</div>');
+}
+
+function insertTransactionViews(transactions) {
+    for (var i = 0; i < transactions.length; i++) {
+        insertTransactionView(transactions[i]);
+    }
+}
+
+exports.setBudget = function (budget) {
+        $('#one-time-input').val(getJson(budget.oneTimeExpenses));
+        $('#biweekly-input').val(budget.biWeeklyIncome.amount/100);
+        $('#weekly-input').val(getJson(budget.weeklyRecurringExpenses));
+        $('#monthly-input').val(getJson(budget.monthlyRecurringExpenses));
+        insertTransactionViews(budget.monthlyRecurringExpenses);
+        $('#actuals').val(getJson(budget.actual));
+    }
+
+},{"jquery":6}]},{},[7]);

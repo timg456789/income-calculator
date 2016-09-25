@@ -8,6 +8,19 @@ body {
     margin-bottom: 15px;
 }
 
+.monthly-expense-item .amount {
+    width: 100%;
+}
+
+.monthly-expense-item .date {
+    width: 50%;
+}
+
+.monthly-expense-item .name {
+    width: 50%;
+}
+
+
 .month-heading {
     font-family: "Trebuchet MS";
     font-weight: 700;
