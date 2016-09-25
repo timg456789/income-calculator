@@ -1,6 +1,6 @@
 {
   "name": "income-calculator-ui",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/timg456789/income-calculator.git#gh-pages"
   },
   "author": "Timothy Gonzalez",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/timg456789/income-calculator/issues"
   },

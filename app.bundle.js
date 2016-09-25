@@ -6,12 +6,12 @@ function CalendarAggregator() {
     const CalendarSearch = require('./calendar-search');
     const calendarSearch = new CalendarSearch();
 
-    this.getSummary = function (start, end, budget, actual) {
+    this.getSummary = function (startTime, endTime, budget, actual) {
         var summary = {};
 
-        summary.budgetItems = calendarSearch.find(start, end, budget);
+        summary.budgetItems = calendarSearch.find(startTime, endTime, budget);
         summary.budgeted = getSimpleTotal(summary.budgetItems);
-        summary.actualsForWeek = calendarSearch.find(start, end, actual);
+        summary.actualsForWeek = calendarSearch.find(startTime, endTime, actual);
         summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
         summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
         summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
@@ -76,7 +76,7 @@ function CalendarAggregator() {
             for (var aI = 0; aI < actuals.length; aI++) {
 
                 if (actuals[aI].budget === budget[bI].name &&
-                    calendarSearch.within(budget[bI].date, budget[bI].endDate, actuals[aI].date)) {
+                    calendarSearch.within(budget[bI].date.getTime(), budget[bI].endDate.getTime(), actuals[aI].date.getTime())) {
                     budgetBalance -= actuals[aI].amount;
                 }
 
@@ -98,12 +98,12 @@ module.exports = CalendarAggregator;
 },{"./calendar":3,"./calendar-search":2}],2:[function(require,module,exports){
 function CalendarSearch() {
 
-    this.find = function (start, end, transactions) {
+    this.find = function (startTime, endTime, transactions) {
         var matches = [];
 
         for (i = 0; i < transactions.length; i++) {
             var transaction = transactions[i];
-            if (this.within(start, end, transaction.date)) {
+            if (this.within(startTime, endTime, transaction.date.getTime())) {
                 matches.push(transaction);
             }
         }
@@ -111,9 +111,9 @@ function CalendarSearch() {
         return matches;
     };
 
-    this.within = function (start, end, sample) {
-        return sample.getTime() >= start.getTime() &&
-            sample.getTime() < end.getTime();
+    this.within = function (startTime, endTime, sampleTime) {
+        return sampleTime >= startTime &&
+            sampleTime < endTime;
     };
 
 }
@@ -171,48 +171,10 @@ function NetIncomeCalculator() {
 
         var current = new Date(startTime);
         while (current.getTime() < endTime) {
-
-            for (var i = 0; i < mre.length; i++) {
-                if ((current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
-                    (mre[i].date && mre[i].date.getDate() === current.getDate())) {
-                    var processed = {};
-                    processed.name = mre[i].name;
-                    processed.amount = mre[i].amount;
-                    processed.date = new Date(current.getTime());
-                    processed.type = 'expense';
-                    breakdown.push(processed);
-                }
-            }
-
-            if (current.getDay() == cal.FRIDAY) {
-                for (var i = 0; i < wre.length; i++) {
-                    var processed = {};
-                    processed.name = wre[i].name;
-                    processed.amount = wre[i].amount;
-                    processed.date = new Date(current.getTime());
-                    processed.endDate = new Date(current.getTime());
-                    processed.endDate.setDate(processed.endDate.getDate() + 7);
-                    processed.type = 'expense';
-                    breakdown.push(processed);
-                }
-            }
-
-            for (var i=0; i < config.oneTimeExpenses.length; i++) {
-                var potentialOneTimeExpense = config.oneTimeExpenses[i];
-                if (current.getTime() == potentialOneTimeExpense.date.getTime()) {
-                    var expense = {};
-                    expense.name = potentialOneTimeExpense.name;
-                    expense.amount = potentialOneTimeExpense.amount;
-                    expense.date = new Date(current.getTime());
-                    expense.type = 'expense';
-                    breakdown.push(expense);
-                }
-            }
-
-            var incomeAccrual = getIncomeAccrual(config, current);
-            if (incomeAccrual) {
-                breakdown.push(incomeAccrual);
-            }
+            getMonthlyExpenses(mre, current, breakdown);
+            getWeeklyExpenses(wre, current, breakdown);
+            getOneTimeExpenses(config.oneTimeExpenses, current, breakdown);
+            getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
 
             current.setDate(current.getDate() + 1);
         }
@@ -220,11 +182,63 @@ function NetIncomeCalculator() {
         return breakdown;
     };
 
-    function getIncomeAccrual(config, date) {
+    function getMonthlyExpenses(monthlyExpenses, current, breakdown) {
+        var mre = monthlyExpenses;
+        for (var i = 0; i < mre.length; i++) {
+            if ((current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
+                (mre[i].date && mre[i].date.getDate() === current.getDate())) {
+                var processed = {};
+                processed.name = mre[i].name;
+                processed.amount = mre[i].amount;
+                processed.date = new Date(current.getTime());
+                processed.type = 'expense';
+                breakdown.push(processed);
+            }
+        }
+
+    }
+
+    function getWeeklyExpenses(wre, current, breakdown) {
+        if (current.getUTCDay() == cal.FRIDAY) {
+            for (var i = 0; i < wre.length; i++) {
+                var processed = {};
+                processed.name = wre[i].name;
+                processed.amount = wre[i].amount;
+                processed.date = new Date(current.getTime());
+                processed.endDate = new Date(current.getTime());
+                processed.endDate.setDate(processed.endDate.getDate() + 7);
+                processed.type = 'expense';
+                breakdown.push(processed);
+            }
+        }
+    }
+
+    function getOneTimeExpenses(expenses, current, breakdown) {
+        for (var i=0; i < expenses.length; i++) {
+            var potentialOneTimeExpense = expenses[i];
+            if (current.getTime() == potentialOneTimeExpense.date.getTime()) {
+                var expense = {};
+                expense.name = potentialOneTimeExpense.name;
+                expense.amount = potentialOneTimeExpense.amount;
+                expense.date = new Date(current.getTime());
+                expense.type = 'expense';
+                breakdown.push(expense);
+            }
+        }
+    }
+
+    function getIncome(amount, time, breakdown) {
+        var incomeAccrual = getIncomeAccrual(amount, time);
+        if (incomeAccrual) {
+            breakdown.push(incomeAccrual);
+        }
+    }
+
+    function getIncomeAccrual(amount, time) {
         var accrual;
         var diffFromFirstPayDate = utcDay.getDayDiff(
             cal.BIWEEKLY_PAY_START_DATE.getTime(),
-            date.getTime()
+            time
         );
 
         var modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
@@ -232,8 +246,8 @@ function NetIncomeCalculator() {
         if (modulusIntervalsFromFirstPayDate === 0) {
             var accrual = {};
             accrual.name = 'biweekly income';
-            accrual.amount = config.biWeeklyIncome.amount;
-            accrual.date = new Date(date.getTime());
+            accrual.amount = amount;
+            accrual.date = new Date(time);
             accrual.type = 'income';
         }
 
@@ -10388,15 +10402,14 @@ function project() {
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val()) * 100;
 
-    var start = new Date(
-        $('#start-year').val(),
-        $('#start-month').val(),
-        1);
+    var year = parseInt($('#start-year').val());
+    var month = parseInt($('#start-month').val());
 
-    var end = new Date(start);
+    var start = new Date(Date.UTC(year, month, 1));
+    var end = new Date(start.getTime());
     end.setMonth(end.getMonth() + 1);
 
-    calendarView.build(start);
+    calendarView.build(year, month);
     calendarView.load(budgetSettings, actual, start, end);
 
     checkNet();
@@ -10489,12 +10502,14 @@ function getWeekTarget(date) {
 }
 
 function getDateTarget(date) {
-    return date.getFullYear() + '-' +
-    date.getMonth() + '-' +
-    date.getDate();
+    return date.getUTCFullYear() + '-' +
+    date.getUTCMonth() + '-' +
+    date.getUTCDate();
 }
 
-exports.build = function (date) {
+exports.build = function (year, month) {
+
+    var date = new Date(year, month);
 
     $('#months-container').empty();
 
@@ -10554,11 +10569,11 @@ function loadTransactions(items, areActuals) {
 function loadWeeklyTotals(budgetSettings, actual, start) {
 
     var currentDate = new Date(start);
-    currentDate.setDate(currentDate.getDate() - currentDate.getDay());
+    currentDate.setUTCDate(currentDate.getUTCDate() - currentDate.getUTCDay());
 
-    while (currentDate.getMonth() !== start.getMonth() + 1) {
-        var weekEnd = new Date(currentDate);
-        weekEnd.setDate(weekEnd.getDate() + cal.DAYS_IN_WEEK);
+    while (currentDate.getUTCMonth() !== start.getUTCMonth() + 1) {
+        var weekEnd = new Date(currentDate.getTime());
+        weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
 
         var budget = netIncomeCalculator.getBudget(
             budgetSettings,
@@ -10566,8 +10581,8 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
             weekEnd.getTime());
 
         var summary = calendarAggregator.getSummary(
-            currentDate,
-            weekEnd,
+            currentDate.getTime(),
+            weekEnd.getTime(),
             budget,
             actual);
 
@@ -10583,8 +10598,8 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 
 exports.load = function (budgetSettings, actual, start, end) {
 
-    $('#debug-console').append('<div>' + start + '</div>');
-    $('#debug-console').append('<div>' + end + '</div>');
+    $('#debug-console').append('<div>Showing from: ' + JSON.stringify(start) + ' UTC</div>');
+    $('#debug-console').append('<div>Showing until: ' + JSON.stringify(end) + ' UTC</div>');
 
     var budget = netIncomeCalculator.getBudget(
         budgetSettings,

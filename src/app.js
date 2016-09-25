@@ -52,15 +52,14 @@ function project() {
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val()) * 100;
 
-    var start = new Date(
-        $('#start-year').val(),
-        $('#start-month').val(),
-        1);
+    var year = parseInt($('#start-year').val());
+    var month = parseInt($('#start-month').val());
 
-    var end = new Date(start);
+    var start = new Date(Date.UTC(year, month, 1));
+    var end = new Date(start.getTime());
     end.setMonth(end.getMonth() + 1);
 
-    calendarView.build(start);
+    calendarView.build(year, month);
     calendarView.load(budgetSettings, actual, start, end);
 
     checkNet();

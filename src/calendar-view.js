@@ -54,12 +54,14 @@ function getWeekTarget(date) {
 }
 
 function getDateTarget(date) {
-    return date.getFullYear() + '-' +
-    date.getMonth() + '-' +
-    date.getDate();
+    return date.getUTCFullYear() + '-' +
+    date.getUTCMonth() + '-' +
+    date.getUTCDate();
 }
 
-exports.build = function (date) {
+exports.build = function (year, month) {
+
+    var date = new Date(year, month);
 
     $('#months-container').empty();
 
@@ -119,11 +121,11 @@ function loadTransactions(items, areActuals) {
 function loadWeeklyTotals(budgetSettings, actual, start) {
 
     var currentDate = new Date(start);
-    currentDate.setDate(currentDate.getDate() - currentDate.getDay());
+    currentDate.setUTCDate(currentDate.getUTCDate() - currentDate.getUTCDay());
 
-    while (currentDate.getMonth() !== start.getMonth() + 1) {
-        var weekEnd = new Date(currentDate);
-        weekEnd.setDate(weekEnd.getDate() + cal.DAYS_IN_WEEK);
+    while (currentDate.getUTCMonth() !== start.getUTCMonth() + 1) {
+        var weekEnd = new Date(currentDate.getTime());
+        weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
 
         var budget = netIncomeCalculator.getBudget(
             budgetSettings,
@@ -131,8 +133,8 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
             weekEnd.getTime());
 
         var summary = calendarAggregator.getSummary(
-            currentDate,
-            weekEnd,
+            currentDate.getTime(),
+            weekEnd.getTime(),
             budget,
             actual);
 
@@ -148,8 +150,8 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 
 exports.load = function (budgetSettings, actual, start, end) {
 
-    $('#debug-console').append('<div>' + start + '</div>');
-    $('#debug-console').append('<div>' + end + '</div>');
+    $('#debug-console').append('<div>Showing from: ' + JSON.stringify(start) + ' UTC</div>');
+    $('#debug-console').append('<div>Until: ' + JSON.stringify(end) + ' UTC</div>');
 
     var budget = netIncomeCalculator.getBudget(
         budgetSettings,
