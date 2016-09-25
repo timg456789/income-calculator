@@ -137,7 +137,6 @@ exports.MONTHS_IN_YEAR = 12;
 
 exports.SAFE_LAST_DAY_OF_MONTH = 28;
 
-
 exports.BIWEEKLY_PAY_START_DATE = new Date(Date.UTC(2015, 11, 25));
 exports.BIWEEKLY_INTERVAL = 14;
 exports.FRIDAY = 5;
@@ -222,9 +221,6 @@ function NetIncomeCalculator() {
     };
 
     function getIncomeAccrual(config, date) {
-        $('#debug-console').append('<div>checking date for accrual' + date + ': ' + date.getTime() + '</div>');
-        $('#debug-console').append('<div>start date ' + cal.BIWEEKLY_PAY_START_DATE + ': ' + cal.BIWEEKLY_PAY_START_DATE.getTime() + '</div>');
-
         var accrual;
         var diffFromFirstPayDate = utcDay.getDayDiff(
             cal.BIWEEKLY_PAY_START_DATE.getTime(),
@@ -240,8 +236,6 @@ function NetIncomeCalculator() {
             accrual.date = new Date(date.getTime());
             accrual.type = 'income';
         }
-
-        $('#debug-console').append('<div>has accrual: ' + (modulusIntervalsFromFirstPayDate === 0) + '</div>');
 
         return accrual;
     }
