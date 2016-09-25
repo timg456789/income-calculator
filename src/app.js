@@ -57,7 +57,7 @@ function project() {
 
     var start = new Date(Date.UTC(year, month, 1));
     var end = new Date(start.getTime());
-    end.setMonth(end.getMonth() + 1);
+    end.setUTCMonth(end.getUTCMonth() + 1);
 
     calendarView.build(year, month);
     calendarView.load(budgetSettings, actual, start, end);

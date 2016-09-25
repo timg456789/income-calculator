@@ -10407,8 +10407,8 @@ function project() {
 
     var start = new Date(Date.UTC(year, month, 1));
     var end = new Date(start.getTime());
-    end.setMonth(end.getMonth() + 1);
-
+    end.setUTCMonth(end.getUTCMonth() + 1);
+    
     calendarView.build(year, month);
     calendarView.load(budgetSettings, actual, start, end);
 
@@ -10599,7 +10599,7 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 exports.load = function (budgetSettings, actual, start, end) {
 
     $('#debug-console').append('<div>Showing from: ' + JSON.stringify(start) + ' UTC</div>');
-    $('#debug-console').append('<div>Showing until: ' + JSON.stringify(end) + ' UTC</div>');
+    $('#debug-console').append('<div>Until: ' + JSON.stringify(end) + ' UTC</div>');
 
     var budget = netIncomeCalculator.getBudget(
         budgetSettings,
