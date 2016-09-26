@@ -8,18 +8,34 @@ body {
     margin-bottom: 15px;
 }
 
-.monthly-expense-item .amount {
+.transaction-input-view .amount {
     width: 100%;
 }
 
-.monthly-expense-item .date {
+.transaction-input-view .date {
     width: 50%;
 }
 
-.monthly-expense-item .name {
+.transaction-input-view .name {
     width: 50%;
 }
 
+/* with a budget */
+.transaction-input-view.actual-expense-item .amount {
+    width: 100%;
+}
+
+.transaction-input-view.actual-expense-item .date {
+    width: 23%;
+}
+
+.transaction-input-view.actual-expense-item .name {
+    width: 38%;
+}
+
+.transaction-input-view.actual-expense-item .budget {
+    width: 38%;
+}
 
 .month-heading {
     font-family: "Trebuchet MS";

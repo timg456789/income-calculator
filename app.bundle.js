@@ -10363,25 +10363,7 @@ $(document).ready(function() {
 });
 
 
-},{"./home-controller":10,"income-calculator/src/calendar":3,"jquery":6}],8:[function(require,module,exports){
-// Used to detect and convert iso strings to date objects.
-// Allows a JS object with a date property to be serialized
-// and deserialized. Normally this breaks, since the date is
-// serialized to a string, but never deserialized to a date.
-exports.parse = function (budget) {
-    return JSON.parse(budget, function (k,v) {
-
-        if (v.length === 24) {
-            var endLetter = v.toLowerCase().substr(23, 1);
-            if (endLetter === 'z') {
-                return new Date(v);
-            }
-        }
-
-        return v;
-    });
-}
-},{}],9:[function(require,module,exports){
+},{"./home-controller":9,"income-calculator/src/calendar":3,"jquery":6}],8:[function(require,module,exports){
 const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 
@@ -10556,23 +10538,22 @@ exports.load = function (budgetSettings, actual, start, end) {
     loadWeeklyTotals(budgetSettings, actual, start);
 };
 
-},{"income-calculator/src/calendar":3,"income-calculator/src/calendar-aggregator":1,"income-calculator/src/net-income-calculator":4,"jquery":6}],10:[function(require,module,exports){
+},{"income-calculator/src/calendar":3,"income-calculator/src/calendar-aggregator":1,"income-calculator/src/net-income-calculator":4,"jquery":6}],9:[function(require,module,exports){
 function HomeController() {
 
     var $ = require('jquery');
     var cal = require('income-calculator/src/calendar');
     const calendarView = require('./calendar-view');
-    const budgetParser = require('./budget-parser');
     const homeView = require('./home-view');
 
     this.init = function (data) {
         loadDateInput('#start-year', '#start-month');
         $('#start-month').val(new Date().getUTCMonth());
-        homeView.setBudget(data);
+        homeView.setView(data);
 
         $('#load-budget').click(function () {
             $.getJSON($('#budget-url').val().trim(), {}, function (data) {
-                homeView.setBudget(data);
+                homeView.setView(data);
             });
         });
 
@@ -10582,38 +10563,14 @@ function HomeController() {
     };
 
     function project() {
-
-        var budgetSettings = {};
-        budgetSettings.monthlyRecurringExpenses = [];
-
-        // budgetParser.parse($('#monthly-input').val().trim());
-
-        $('.monthly-expense-item').each(function() {
-            var tran = {};
-
-            var amountInput = $(this).children('input.amount');
-            var dateInput = $(this).children('input.date');
-            var nameInput = $(this).children('input.name');
-
-            tran.amount = parseInt(amountInput.val().trim()) * 100;
-            tran.date = new Date(dateInput.val().trim());
-            tran.name = nameInput.val().trim();
-
-            budgetSettings.monthlyRecurringExpenses.push(tran);
-        });
-
-
-        budgetSettings.weeklyRecurringExpenses = budgetParser.parse($('#weekly-input').val().trim());
-        budgetSettings.oneTimeExpenses = budgetParser.parse($('#one-time-input').val().trim());
-        budgetSettings.biWeeklyIncome = {};
-        budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
+        var budgetSettings = homeView.getModel();
         var year = parseInt($('#start-year').val().trim());
         var month = parseInt($('#start-month').val().trim());
         var start = new Date(Date.UTC(year, month, 1));
         var end = new Date(start.getTime());
         end.setUTCMonth(end.getUTCMonth() + 1);
         calendarView.build(year, month);
-        calendarView.load(budgetSettings, budgetParser.parse($('#actuals').val().trim()), start, end);
+        calendarView.load(budgetSettings, budgetSettings.actuals, start, end);
         checkNet();
         $('#input-form').remove();
     }
@@ -10655,36 +10612,94 @@ function HomeController() {
 }
 
 module.exports = HomeController;
-},{"./budget-parser":8,"./calendar-view":9,"./home-view":11,"income-calculator/src/calendar":3,"jquery":6}],11:[function(require,module,exports){
+},{"./calendar-view":8,"./home-view":10,"income-calculator/src/calendar":3,"jquery":6}],10:[function(require,module,exports){
 const $ = require('jquery');
 
-function getJson(object) {
-    return JSON.stringify(object, 0, 4);
-}
-
-function insertTransactionView(transaction) {
-    return $('#monthly-input-group').append('<div class="monthly-expense-item input-group">' +
+function getTransactionView(transaction, iteration, type) {
+    var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
         '<div class="input-group-addon">$</div>' +
         '<input class="amount form-control inline-group" type="text" value="' + transaction.amount/100 + '" /> ' +
         '<div class="input-group-addon">&#64;</div>' +
         '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
         '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
-        '</div>');
+        '</div>';
+
+    var view = $(html);
+
+    if (transaction.budget !== undefined) {
+        view.append('<input class="budget form-control inline-group" ' +
+            'type="text" value="' + transaction.budget + '" /> ');
+    }
+
+    return view;
 }
 
-function insertTransactionViews(transactions) {
+function getTransactionModel(target) {
+    var transaction = {};
+
+    var amountInput = $(target).children('input.amount');
+    var dateInput = $(target).children('input.date');
+    var nameInput = $(target).children('input.name');
+
+    transaction.amount = parseInt(amountInput.val().trim()) * 100;
+    transaction.date = new Date(dateInput.val().trim());
+    transaction.name = nameInput.val().trim();
+    transaction.type = 'expense';
+
+    var budgetInput = $(target).children('input.budget');
+    if (budgetInput && budgetInput.length > 0) {
+        transaction.budget = budgetInput.val().trim();
+    }
+
+    return transaction;
+};
+
+function insertTransactionView(transaction, target, iteration, type) {
+    $(target).append(getTransactionView(transaction, iteration, type));
+}
+
+function insertTransactionViews(transactions, target, iteration, type) {
     for (var i = 0; i < transactions.length; i++) {
-        insertTransactionView(transactions[i]);
+        insertTransactionView(transactions[i], target, iteration, type);
     }
 }
 
-exports.setBudget = function (budget) {
-        $('#one-time-input').val(getJson(budget.oneTimeExpenses));
-        $('#biweekly-input').val(budget.biWeeklyIncome.amount/100);
-        $('#weekly-input').val(getJson(budget.weeklyRecurringExpenses));
-        $('#monthly-input').val(getJson(budget.monthlyRecurringExpenses));
-        insertTransactionViews(budget.monthlyRecurringExpenses);
-        $('#actuals').val(getJson(budget.actual));
-    }
+exports.setView = function (budget) {
+    $('#biweekly-input').val(budget.biWeeklyIncome.amount/100);
+    insertTransactionViews(budget.oneTimeExpenses, '#one-time-input-group', 'one-time', 'expense');
+    insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
+    insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
+    insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
+};
+
+exports.getModel = function() {
+    var budgetSettings = {};
+
+    budgetSettings.biWeeklyIncome = {};
+    budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
+
+    budgetSettings.monthlyRecurringExpenses = [];
+    $('.monthly-expense-item').each(function() {
+        budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
+    });
+
+    budgetSettings.weeklyRecurringExpenses = [];
+    $('.weekly-expense-item').each(function () {
+        budgetSettings.weeklyRecurringExpenses.push(getTransactionModel(this));
+    });
+
+    budgetSettings.oneTimeExpenses = [];
+    $('.one-time-expense-item').each(function() {
+        budgetSettings.oneTimeExpenses.push(getTransactionModel(this));
+    });
+
+    budgetSettings.actuals = [];
+    $('.actual-expense-item').each(function() {
+        budgetSettings.actuals.push(getTransactionModel(this));
+    });
+
+    return budgetSettings;
+}
+
 
 },{"jquery":6}]},{},[7]);
