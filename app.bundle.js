@@ -10516,8 +10516,8 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 
 exports.load = function (budgetSettings, actual, start, end) {
 
-    $('#debug-console').append('<div>Showing from: ' + JSON.stringify(start) + ' UTC</div>');
-    $('#debug-console').append('<div>Until: ' + JSON.stringify(end) + ' UTC</div>');
+    $('#debug-console').append('<div>Showing from: ' + start.toISOString() + ' UTC</div>');
+    $('#debug-console').append('<div>Until: ' + end.toISOString() + ' UTC</div>');
 
     var budget = netIncomeCalculator.getBudget(
         budgetSettings,
@@ -10547,6 +10547,8 @@ function HomeController() {
     const homeView = require('./home-view');
 
     this.init = function (data) {
+        $('#output').append('<p>Enter your biweekly income and expenses. Then we will show your expenses for the current month on a calendar.</p>');
+
         loadDateInput('#start-year', '#start-month');
         $('#start-month').val(new Date().getUTCMonth());
         homeView.setView(data);
@@ -10573,6 +10575,8 @@ function HomeController() {
         calendarView.load(budgetSettings, budgetSettings.actuals, start, end);
         checkNet();
         $('#input-form').remove();
+        $('#output').empty();
+        /*$('#output').append('<p>You can view this budget at anytime by bookmarking this page and returning to the current URL.</p><div>I still have to do the create in S3 part and </div>');*/
     }
 
     function loadDateInput(yearTarget, monthTarget) {
@@ -10659,6 +10663,7 @@ function insertTransactionView(transaction, target, iteration, type) {
 }
 
 function insertTransactionViews(transactions, target, iteration, type) {
+    $(target).empty();
     for (var i = 0; i < transactions.length; i++) {
         insertTransactionView(transactions[i], target, iteration, type);
     }

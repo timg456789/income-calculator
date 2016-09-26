@@ -44,6 +44,7 @@ function insertTransactionView(transaction, target, iteration, type) {
 }
 
 function insertTransactionViews(transactions, target, iteration, type) {
+    $(target).empty();
     for (var i = 0; i < transactions.length; i++) {
         insertTransactionView(transactions[i], target, iteration, type);
     }

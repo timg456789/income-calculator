@@ -150,8 +150,8 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 
 exports.load = function (budgetSettings, actual, start, end) {
 
-    $('#debug-console').append('<div>Showing from: ' + JSON.stringify(start) + ' UTC</div>');
-    $('#debug-console').append('<div>Until: ' + JSON.stringify(end) + ' UTC</div>');
+    $('#debug-console').append('<div>Showing from: ' + start.toISOString() + ' UTC</div>');
+    $('#debug-console').append('<div>Until: ' + end.toISOString() + ' UTC</div>');
 
     var budget = netIncomeCalculator.getBudget(
         budgetSettings,

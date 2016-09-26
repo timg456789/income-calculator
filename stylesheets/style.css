@@ -1,9 +1,29 @@
 body {
     font-family: Tahoma, Verdana, Arial, sans-serif;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
-#input-form {
+.header {
+    background: #c7a720;
+    color: white;
+    padding-left: 20px;
+    padding-top: 3px;
+    margin-top: 0px;
+    box-shadow: 0px 2px 5px #aa8f00;
+
+}
+
+h2, .month-heading {
+    font-family: "Trebuchet MS";
+    font-weight: 700;
+    font-size: 1.5em;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    clear: both;
+}
+
+
+#input-form .btn-primary {
     margin-bottom: 15px;
 }
 
@@ -34,15 +54,6 @@ body {
 
 .transaction-input-view.actual-expense-item .budget {
     width: 38%;
-}
-
-.month-heading {
-    font-family: "Trebuchet MS";
-    font-weight: 700;
-    font-size: 1.5em;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    clear: both;
 }
 
 .inline-group {
