@@ -78,6 +78,8 @@ function HomeController() {
         $('#input-form').hide();
         $('#output').empty();
 
+        log('uploading');
+
         var s3 = dataFactory();
         var options = {};
         options.Bucket = bucket;
@@ -87,6 +89,8 @@ function HomeController() {
             if (err) {
                 log(JSON.stringify(err, 0, 4));
             }
+
+            log('created');
 
             var url = window.location.href + "&data=" + options.Key;
             $('#output').append('<p>You can view this budget at anytime by viewing this ' +
