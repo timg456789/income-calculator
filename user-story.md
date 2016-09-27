@@ -1,32 +1,26 @@
-someone comes to the site in search of help with their budgeting. they are unorganized and constantly falling behind, because they have no good understanding of how much money they have when bills take up most of their paycheck.
+someone comes to the site in search of help with their budgeting. they are unorganized and constantly falling behind as a result. it's nearly impossible for them to know how much money they have when the majority of the money they get is spent on bills that are known ahead of time.
 
 so when they get to the site with this in mind,
-we let them know that we can help by creating a budget.
+we let them know that we can get them organized by creating a budget. 
 
-once a budget is created we can offer text message and email reminders.
-reminders can be sent when a budget is in danger of going negative.
+Once the budget is made, a custom url is created to save the budget.
 
-at any time how much free cash is available to spend is viewable at any time.
-along with the expenses that will be made against it up to the spending date.
+After getting organized and no longer receiving unexpected legitimate payments, they want more. They try the time based reminders. They are paying their bills earlier now. They try the time-locked accounts. Through the time-locked accounts, they secure over $1,000 dollars on a rolling basis to ensure their living expenses are always available for the upcoming month.
 
-eventually they use the application enough and build trust and come to depend on the service.
-they have a firm graps on their finances where everything is on a calendar and
-updates are sent when issues occur with few false alarms. they now want to build a small buffer now that their finances are stable.
+Now they are free to create a new budget expense for the things they enjoy doing, rather than paying back principal, interest and fees.
 
-their worried though still. cash has a tendency to be spent faster with its density. they don't want to put their money away for a long time, just a short time. they never again want to face owing a bill when they had the money at one point and could have paid it, if only they could have set aside the money. a few hundred dollars here a few hundred there. the typical $1,000 emergency fund. Or if not just stuck away it could be equal to one month's living expenses. It's not much, but it's a safe place to store the money.
+They start saving for a vacation. This time in a 4 month time-locked account.
 
-For example, eventually they get on track with their budget. All bills are paid up to date. Now they want to pre-pay, but they can't. Some services are spent at a specific time e.g. gas. Car services. Utilities. It may be possible to, but can you image that mess! Alone that set of bills is complex now alternate dates with an alternate balance will be introduced.
-
-Here's the way it would work. For a monthly service fee, $1 per month, I will include up to 10 short-term savings accounts. The short-term savings accounts can hold up to $1000 altogether.
-
-The short-term savings accounts are the foundation where things flow as a base. They can be combined into a master account, once you have more trust and build more funds.
-
-It must be said that there is a certain amount of risk here. The amount added should be limited to a certain amount over a certain period of time. The programs need to prove themselves through tests and time.
-
-If this works though. Imagine, if I could write a program which forced me to stay on budget. All I would have to do is transfer from my direct deposit once I get paid. That's my safety net by the way. Nothing automated touches that. However once faith is built into the system I can do that transfer, and assuming it went this far I would need a paycheck's worth of reserves in case it ever failed. However consider if that were the case.
-
-Imagine what could be done if loans could be made easily. The beauty of it is profit is made on managing the loan not on the interest. For example, what is it worth to you if someone setup a vacation fund for you, locked the funds, and made them available to you a month prior to the date? Now what if they did that for everything you ever wanted to save for, what is that worth?
-
-The reason the solution is so beautiful is, because you don't need to lend the money away. There is zero risk. You can obviously charge a premium for larger accounts, but this would just be for offering a higher level of service or some extra non-essential features. Nobody would have access to anything better than another. For example where now if you have bad credit you pay more for a loan. Well if you are saving you don't need to.
-
-Discipline would be needed not to borrow out even a little bit. Especially considering the volatility of the crypto currencies.
+Putting away only 50 dollars each week, they are able to save $800 for a vacation.
+ 
+ The money is safe away in a time locked account. If some  months are miss a contribution to the account, it's no big deal. It's only a setback. A loss to the entire account can never occur.
+  
+ Two months in they have to abort the account. Their car broke down and needed emergency repairs. While the car was in the shop getting repaired for a few days, he went and got his backup key stored in a safe in his fathers home. He takes the document storing the coins and retrieves them for cash. It's an emergency and the funds were set aside for entertainment purposes, so the current turn in rate wasn't even checked.
+ 
+ It ended up that the rates were ok, no large variance occured and the entire account didn't need to be depleted so there was still a balance remaining in the vacation fund for the future.
+ 
+ Using the backup key, the lock-date was set back two more months. The backup key was stored away in the safe and 
+ 
+ Note: The backup key is actually a third-key. Two keys would be needed with something like a phone or common password being the second.
+ 
+ Every time the primary key and the phone or the backup key and the phone or the phone and the backup key can unlock the account.

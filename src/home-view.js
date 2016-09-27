@@ -79,9 +79,9 @@ exports.getModel = function() {
         budgetSettings.oneTimeExpenses.push(getTransactionModel(this));
     });
 
-    budgetSettings.actuals = [];
+    budgetSettings.actual = [];
     $('.actual-expense-item').each(function() {
-        budgetSettings.actuals.push(getTransactionModel(this));
+        budgetSettings.actual.push(getTransactionModel(this));
     });
 
     return budgetSettings;

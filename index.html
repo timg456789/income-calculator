@@ -10,10 +10,11 @@
     <script type="text/javascript" src="app.bundle.js"></script>
   </head>
   <body>
-  <h1 class="header">Income Calculator</h1>
+  <div id="header" class="container">
+    <h1 class="header">Income Calculator</h1>
+    <div id="output"></div>
+  </div>
   <div class="container">
-      <div id="output"></div>
-
       <form id="input-form" class="container-fluid form">
           <h2 class="hide">Optional Load a Budget</h2>
           <div class="hide form-group">
@@ -29,6 +30,10 @@
                   <input id="biweekly-input" type="text" class="form-control" value="1335" />
                   <div class="input-group-addon">.00</div>
               </div>
+          </div>
+          <div id="bitcoin-address-input-group" class="form-group">
+              <label class="form-label">Bitcoin Address</label>
+              <input id="bitcoin-input" class="form-control" value="1Ec9cjr5HW9nUXadixE9ZUi8qozedGzTFE" />
           </div>
           <label class="form-label">Monthly Expenses</label>
           <div id="monthly-input-group" class="form-group"></div>

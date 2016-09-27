@@ -1,62 +1,98 @@
 function HomeController() {
 
     var $ = require('jquery');
-    var cal = require('income-calculator/src/calendar');
     const calendarView = require('./calendar-view');
     const homeView = require('./home-view');
+    var bucket = 'income-calculator';
+    var s3Obj;
+    var accessKeyId;
+    var secretAccessKey;
 
-    this.init = function (data) {
-        $('#output').append('<p>Enter your biweekly income and expenses. Then we will show your expenses for the current month on a calendar.</p>');
+    function getS3Params() {
+        return {
+            Bucket: bucket,
+            Key: s3Obj,
+        };
+    }
+    //, ,
+    function dataFactory() {
+        var AWS = require('aws-sdk');
+        AWS.config.update(
+            {
+                accessKeyId: accessKeyId,
+                secretAccessKey: secretAccessKey,
+                region: 'us-east-1'
+            });
+        var s3 = new AWS.S3();
+        return s3;
+    }
 
-        loadDateInput('#start-year', '#start-month');
-        $('#start-month').val(new Date().getUTCMonth());
-        homeView.setView(data);
+    function refresh() {
+        dataFactory().getObject(getS3Params(), function (err, data) {
+            if (err) {
+                log(JSON.stringify(err, 0, 4));
+            }
+            homeView.setView(JSON.parse(data.Body.toString('utf-8')));
+        });
+    }
+
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    }
+
+    this.init = function (s3ObjIn, accessKeyIdIn, secretAccessKeyIn) {
+        s3Obj = s3ObjIn;
+        accessKeyId = accessKeyIdIn;
+        secretAccessKey = secretAccessKeyIn;
+
+        $('#output').append('<p>Enter your biweekly income and expenses. ' +
+            'Then we will show your expenses for the current month on a calendar.</p>');
 
         $('#load-budget').click(function () {
-            $.getJSON($('#budget-url').val().trim(), {}, function (data) {
-                homeView.setView(data);
-            });
+            refresh();
         });
 
         $('#project').click(function () {
             project();
         });
+
+        refresh();
     };
 
     function project() {
         var budgetSettings = homeView.getModel();
-        var year = parseInt($('#start-year').val().trim());
-        var month = parseInt($('#start-month').val().trim());
+        var year = new Date().getUTCFullYear();
+        var month = new Date().getUTCMonth();
         var start = new Date(Date.UTC(year, month, 1));
         var end = new Date(start.getTime());
         end.setUTCMonth(end.getUTCMonth() + 1);
         calendarView.build(year, month);
-        calendarView.load(budgetSettings, budgetSettings.actuals, start, end);
+        calendarView.load(budgetSettings, budgetSettings.actual, start, end);
         checkNet();
-        $('#input-form').remove();
+        $('#input-form').hide();
         $('#output').empty();
-        /*$('#output').append('<p>You can view this budget at anytime by bookmarking this page and returning to the current URL.</p><div>I still have to do the create in S3 part and </div>');*/
-    }
 
-    function loadDateInput(yearTarget, monthTarget) {
-        loadYears(yearTarget);
-        loadMonths(monthTarget);
-    }
+        var s3 = dataFactory();
+        var options = {};
+        options.Bucket = bucket;
+        options.Key = guid() + '.json';
+        options.Body = JSON.stringify(homeView.getModel(), 0, 4);
+        s3.upload(options, function (err, data) {
+            if (err) {
+                log(JSON.stringify(err, 0, 4));
+            }
 
-    function loadYears(target) {
-        var startYear = new Date().getUTCFullYear();
-        for (var year = startYear; year < startYear + 10; year++) {
-            $(target).append('<option value="' + year + '">' + year + '</option>');
-        }
-    }
-
-    function loadMonths(target) {
-        for (var month = 0; month < cal.MONTHS_IN_YEAR; month++) {
-            $(target).append(
-                '<option value="' + month + '">' +
-                cal.MONTH_NAME_ABBRS[month] +
-                '</option>');
-        }
+            var url = window.location.href + "&data=" + options.Key;
+            $('#output').append('<p>You can view this budget at anytime by viewing this ' +
+                '<a href="' + url +'">' + url + '</a>.' +
+                '</p>');
+        });
     }
 
     function checkNet() {

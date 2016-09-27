@@ -1,4 +1,7 @@
 {
+    "biWeeklyIncome": {
+        "amount": 133500
+    },
     "monthlyRecurringExpenses": [
         {
             "name": "rent",
@@ -24,9 +27,6 @@
             "date": "2016-09-17T00:00:00.000Z"
         }
     ],
-    "biWeeklyIncome": {
-        "amount": 133500
-    },
     "actual": [
         {
             "name": "groceries",
