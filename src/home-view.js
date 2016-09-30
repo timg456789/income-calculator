@@ -1,25 +1,42 @@
 const $ = require('jquery');
 
 function getTransactionView(transaction, iteration, type) {
+    'use strict';
+
     var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
-        '<div class="input-group-addon">$</div>' +
-        '<input class="amount form-control inline-group" type="text" value="' + transaction.amount/100 + '" /> ' +
-        '<div class="input-group-addon">&#64;</div>' +
-        '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
-        '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
-        '</div>';
+            '<div class="input-group-addon">$</div>' +
+            '<input class="amount form-control inline-group" type="text" value="' + transaction.amount / 100 + '" /> ' +
+            '<div class="input-group-addon">&#64;</div>' +
+            '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
+            '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
+            '</div>';
 
     var view = $(html);
 
     if (transaction.budget !== undefined) {
-        view.append('<input class="budget form-control inline-group" ' +
-            'type="text" value="' + transaction.budget + '" /> ');
+        var budgetInput = '<input class="budget form-control inline-group" ' +
+                'type="text" value="' + transaction.budget + '" /> ';
+        view.append(budgetInput);
     }
+
+    var removeButtonHtml = '<div class="input-group-addon remove">' +
+            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
+            '</div>';
+
+    var removeButton = $(removeButtonHtml);
+
+    removeButton.click(function () {
+        view.remove();
+    });
+
+    view.append(removeButton);
 
     return view;
 }
 
 function getTransactionModel(target) {
+    'use strict';
+
     var transaction = {};
 
     var amountInput = $(target).children('input.amount');
@@ -37,35 +54,41 @@ function getTransactionModel(target) {
     }
 
     return transaction;
-};
+}
 
 function insertTransactionView(transaction, target, iteration, type) {
+    'use strict';
     $(target).append(getTransactionView(transaction, iteration, type));
 }
 
 function insertTransactionViews(transactions, target, iteration, type) {
+    'use strict';
     $(target).empty();
-    for (var i = 0; i < transactions.length; i++) {
+    var i;
+    for (i = 0; i < transactions.length; i += 1) {
         insertTransactionView(transactions[i], target, iteration, type);
     }
 }
 
 exports.setView = function (budget) {
-    $('#biweekly-input').val(budget.biWeeklyIncome.amount/100);
+    'use strict';
+    $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTimeExpenses, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
     insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
 };
 
-exports.getModel = function() {
+exports.getModel = function () {
+    'use strict';
+
     var budgetSettings = {};
 
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
 
     budgetSettings.monthlyRecurringExpenses = [];
-    $('.monthly-expense-item').each(function() {
+    $('.monthly-expense-item').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
 
@@ -75,15 +98,14 @@ exports.getModel = function() {
     });
 
     budgetSettings.oneTimeExpenses = [];
-    $('.one-time-expense-item').each(function() {
+    $('.one-time-expense-item').each(function () {
         budgetSettings.oneTimeExpenses.push(getTransactionModel(this));
     });
 
     budgetSettings.actual = [];
-    $('.actual-expense-item').each(function() {
+    $('.actual-expense-item').each(function () {
         budgetSettings.actual.push(getTransactionModel(this));
     });
 
     return budgetSettings;
-}
-
+};

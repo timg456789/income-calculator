@@ -1,11 +1,27 @@
 const $ = require('jquery');
-const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
-$(document).ready(function() {
+function getParameterByName(name, url) {
+    'use strict';
 
-    var s3ObjectKey = 'budget.json'
+    url = location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+    var results = regex.exec(url);
+    if (!results) {
+        return null;
+    }
+    if (!results[2]) {
+        return '';
+    }
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+$(document).ready(function () {
+    'use strict';
+
+    var s3ObjectKey = 'budget.json';
     var optionalOverride = getParameterByName('data');
     if (optionalOverride) {
         s3ObjectKey = optionalOverride;
@@ -21,14 +37,8 @@ $(document).ready(function() {
     $.getJSON(address, function (data) {
         $('#header').append('<div>Bitcoin Balance: ' + data.final_balance + '</div>');
     });*/
-});
 
-function getParameterByName(name, url) {
-    url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+    $('.alert-dismissible > button.close').click(function () {
+        $(this).parent().remove();
+    });
+});

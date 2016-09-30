@@ -114139,13 +114139,29 @@ function isNullOrUndefined(arg) {
 
 },{"./XMLBuilder":333,"lodash/object/assign":321}],349:[function(require,module,exports){
 const $ = require('jquery');
-const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
-$(document).ready(function() {
+function getParameterByName(name, url) {
+    'use strict';
 
-    var s3ObjectKey = 'budget.json'
+    url = location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+    var results = regex.exec(url);
+    if (!results) {
+        return null;
+    }
+    if (!results[2]) {
+        return '';
+    }
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+$(document).ready(function () {
+    'use strict';
+
+    var s3ObjectKey = 'budget.json';
     var optionalOverride = getParameterByName('data');
     if (optionalOverride) {
         s3ObjectKey = optionalOverride;
@@ -114161,19 +114177,13 @@ $(document).ready(function() {
     $.getJSON(address, function (data) {
         $('#header').append('<div>Bitcoin Balance: ' + data.final_balance + '</div>');
     });*/
+
+    $('.alert-dismissible > button.close').click(function () {
+        $(this).parent().remove();
+    });
 });
 
-function getParameterByName(name, url) {
-    url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-},{"./home-controller":351,"income-calculator/src/calendar":274,"jquery":279}],350:[function(require,module,exports){
+},{"./home-controller":351,"jquery":279}],350:[function(require,module,exports){
 const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 
@@ -114184,6 +114194,7 @@ const CalendarAggregator = require('income-calculator/src/calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
 function getTransactionView(name, amount, type, budget, isActual) {
+    'use strict';
 
     var budgetedCss = '';
 
@@ -114194,49 +114205,61 @@ function getTransactionView(name, amount, type, budget, isActual) {
     }
 
     return '<div class="transaction-view ' +
-        type + ' ' +
-        budgetedCss + '">' +
-        '<div class="name">' + name + '</div>' +
-        '<div class="amount">$' + amount/100 + '</div>' +
-        '</div>';
+            type + ' ' +
+            budgetedCss + '">' +
+            '<div class="name">' + name + '</div>' +
+            '<div class="amount">$' + amount / 100 + '</div>' +
+            '</div>';
 }
 
 function getMonthContainerId(date) {
+    'use strict';
     return 'items-container-for-month-' +
-        date.getFullYear() + '-' +
-        date.getMonth();
+            date.getFullYear() + '-' +
+            date.getMonth();
 }
 
 function getMonthHeading(date) {
+    'use strict';
     return cal.MONTH_NAMES[date.getMonth()] +
-        ' ' +
-        date.getFullYear() +
-        ': ' + '<span id="month-net-header-value"></span>';
-}
-
-function getDayView(date) {
-    var dayViewHtml = '<div class="day-view day-col col-xs-1 ' +
-        getDayTarget(date) + '">' +
-        '</div>';
-    return dayViewHtml;
-}
-
-function getDayTarget(date) {
-    return 'day-of-' + getDateTarget(date);
-}
-
-function getWeekTarget(date) {
-    return 'week-of-' + getDateTarget(date);;
+            ' ' +
+            date.getFullYear() +
+            ': ' + '<span id="month-net-header-value"></span>';
 }
 
 function getDateTarget(date) {
+    'use strict';
     return date.getUTCFullYear() + '-' +
-    date.getUTCMonth() + '-' +
-    date.getUTCDate();
+            date.getUTCMonth() + '-' +
+            date.getUTCDate();
+}
+
+function getDayTarget(date) {
+    'use strict';
+    return 'day-of-' + getDateTarget(date);
+}
+
+function getDayView(date, inMonth) {
+    'use strict';
+    var css = !inMonth
+        ? 'out-of-month'
+        : '';
+    css += ' day-view'
+    css = css.trim()
+    var dayViewHtml = '<div class="' + css + ' day-col col-xs-1 ' +
+            getDayTarget(date) + '">' +
+            '<span class="calendar-day-number">' +
+            date.getUTCDate() + '</div>';
+    return dayViewHtml;
+}
+
+function getWeekTarget(date) {
+    'use strict';
+    return 'week-of-' + getDateTarget(date);
 }
 
 exports.build = function (year, month) {
-
+    'use strict';
     var date = new Date(year, month);
 
     $('#months-container').empty();
@@ -114247,13 +114270,15 @@ exports.build = function (year, month) {
         '<div class="month-heading">' + getMonthHeading(date) + '</div>' +
         '<div class="items-container-for-month" id="' +
             monthContainerId +
-        '"></div>');
+        '"></div>'
+    );
 
     var monthTarget = '#' + monthContainerId;
 
     $(monthTarget).append('<div class="weeks row"></div>');
 
-    for (var d = 0; d < 7; d++) {
+    var d;
+    for (d = 0; d < 7; d += 1) {
         $(monthTarget + '>' + '.weeks').append(
             '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAME_ABBRS[d] + '</div>');
     }
@@ -114262,94 +114287,130 @@ exports.build = function (year, month) {
 
     var currentDate = new Date(date);
     currentDate.setDate(currentDate.getDate() - currentDate.getDay());
-
+    var transactionsForWeekTarget;
+    var dayViewContainer;
+    var dayInWeek;
     while (currentDate.getMonth() !== date.getMonth() + 1) {
-        var dateClassName =  currentDate.getFullYear() + '-' + currentDate.getMonth() + '-' + currentDate.getDate();
-
-        var transactionsForWeekTarget = getWeekTarget(currentDate);
-        var dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
+        transactionsForWeekTarget = getWeekTarget(currentDate);
+        dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
         $(monthTarget).append(dayViewContainer);
 
-        for (var dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek++) {
-            $('.' + transactionsForWeekTarget).append(getDayView(currentDate));
+        for (dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek += 1) {
+            $('.' + transactionsForWeekTarget).append(
+                getDayView(currentDate, new Date().getUTCMonth() === currentDate.getUTCMonth()));
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
         $('.' + transactionsForWeekTarget).append(
             '<div class="day-view totals-view day-col col-xs-1">' +
-            '</div>');
+            '</div>'
+        );
     }
 
 };
 
 function loadTransactions(items, areActuals) {
-    for (var bi = 0; bi < items.length; bi++) {
-        var budgetItem = items[bi];
+    'use strict';
+    var bi;
+    var budgetItem;
+    for (bi = 0; bi < items.length; bi += 1) {
+        budgetItem = items[bi];
         $('.' + getDayTarget(budgetItem.date)).append(
             getTransactionView(
-                budgetItem.name, budgetItem.amount,
-                budgetItem.type, budgetItem.budget,
-                areActuals)
+                budgetItem.name,
+                budgetItem.amount,
+                budgetItem.type,
+                budgetItem.budget,
+                areActuals
+            )
         );
     }
+}
+
+function getSummary(budgetSettings, actual, startTime, endTime) {
+    'use strict';
+    var budget = netIncomeCalculator.getBudget(
+        budgetSettings,
+        startTime,
+        endTime
+    );
+
+    var summary = calendarAggregator.getSummary(
+        startTime,
+        endTime,
+        budget,
+        actual
+    );
+
+    return summary;
 }
 
 function loadWeeklyTotals(budgetSettings, actual, start) {
+    'use strict';
+    var weekEnd;
+    var summary;
+    var type;
+    var currentBudgetDate = new Date(start);
+    var currentTargetDate = new Date(start);
+    var net = 0;
 
-    var currentDate = new Date(start);
-    currentDate.setUTCDate(currentDate.getUTCDate() - currentDate.getUTCDay());
+    while (currentTargetDate.getUTCMonth() !== start.getUTCMonth() + 1) {
 
-    while (currentDate.getUTCMonth() !== start.getUTCMonth() + 1) {
-        var weekEnd = new Date(currentDate.getTime());
+        if (currentTargetDate.getUTCDay() !== 0) {
+            currentTargetDate.setUTCDate(currentTargetDate.getUTCDate() - currentTargetDate.getUTCDay());
+        }
+
+        weekEnd = new Date(currentTargetDate.getTime());
         weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
 
-        var budget = netIncomeCalculator.getBudget(
+        if (weekEnd.getUTCMonth() > currentBudgetDate.getUTCMonth()) {
+            weekEnd.setUTCDate(1);
+        }
+
+        summary = getSummary(
             budgetSettings,
-            currentDate.getTime(),
-            weekEnd.getTime());
+            actual,
+            currentBudgetDate.getTime(),
+            weekEnd.getTime()
+        );
 
-        var summary = calendarAggregator.getSummary(
-            currentDate.getTime(),
-            weekEnd.getTime(),
-            budget,
-            actual);
+        type = summary.net > 0
+            ? 'income'
+            : 'expense';
 
-        var type = summary.net > 0 ? 'income' : 'expense';
-
-        $('.' + getWeekTarget(currentDate) + ' .totals-view').append(
+        $('.' + getWeekTarget(currentTargetDate) + ' .totals-view').append(
             getTransactionView('', summary.net, type)
         );
 
-        currentDate.setDate(currentDate.getDate() + cal.DAYS_IN_WEEK);
+        net += summary.net;
+
+        currentTargetDate.setTime(weekEnd.getTime());
+        currentBudgetDate.setTime(weekEnd.getTime());
     }
+
+    return net;
 }
 
 exports.load = function (budgetSettings, actual, start, end) {
-
+    'use strict';
     $('#debug-console').append('<div>Showing from: ' + start.toISOString() + ' UTC</div>');
     $('#debug-console').append('<div>Until: ' + end.toISOString() + ' UTC</div>');
 
-    var budget = netIncomeCalculator.getBudget(
-        budgetSettings,
-        start.getTime(),
-        end.getTime());
-
-    var summary = calendarAggregator.getSummary(
-        start,
-        end,
-        budget,
-        actual);
+    var summary = getSummary(budgetSettings, actual, start.getTime(), end.getTime());
 
     loadTransactions(summary.budgetItems);
     loadTransactions(summary.actualsForWeek, true);
 
-    $('#month-net-header-value').append(summary.net/100);
+    $('#month-net-header-value').append(summary.net / 100);
 
-    loadWeeklyTotals(budgetSettings, actual, start);
+    var netByWeeklyTotals = loadWeeklyTotals(budgetSettings, actual, start);
+
+    $('#month-net-header-value').attr('data-net-by-weekly-totals', netByWeeklyTotals);
 };
 
 },{"income-calculator/src/calendar":274,"income-calculator/src/calendar-aggregator":272,"income-calculator/src/net-income-calculator":275,"jquery":279}],351:[function(require,module,exports){
 function HomeController() {
+    'use strict';
 
     var $ = require('jquery');
     const calendarView = require('./calendar-view');
@@ -114359,13 +114420,39 @@ function HomeController() {
     var accessKeyId;
     var secretAccessKey;
 
+    function log(error) {
+        console.log(error);
+        $('#debug-console').append('<div>' + error + '</div>');
+    }
+
+    function checkNet() {
+        const EXPECTED_MONTHLY_NET = 172000;
+
+        var displayedNet = parseInt($('#month-net-header-value').html());
+        if (displayedNet !== EXPECTED_MONTHLY_NET / 100) {
+            log('expected net of ' +
+                    (EXPECTED_MONTHLY_NET / 100) +
+                    ' for October 2016, but was: ' + displayedNet);
+        }
+
+        var displayedNetByWeek = $('#month-net-header-value')
+            .attr('data-net-by-weekly-totals');
+        displayedNetByWeek = parseInt(displayedNetByWeek);
+        if (displayedNetByWeek !== EXPECTED_MONTHLY_NET) {
+            log('expected net of ' +
+                    EXPECTED_MONTHLY_NET +
+                    ' for October 2016, but was: ' + displayedNetByWeek);
+        }
+
+    }
+
     function getS3Params() {
         return {
             Bucket: bucket,
-            Key: s3Obj,
+            Key: s3Obj
         };
     }
-    //, ,
+
     function dataFactory() {
         var AWS = require('aws-sdk');
         AWS.config.update(
@@ -114373,18 +114460,32 @@ function HomeController() {
                 accessKeyId: accessKeyId,
                 secretAccessKey: secretAccessKey,
                 region: 'us-east-1'
-            });
-        var s3 = new AWS.S3();
-        return s3;
+            }
+        );
+        return new AWS.S3();
+    }
+
+    function hasCredentials() {
+        return accessKeyId && secretAccessKey;
     }
 
     function refresh() {
-        dataFactory().getObject(getS3Params(), function (err, data) {
-            if (err) {
-                log(JSON.stringify(err, 0, 4));
-            }
-            homeView.setView(JSON.parse(data.Body.toString('utf-8')));
-        });
+        if (hasCredentials()) {
+            dataFactory().getObject(getS3Params(), function (err, data) {
+                if (err) {
+                    log(JSON.stringify(err, 0, 4));
+                }
+                homeView.setView(JSON.parse(data.Body.toString('utf-8')));
+            });
+        } else {
+            var url = 'https://s3.amazonaws.com/income-calculator/';
+            url += s3Obj;
+            $.getJSON(url, function (data) {
+                homeView.setView(data);
+            }).fail(function (jqxhr) {
+                log(JSON.stringify(jqxhr, 0, 4));
+            });
+        }
     }
 
     function guid() {
@@ -114394,27 +114495,26 @@ function HomeController() {
                 .substring(1);
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
+                s4() + '-' + s4() + s4() + s4();
     }
 
-    this.init = function (s3ObjIn, accessKeyIdIn, secretAccessKeyIn) {
-        s3Obj = s3ObjIn;
-        accessKeyId = accessKeyIdIn;
-        secretAccessKey = secretAccessKeyIn;
+    function save() {
+        var s3 = dataFactory();
+        var options = {};
+        options.Bucket = bucket;
+        options.Key = guid() + '.json';
+        options.Body = JSON.stringify(homeView.getModel(), 0, 4);
+        s3.upload(options, function (err) {
+            if (err) {
+                log('failure saving settings: ' + JSON.stringify(err, 0, 4));
+            }
 
-        $('#output').append('<p>Enter your biweekly income and expenses. ' +
-            'Then we will show your expenses for the current month on a calendar.</p>');
-
-        $('#load-budget').click(function () {
-            refresh();
+            var url = location.href + "&data=" + options.Key;
+            $('#output').append('<p>You can view this budget at anytime by viewing this ' +
+                    '<a href="' + url + '">' + url + '</a>.' +
+                    '</p>');
         });
-
-        $('#project').click(function () {
-            project();
-        });
-
-        refresh();
-    };
+    }
 
     function project() {
         var budgetSettings = homeView.getModel();
@@ -114429,39 +114529,26 @@ function HomeController() {
         $('#input-form').hide();
         $('#output').empty();
 
-        log('uploading');
-
-        var s3 = dataFactory();
-        var options = {};
-        options.Bucket = bucket;
-        options.Key = guid() + '.json';
-        options.Body = JSON.stringify(homeView.getModel(), 0, 4);
-        s3.upload(options, function (err, data) {
-            if (err) {
-                log(JSON.stringify(err, 0, 4));
-            }
-
-            log('created');
-
-            var url = window.location.href + "&data=" + options.Key;
-            $('#output').append('<p>You can view this budget at anytime by viewing this ' +
-                '<a href="' + url +'">' + url + '</a>.' +
-                '</p>');
-        });
-    }
-
-    function checkNet() {
-        var displayedNet = parseInt($('#month-net-header-value').html());
-        var expectedNet = 2545;
-        if (displayedNet !== expectedNet) {
-            log('expected net of ' + expectedNet + ', but was: ' + displayedNet);
+        if (hasCredentials()) {
+            save();
         }
     }
 
-    function log(error) {
-        console.log(error);
-        $('#debug-console').append('<div>' + error + '</div>');
-    }
+    this.init = function (s3ObjIn, accessKeyIdIn, secretAccessKeyIn) {
+        s3Obj = s3ObjIn;
+        accessKeyId = accessKeyIdIn;
+        secretAccessKey = secretAccessKeyIn;
+
+        $('#load-budget').click(function () {
+            refresh();
+        });
+
+        $('#project').click(function () {
+            project();
+        });
+
+        refresh();
+    };
 
 }
 
@@ -114470,25 +114557,42 @@ module.exports = HomeController;
 const $ = require('jquery');
 
 function getTransactionView(transaction, iteration, type) {
+    'use strict';
+
     var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
-        '<div class="input-group-addon">$</div>' +
-        '<input class="amount form-control inline-group" type="text" value="' + transaction.amount/100 + '" /> ' +
-        '<div class="input-group-addon">&#64;</div>' +
-        '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
-        '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
-        '</div>';
+            '<div class="input-group-addon">$</div>' +
+            '<input class="amount form-control inline-group" type="text" value="' + transaction.amount / 100 + '" /> ' +
+            '<div class="input-group-addon">&#64;</div>' +
+            '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
+            '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
+            '</div>';
 
     var view = $(html);
 
     if (transaction.budget !== undefined) {
-        view.append('<input class="budget form-control inline-group" ' +
-            'type="text" value="' + transaction.budget + '" /> ');
+        var budgetInput = '<input class="budget form-control inline-group" ' +
+                'type="text" value="' + transaction.budget + '" /> ';
+        view.append(budgetInput);
     }
+
+    var removeButtonHtml = '<div class="input-group-addon remove">' +
+            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
+            '</div>';
+
+    var removeButton = $(removeButtonHtml);
+
+    removeButton.click(function () {
+        view.remove();
+    });
+
+    view.append(removeButton);
 
     return view;
 }
 
 function getTransactionModel(target) {
+    'use strict';
+
     var transaction = {};
 
     var amountInput = $(target).children('input.amount');
@@ -114506,35 +114610,41 @@ function getTransactionModel(target) {
     }
 
     return transaction;
-};
+}
 
 function insertTransactionView(transaction, target, iteration, type) {
+    'use strict';
     $(target).append(getTransactionView(transaction, iteration, type));
 }
 
 function insertTransactionViews(transactions, target, iteration, type) {
+    'use strict';
     $(target).empty();
-    for (var i = 0; i < transactions.length; i++) {
+    var i;
+    for (i = 0; i < transactions.length; i += 1) {
         insertTransactionView(transactions[i], target, iteration, type);
     }
 }
 
 exports.setView = function (budget) {
-    $('#biweekly-input').val(budget.biWeeklyIncome.amount/100);
+    'use strict';
+    $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTimeExpenses, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
     insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
 };
 
-exports.getModel = function() {
+exports.getModel = function () {
+    'use strict';
+
     var budgetSettings = {};
 
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
 
     budgetSettings.monthlyRecurringExpenses = [];
-    $('.monthly-expense-item').each(function() {
+    $('.monthly-expense-item').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
 
@@ -114544,17 +114654,16 @@ exports.getModel = function() {
     });
 
     budgetSettings.oneTimeExpenses = [];
-    $('.one-time-expense-item').each(function() {
+    $('.one-time-expense-item').each(function () {
         budgetSettings.oneTimeExpenses.push(getTransactionModel(this));
     });
 
     budgetSettings.actual = [];
-    $('.actual-expense-item').each(function() {
+    $('.actual-expense-item').each(function () {
         budgetSettings.actual.push(getTransactionModel(this));
     });
 
     return budgetSettings;
-}
-
+};
 
 },{"jquery":279}]},{},[349]);
