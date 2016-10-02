@@ -1,14 +1,29 @@
 const $ = require('jquery');
 
-function getTransactionView(transaction, iteration, type) {
+exports.getTransactionView = function (transaction, iteration, type) {
     'use strict';
+
+    var amount = '';
+    if (transaction.amount) {
+        amount = transaction.amount / 100;
+    }
+
+    var date = '';
+    if (transaction.date) {
+        date = transaction.date;
+    }
+
+    var name = '';
+    if (transaction.name) {
+        name = transaction.name;
+    }
 
     var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
             '<div class="input-group-addon">$</div>' +
-            '<input class="amount form-control inline-group" type="text" value="' + transaction.amount / 100 + '" /> ' +
+            '<input class="amount form-control inline-group" type="text" value="' + amount + '" /> ' +
             '<div class="input-group-addon">&#64;</div>' +
-            '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
-            '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
+            '<input class="date form-control inline-group" type="text" value="' + date + '" /> ' +
+            '<input class="name form-control inline-group" type="text" value="' + name + '" /> ' +
             '</div>';
 
     var view = $(html);
@@ -43,7 +58,7 @@ function getTransactionModel(target) {
     var dateInput = $(target).children('input.date');
     var nameInput = $(target).children('input.name');
 
-    transaction.amount = parseInt(amountInput.val().trim()) * 100;
+    transaction.amount = parseFloat(amountInput.val().trim()) * 100;
     transaction.date = new Date(dateInput.val().trim());
     transaction.name = nameInput.val().trim();
     transaction.type = 'expense';
@@ -58,7 +73,7 @@ function getTransactionModel(target) {
 
 function insertTransactionView(transaction, target, iteration, type) {
     'use strict';
-    $(target).append(getTransactionView(transaction, iteration, type));
+    $(target).append(exports.getTransactionView(transaction, iteration, type));
 }
 
 function insertTransactionViews(transactions, target, iteration, type) {
@@ -73,7 +88,7 @@ function insertTransactionViews(transactions, target, iteration, type) {
 exports.setView = function (budget) {
     'use strict';
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
-    insertTransactionViews(budget.oneTimeExpenses, '#one-time-input-group', 'one-time', 'expense');
+    insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
     insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
@@ -86,6 +101,7 @@ exports.getModel = function () {
 
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
+    budgetSettings.biWeeklyIncome.date = new Date(Date.UTC(2015, 11, 25));
 
     budgetSettings.monthlyRecurringExpenses = [];
     $('.monthly-expense-item').each(function () {
@@ -97,9 +113,15 @@ exports.getModel = function () {
         budgetSettings.weeklyRecurringExpenses.push(getTransactionModel(this));
     });
 
-    budgetSettings.oneTimeExpenses = [];
+    budgetSettings.oneTime = [];
     $('.one-time-expense-item').each(function () {
-        budgetSettings.oneTimeExpenses.push(getTransactionModel(this));
+        var ote = getTransactionModel(this);
+        if (ote.amount > 0) {
+            ote.type = 'income';
+        } else {
+            ote.amount = ote.amount * -1;
+        }
+        budgetSettings.oneTime.push(ote);
     });
 
     budgetSettings.actual = [];

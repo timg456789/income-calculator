@@ -20,7 +20,7 @@
             "amount": 7500
         }
         ],
-        "oneTimeExpenses": [
+        "oneTime": [
         {
             "name": "taxes",
             "amount": 40000,

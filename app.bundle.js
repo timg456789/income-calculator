@@ -97732,12 +97732,17 @@ function CalendarAggregator() {
         var summary = {};
 
         summary.budgetItems = calendarSearch.find(startTime, endTime, budget);
-        summary.budgeted = getSimpleTotal(summary.budgetItems);
-        summary.actualsForWeek = calendarSearch.find(startTime, endTime, actual);
-        summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
-        summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
-        summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
-        summary.net = getNet(summary.budgeted, summary.totalOverBudget, summary.actualsUnbudgeted);
+        summary.budgetedNet = getSimpleTotal(summary.budgetItems);
+        if (actual) {
+            summary.actualsForWeek = calendarSearch.find(startTime, endTime, actual);
+            summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
+            summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
+            summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
+        } else {
+            summary.actualsUnbudgeted = 0;
+            summary.totalOverBudget = 0;
+        }
+        summary.net = getNet(summary.budgetedNet, summary.totalOverBudget, summary.actualsUnbudgeted);
 
         return summary;
     };
@@ -97786,8 +97791,8 @@ function CalendarAggregator() {
         return net;
     };
 
-    function getNet(budgeted, totalOverBudget, unbudgeted) {
-        return budgeted - totalOverBudget - unbudgeted;
+    function getNet(budgetedNet, totalOverBudget, unbudgeted) {
+        return budgetedNet - totalOverBudget - unbudgeted;
     };
 
     function getAmountOverBudget(budget, actuals) {
@@ -97859,15 +97864,9 @@ exports.MONTHS_IN_YEAR = 12;
 
 exports.SAFE_LAST_DAY_OF_MONTH = 28;
 
-exports.BIWEEKLY_PAY_START_DATE = new Date(Date.UTC(2015, 11, 25));
 exports.BIWEEKLY_INTERVAL = 14;
 exports.FRIDAY = 5;
 exports.DAYS_IN_WEEK = 7;
-
-exports.BIWEEKLY_CALENDAR_CONFIG = {
-    firstPayDateTime: exports.BIWEEKLY_PAY_START_DATE.getTime(),
-    interval: exports.BIWEEKLY_INTERVAL
-};
 
 exports.MONTH_NAMES = [ 'January', 'February', 'March', 'April',
     'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
@@ -97893,10 +97892,20 @@ function NetIncomeCalculator() {
 
         var current = new Date(startTime);
         while (current.getTime() < endTime) {
-            getMonthlyExpenses(mre, current, breakdown);
+            if (mre) {
+                getMonthlyExpenses(mre, current, breakdown);
+            }
             getWeeklyExpenses(wre, current, breakdown);
-            getOneTimeExpenses(config.oneTimeExpenses, current, breakdown);
-            getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
+            if (config.oneTime) {
+                getOne(config.oneTime, current, breakdown);
+            }
+            if (config.biWeeklyIncome) {
+                getIncome(
+                    config.biWeeklyIncome.amount,
+                    current.getTime(),
+                    breakdown,
+                    config.biWeeklyIncome.date.getTime());
+            }
 
             current.setDate(current.getDate() + 1);
         }
@@ -97920,9 +97929,21 @@ function NetIncomeCalculator() {
 
     }
 
+    function matchesDefaultWeekly(transactionDate, current) {
+        return cal.FRIDAY === current.getUTCDay() &&
+            !transactionDate;
+    }
+
+    function matchesSpecifiedWeekly(transactionDate, currentDay) {
+        return transactionDate &&
+            currentDay === transactionDate.getUTCDay();
+    }
+
     function getWeeklyExpenses(wre, current, breakdown) {
-        if (current.getUTCDay() == cal.FRIDAY) {
-            for (var i = 0; i < wre.length; i++) {
+        var currentDay = current.getUTCDay();
+        for (var i = 0; i < wre.length; i++) {
+            if (matchesDefaultWeekly(wre[i].date, current) ||
+                matchesSpecifiedWeekly(wre[i].date, currentDay)) {
                 var processed = {};
                 processed.name = wre[i].name;
                 processed.amount = wre[i].amount;
@@ -97935,7 +97956,7 @@ function NetIncomeCalculator() {
         }
     }
 
-    function getOneTimeExpenses(expenses, current, breakdown) {
+    function getOne(expenses, current, breakdown) {
         for (var i=0; i < expenses.length; i++) {
             var potentialOneTimeExpense = expenses[i];
             if (current.getTime() == potentialOneTimeExpense.date.getTime()) {
@@ -97943,23 +97964,23 @@ function NetIncomeCalculator() {
                 expense.name = potentialOneTimeExpense.name;
                 expense.amount = potentialOneTimeExpense.amount;
                 expense.date = new Date(current.getTime());
-                expense.type = 'expense';
+                expense.type = potentialOneTimeExpense.type;
                 breakdown.push(expense);
             }
         }
     }
 
-    function getIncome(amount, time, breakdown) {
-        var incomeAccrual = getIncomeAccrual(amount, time);
+    function getIncome(amount, time, breakdown, startTime) {
+        var incomeAccrual = getIncomeAccrual(amount, time, startTime);
         if (incomeAccrual) {
             breakdown.push(incomeAccrual);
         }
     }
 
-    function getIncomeAccrual(amount, time) {
+    function getIncomeAccrual(amount, time, startTime) {
         var accrual;
         var diffFromFirstPayDate = utcDay.getDayDiff(
-            cal.BIWEEKLY_PAY_START_DATE.getTime(),
+            startTime,
             time
         );
 
@@ -114161,7 +114182,7 @@ function getParameterByName(name, url) {
 $(document).ready(function () {
     'use strict';
 
-    var s3ObjectKey = 'budget.json';
+    var s3ObjectKey;
     var optionalOverride = getParameterByName('data');
     if (optionalOverride) {
         s3ObjectKey = optionalOverride;
@@ -114416,7 +114437,7 @@ function HomeController() {
     const calendarView = require('./calendar-view');
     const homeView = require('./home-view');
     var bucket = 'income-calculator';
-    var s3Obj;
+    var s3ObjKey;
     var accessKeyId;
     var secretAccessKey;
 
@@ -114449,7 +114470,7 @@ function HomeController() {
     function getS3Params() {
         return {
             Bucket: bucket,
-            Key: s3Obj
+            Key: s3ObjKey
         };
     }
 
@@ -114469,22 +114490,15 @@ function HomeController() {
         return accessKeyId && secretAccessKey;
     }
 
-    function refresh() {
-        if (hasCredentials()) {
-            dataFactory().getObject(getS3Params(), function (err, data) {
-                if (err) {
-                    log(JSON.stringify(err, 0, 4));
-                }
-                homeView.setView(JSON.parse(data.Body.toString('utf-8')));
-            });
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1
+            ? "&"
+            : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
         } else {
-            var url = 'https://s3.amazonaws.com/income-calculator/';
-            url += s3Obj;
-            $.getJSON(url, function (data) {
-                homeView.setView(data);
-            }).fail(function (jqxhr) {
-                log(JSON.stringify(jqxhr, 0, 4));
-            });
+            return uri + separator + key + "=" + value;
         }
     }
 
@@ -114494,25 +114508,42 @@ function HomeController() {
                 .toString(16)
                 .substring(1);
         }
+
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                s4() + '-' + s4() + s4() + s4();
+            s4() + '-' + s4() + s4() + s4();
     }
 
     function save() {
+        if (!s3ObjKey) {
+            s3ObjKey = guid() + '.json';
+        }
+
         var s3 = dataFactory();
         var options = {};
         options.Bucket = bucket;
-        options.Key = guid() + '.json';
+        options.Key = s3ObjKey;
         options.Body = JSON.stringify(homeView.getModel(), 0, 4);
         s3.upload(options, function (err) {
             if (err) {
                 log('failure saving settings: ' + JSON.stringify(err, 0, 4));
             }
 
-            var url = location.href + "&data=" + options.Key;
+            var url = updateQueryStringParameter(location.href, 'data', options.Key);
             $('#output').append('<p>You can view this budget at anytime by viewing this ' +
                     '<a href="' + url + '">' + url + '</a>.' +
                     '</p>');
+
+            $('#months-container').prepend(
+                '<div id="calendar-legend">' +
+                'Legend&nbsp;' +
+                '<span class="transaction-view expense budgeted" title="expenditure that occurred within budget">' +
+                'Budgeted Spending</span>' +
+                '</span>' +
+                '<span class="transaction-view expense" title="budgeted expense">' +
+                'Budgeted Expense</span>' +
+                '</div>'
+            );
+
         });
     }
 
@@ -114534,8 +114565,17 @@ function HomeController() {
         }
     }
 
-    this.init = function (s3ObjIn, accessKeyIdIn, secretAccessKeyIn) {
-        s3Obj = s3ObjIn;
+    function refresh() {
+        dataFactory().getObject(getS3Params(), function (err, data) {
+            if (err) {
+                log(JSON.stringify(err, 0, 4));
+            }
+            homeView.setView(JSON.parse(data.Body.toString('utf-8')));
+        });
+    }
+
+    this.init = function (s3ObjKeyIn, accessKeyIdIn, secretAccessKeyIn) {
+        s3ObjKey = s3ObjKeyIn;
         accessKeyId = accessKeyIdIn;
         secretAccessKey = secretAccessKeyIn;
 
@@ -114547,7 +114587,26 @@ function HomeController() {
             project();
         });
 
-        refresh();
+        $('#add-new-monthly-epense').click(function () {
+            $('#monthly-input-group').append(homeView.getTransactionView({}, 'monthly', 'expense'));
+        });
+
+        $('#add-new-weekly-expense').click(function () {
+            $('#weekly-input-group').append(homeView.getTransactionView({}, 'weekly', 'expense'));
+        });
+
+        $('#add-new-one-time-expense').click(function () {
+            $('#one-time-input-group').append(homeView.getTransactionView({}, 'one-time', 'expense'));
+        });
+
+        $('#add-new-actual-expense').click(function () {
+            $('#actuals-input-group').append(homeView.getTransactionView({budget: ''}, 'actual', 'expense'));
+        });
+
+
+        if (s3ObjKey) {
+            refresh();
+        }
     };
 
 }
@@ -114556,15 +114615,30 @@ module.exports = HomeController;
 },{"./calendar-view":350,"./home-view":352,"aws-sdk":199,"jquery":279}],352:[function(require,module,exports){
 const $ = require('jquery');
 
-function getTransactionView(transaction, iteration, type) {
+exports.getTransactionView = function (transaction, iteration, type) {
     'use strict';
+
+    var amount = '';
+    if (transaction.amount) {
+        amount = transaction.amount / 100;
+    }
+
+    var date = '';
+    if (transaction.date) {
+        date = transaction.date;
+    }
+
+    var name = '';
+    if (transaction.name) {
+        name = transaction.name;
+    }
 
     var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
             '<div class="input-group-addon">$</div>' +
-            '<input class="amount form-control inline-group" type="text" value="' + transaction.amount / 100 + '" /> ' +
+            '<input class="amount form-control inline-group" type="text" value="' + amount + '" /> ' +
             '<div class="input-group-addon">&#64;</div>' +
-            '<input class="date form-control inline-group" type="text" value="' + transaction.date + '" /> ' +
-            '<input class="name form-control inline-group" type="text" value="' + transaction.name + '" /> ' +
+            '<input class="date form-control inline-group" type="text" value="' + date + '" /> ' +
+            '<input class="name form-control inline-group" type="text" value="' + name + '" /> ' +
             '</div>';
 
     var view = $(html);
@@ -114599,7 +114673,7 @@ function getTransactionModel(target) {
     var dateInput = $(target).children('input.date');
     var nameInput = $(target).children('input.name');
 
-    transaction.amount = parseInt(amountInput.val().trim()) * 100;
+    transaction.amount = parseFloat(amountInput.val().trim()) * 100;
     transaction.date = new Date(dateInput.val().trim());
     transaction.name = nameInput.val().trim();
     transaction.type = 'expense';
@@ -114614,7 +114688,7 @@ function getTransactionModel(target) {
 
 function insertTransactionView(transaction, target, iteration, type) {
     'use strict';
-    $(target).append(getTransactionView(transaction, iteration, type));
+    $(target).append(exports.getTransactionView(transaction, iteration, type));
 }
 
 function insertTransactionViews(transactions, target, iteration, type) {
@@ -114629,7 +114703,7 @@ function insertTransactionViews(transactions, target, iteration, type) {
 exports.setView = function (budget) {
     'use strict';
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
-    insertTransactionViews(budget.oneTimeExpenses, '#one-time-input-group', 'one-time', 'expense');
+    insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
     insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
@@ -114642,6 +114716,7 @@ exports.getModel = function () {
 
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
+    budgetSettings.biWeeklyIncome.date = new Date(Date.UTC(2015, 11, 25));
 
     budgetSettings.monthlyRecurringExpenses = [];
     $('.monthly-expense-item').each(function () {
@@ -114653,9 +114728,15 @@ exports.getModel = function () {
         budgetSettings.weeklyRecurringExpenses.push(getTransactionModel(this));
     });
 
-    budgetSettings.oneTimeExpenses = [];
+    budgetSettings.oneTime = [];
     $('.one-time-expense-item').each(function () {
-        budgetSettings.oneTimeExpenses.push(getTransactionModel(this));
+        var ote = getTransactionModel(this);
+        if (ote.amount > 0) {
+            ote.type = 'income';
+        } else {
+            ote.amount = ote.amount * -1;
+        }
+        budgetSettings.oneTime.push(ote);
     });
 
     budgetSettings.actual = [];

@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="screen">
     <title>Net Income Calculator</title>
-    <script type="text/javascript" src="app.bundle.js"></script>
+      <script type="text/javascript" src="app.bundle.js"></script>
   </head>
   <body>
   <h1>Income Calculator</h1>
@@ -30,13 +30,10 @@
           <h2>Create a Budget</h2>
           <p>
               Enter your biweekly income and expenses.
-              Then we will show your expenses for the current month on a calendar.
+              Then you will be shown your expenses for the current month on a calendar.
           </p>
           <h3>
               Biweekly(14 day) Income
-              <button type="button" class="btn btn-success pull-right">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              </button>
           </h3>
           <div id="biweekly-input-group" class="form-group">
               <div class="input-group">
@@ -46,18 +43,8 @@
               </div>
           </div>
           <h3>
-              Bitcoin Address
-              <button type="button" class="btn btn-success pull-right">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              </button>
-          </h3>
-          <div id="bitcoin-address-input-group" class="form-group">
-              <input id="bitcoin-input" class="form-control" value="1Ec9cjr5HW9nUXadixE9ZUi8qozedGzTFE" />
-          </div>
-
-          <h3>
               Monthly Expenses
-              <button type="button" class="btn btn-success pull-right">
+              <button id="add-new-monthly-epense" type="button" class="btn btn-success pull-right">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               </button>
           </h3>
@@ -65,15 +52,15 @@
 
           <h3>
               Weekly Expenses
-              <button type="button" class="btn btn-success pull-right">
+              <button id="add-new-weekly-expense" type="button" class="btn btn-success pull-right">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               </button>
           </h3>
           <div id="weekly-input-group" class="form-group"></div>
 
           <h3>
-              One time expenses
-              <button type="button" class="btn btn-success pull-right">
+              One Time Transactions
+              <button id="add-new-one-time-expense" type="button" class="btn btn-success pull-right">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               </button>
           </h3>
@@ -81,7 +68,7 @@
 
           <h3>
               Actual Expenses
-              <button type="button" class="btn btn-success pull-right">
+              <button id="add-new-actual-expense" type="button" class="btn btn-success pull-right">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               </button>
           </h3>

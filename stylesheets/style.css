@@ -121,21 +121,22 @@ h3 > .btn-success {
     box-shadow: 0px 0px 3px #999;
 }
 
-.transaction-view.expense > .amount,
-.transaction-view.net.negative > .amount {
+.transaction-view.expense,
+.transaction-view.net.negative {
     background-color: #ffcccc;
 }
 
-.transaction-view.expense.budgeted > .amount {
+.transaction-view.expense.budgeted,
+.transaction-view.expense.budgeted {
     background-color: #fbfbba;
 }
 
-.transaction-view.expense.unbudgeted > .amount {
+.transaction-view.expense.unbudgeted {
     border-bottom: 1px solid rgb(255, 69, 0);
 }
 
-.transaction-view.income > .amount,
-.transaction-view.net.positive > .amount {
+.transaction-view.income,
+.transaction-view.net.positive {
     background-color: #ccffb6;
 }
 

@@ -21,7 +21,7 @@ function getParameterByName(name, url) {
 $(document).ready(function () {
     'use strict';
 
-    var s3ObjectKey = 'budget.json';
+    var s3ObjectKey;
     var optionalOverride = getParameterByName('data');
     if (optionalOverride) {
         s3ObjectKey = optionalOverride;

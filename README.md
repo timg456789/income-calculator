@@ -16,3 +16,11 @@ This would need to get added to the core processing.
 # Supported Browsers
 
 Latest versions of chrome, internet explorer, and safari for iPhone.
+
+
+
+# Logs
+https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logStream:group=/aws/lambda/bitcoin-payment-scheduler;streamFilter=typeLogStreamPrefix
+
+# Function
+https://console.aws.amazon.com/lambda/home?region=us-east-1#/functions/bitcoin-payment-scheduler?tab=code
