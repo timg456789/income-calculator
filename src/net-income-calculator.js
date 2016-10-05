@@ -11,10 +11,16 @@ function NetIncomeCalculator() {
 
         var current = new Date(startTime);
         while (current.getTime() < endTime) {
-            getMonthlyExpenses(mre, current, breakdown);
+            if (mre) {
+                getMonthlyExpenses(mre, current, breakdown);
+            }
             getWeeklyExpenses(wre, current, breakdown);
-            getOneTimeExpenses(config.oneTimeExpenses, current, breakdown);
-            getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
+            if (config.oneTimeExpenses) {
+                getOneTimeExpenses(config.oneTimeExpenses, current, breakdown);
+            }
+            if (config.biWeeklyIncome) {
+                getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
+            }
 
             current.setDate(current.getDate() + 1);
         }
@@ -38,9 +44,21 @@ function NetIncomeCalculator() {
 
     }
 
+    function matchesDefaultWeekly(transactionDate, current) {
+        return cal.FRIDAY === current.getUTCDay() &&
+            !transactionDate;
+    }
+
+    function matchesSpecifiedWeekly(transactionDate, currentDay) {
+        return transactionDate &&
+            currentDay === transactionDate.getUTCDay();
+    }
+
     function getWeeklyExpenses(wre, current, breakdown) {
-        if (current.getUTCDay() == cal.FRIDAY) {
-            for (var i = 0; i < wre.length; i++) {
+        var currentDay = current.getUTCDay();
+        for (var i = 0; i < wre.length; i++) {
+            if (matchesDefaultWeekly(wre[i].date, current) ||
+                matchesSpecifiedWeekly(wre[i].date, currentDay)) {
                 var processed = {};
                 processed.name = wre[i].name;
                 processed.amount = wre[i].amount;

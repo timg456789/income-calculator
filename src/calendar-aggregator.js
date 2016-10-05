@@ -9,12 +9,17 @@ function CalendarAggregator() {
         var summary = {};
 
         summary.budgetItems = calendarSearch.find(startTime, endTime, budget);
-        summary.budgeted = getSimpleTotal(summary.budgetItems);
-        summary.actualsForWeek = calendarSearch.find(startTime, endTime, actual);
-        summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
-        summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
-        summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
-        summary.net = getNet(summary.budgeted, summary.totalOverBudget, summary.actualsUnbudgeted);
+        summary.budgetedNet = getSimpleTotal(summary.budgetItems);
+        if (actual) {
+            summary.actualsForWeek = calendarSearch.find(startTime, endTime, actual);
+            summary.actualsByBudget = getTotalAmountsByBudget(summary.actualsForWeek);
+            summary.actualsUnbudgeted = getTotalAmountUnbudgeted(summary.actualsForWeek);
+            summary.totalOverBudget = getAmountOverBudget(summary.budgetItems, summary.actualsForWeek);
+        } else {
+            summary.actualsUnbudgeted = 0;
+            summary.totalOverBudget = 0;
+        }
+        summary.net = getNet(summary.budgetedNet, summary.totalOverBudget, summary.actualsUnbudgeted);
 
         return summary;
     };
@@ -63,8 +68,8 @@ function CalendarAggregator() {
         return net;
     };
 
-    function getNet(budgeted, totalOverBudget, unbudgeted) {
-        return budgeted - totalOverBudget - unbudgeted;
+    function getNet(budgetedNet, totalOverBudget, unbudgeted) {
+        return budgetedNet - totalOverBudget - unbudgeted;
     };
 
     function getAmountOverBudget(budget, actuals) {
