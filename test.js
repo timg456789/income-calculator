@@ -18,7 +18,7 @@ const budgetSettings = {
     biWeeklyIncome: {
         amount: 1335 * 100
     },
-    transactions: [
+    oneTime: [
         {
             name: 'taxes',
             amount: 300 * 100,
@@ -101,7 +101,7 @@ test('september week 2', function (t) {
     var end = Date.UTC(2016, cal.SEPTEMBER, 11);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
-    t.equal(summary.budgetItems.length, 1, 'september week 2 transactions');
+    t.equal(summary.budgetItems.length, 1, 'september week 2 oneTime');
     t.equal(summary.budgetedNet, -75 * 100, 'september week 2 net income');
     t.equal(summary.actualsForWeek.length, 0, 'september week 2 actual expenses.');
 });
@@ -148,7 +148,7 @@ test('september week 5', function(t) {
     var end = Date.UTC(2016, cal.OCTOBER, 1);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
-    t.equal(summary.budgetItems.length, 3, 'september week 5 transactions');
+    t.equal(summary.budgetItems.length, 3, 'september week 5 oneTime');
     t.equal(summary.budgetedNet, 710 * 100, 'september week 5 net income');
 
 });

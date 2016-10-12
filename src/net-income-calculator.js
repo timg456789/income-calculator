@@ -15,8 +15,8 @@ function NetIncomeCalculator() {
                 getMonthlyExpenses(mre, current, breakdown);
             }
             getWeeklyExpenses(wre, current, breakdown);
-            if (config.transactions) {
-                getOne(config.transactions, current, breakdown);
+            if (config.oneTime) {
+                getOne(config.oneTime, current, breakdown);
             }
             if (config.biWeeklyIncome) {
                 getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
