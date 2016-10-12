@@ -18,7 +18,7 @@ const budgetSettings = {
     biWeeklyIncome: {
         amount: 1335 * 100
     },
-    oneTimeExpenses: [
+    transactions: [
         {
             name: 'taxes',
             amount: 300 * 100,
