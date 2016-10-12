@@ -19,8 +19,24 @@ const budgetSettings = {
         amount: 1335 * 100
     },
     oneTimeExpenses: [
-        {name: 'taxes', amount: 300 * 100, date: new Date(Date.UTC(2016, cal.APRIL, 17))},
-        {name: 'taxes', amount: 400 * 100, date: new Date(Date.UTC(2016, cal.SEPTEMBER, 17))}
+        {
+            name: 'taxes',
+            amount: 300 * 100,
+            date: new Date(Date.UTC(2016, cal.APRIL, 17)),
+            type: 'expense'
+        },
+        {
+            name: 'taxes',
+            amount: 400 * 100,
+            date: new Date(Date.UTC(2016, cal.SEPTEMBER, 17)),
+            type: 'expense'
+        },
+        {
+            name: 'checking account balance',
+            amount: 10 * 100,
+            date: new Date(Date.UTC(2016, cal.SEPTEMBER, 22)),
+            type: 'income'
+        }
     ]
 };
 
@@ -116,12 +132,12 @@ test('september week 4', function (t) {
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
 
-    t.equal(summary.budgetItems.length, 2, 'september week 4 budgeted income and expenses');
-    t.equal(summary.budgetedNet, -175 * 100, 'september week 4 net income');
+    t.equal(summary.budgetItems.length, 3, 'september week 4 budgeted income and expenses');
+    t.equal(summary.budgetedNet, -165 * 100, 'september week 4 net income');
     t.equal(summary.actualsForWeek.length, 1, 'september week 4 actual expenses.');
     t.equal(summary.actualsUnbudgeted, 10 * 100, 'september week 4 actual expenses.');
     t.equal(summary.totalOverBudget, 0, 'september week 1 groceries over budget');
-    t.equal(summary.net, -185 * 100, 'september net income');
+    t.equal(summary.net, -175 * 100, 'september net income');
 
 });
 
@@ -144,11 +160,11 @@ test('september total', function (t) {
     var end = Date.UTC(2016, cal.OCTOBER, 1);
 
     var summary = calendarAggregator.getSummary(start, end, budget, actual);
-    t.equal(summary.budgetedNet, 2580 * 100, 'september budgeted net income');
+    t.equal(summary.budgetedNet, 2590 * 100, 'september budgeted net income');
     t.equal(summary.actualsForWeek.length, 4, 'september actual expenses.');
     t.equal(summary.actualsByBudget.food, 150 * 100, 'september food actual expense');
     t.equal(summary.actualsUnbudgeted, 10 * 100);
     t.equal(summary.totalOverBudget, 25 * 100, 'september total over budget');
-    t.equal(summary.net, 2545 * 100, 'september net');
+    t.equal(summary.net, 2555 * 100, 'september net');
 
 });

@@ -16,7 +16,7 @@ function NetIncomeCalculator() {
             }
             getWeeklyExpenses(wre, current, breakdown);
             if (config.oneTimeExpenses) {
-                getOneTimeExpenses(config.oneTimeExpenses, current, breakdown);
+                getOne(config.oneTimeExpenses, current, breakdown);
             }
             if (config.biWeeklyIncome) {
                 getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
@@ -71,7 +71,7 @@ function NetIncomeCalculator() {
         }
     }
 
-    function getOneTimeExpenses(expenses, current, breakdown) {
+    function getOne(expenses, current, breakdown) {
         for (var i=0; i < expenses.length; i++) {
             var potentialOneTimeExpense = expenses[i];
             if (current.getTime() == potentialOneTimeExpense.date.getTime()) {
@@ -79,7 +79,7 @@ function NetIncomeCalculator() {
                 expense.name = potentialOneTimeExpense.name;
                 expense.amount = potentialOneTimeExpense.amount;
                 expense.date = new Date(current.getTime());
-                expense.type = 'expense';
+                expense.type = potentialOneTimeExpense.type;
                 breakdown.push(expense);
             }
         }

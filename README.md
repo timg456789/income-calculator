@@ -53,11 +53,8 @@ An expense that is incurred every seven days. WRE's are incurred on Friday's by 
 ### Incur
 Payment of goods or services.
 
-## Roadmap
+## Future Work
 
-Two features I want from usage:
+Query a bitcoin address and get a BTC sum. This would be added as an actual income for the current date at some conversion rate.
 
-1. ability to override the default date for monthly recurring expenses e.g. what's the expense spread like if insurance is paid on the 25th?
-2. abiliity to view net income across multiple months e.g what's my yearly net income?
-
-Before deliver I want is to nail down my process, then deploy it in a REST API. I want the API to be able to scale massively and be highly reliable. Then I will just build a few HTML pages to connect to that API in a rock solid web server. I'm talking like static content for the web server. Effectively just a CDN would be optimal. No fragile web server architecture. Instead I want durable microservices.
+User authentication and authorization.
