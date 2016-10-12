@@ -10,13 +10,10 @@ const utcDay = new UtcDay();
 test('checking pay date september 2, 2016', function(t) {
     t.plan(1);
 
-    var payStartDate = cal.BIWEEKLY_PAY_START_DATE;
-    var payStartDateTime = cal.BIWEEKLY_PAY_START_DATE.getTime();
-
     var testDate = new Date(Date.UTC(2016, cal.SEPTEMBER, 2));
     var testTime = testDate.getTime();
 
-    var diff = utcDay.getDayDiff(payStartDateTime, testTime);
+    var diff = utcDay.getDayDiff(new Date(Date.UTC(2015, 11, 25)), testTime);
 
     var offBy = diff % cal.BIWEEKLY_INTERVAL;
 

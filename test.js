@@ -16,7 +16,8 @@ const budgetSettings = {
         {name: 'food', amount: 75 * 100}
     ],
     biWeeklyIncome: {
-        amount: 1335 * 100
+        amount: 1335 * 100,
+        date: new Date(Date.UTC(2015, 11, 25))
     },
     oneTime: [
         {

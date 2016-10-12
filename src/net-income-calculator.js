@@ -19,7 +19,11 @@ function NetIncomeCalculator() {
                 getOne(config.oneTime, current, breakdown);
             }
             if (config.biWeeklyIncome) {
-                getIncome(config.biWeeklyIncome.amount, current.getTime(), breakdown);
+                getIncome(
+                    config.biWeeklyIncome.amount,
+                    current.getTime(),
+                    breakdown,
+                    config.biWeeklyIncome.date.getTime());
             }
 
             current.setDate(current.getDate() + 1);
@@ -85,17 +89,17 @@ function NetIncomeCalculator() {
         }
     }
 
-    function getIncome(amount, time, breakdown) {
-        var incomeAccrual = getIncomeAccrual(amount, time);
+    function getIncome(amount, time, breakdown, startTime) {
+        var incomeAccrual = getIncomeAccrual(amount, time, startTime);
         if (incomeAccrual) {
             breakdown.push(incomeAccrual);
         }
     }
 
-    function getIncomeAccrual(amount, time) {
+    function getIncomeAccrual(amount, time, startTime) {
         var accrual;
         var diffFromFirstPayDate = utcDay.getDayDiff(
-            cal.BIWEEKLY_PAY_START_DATE.getTime(),
+            startTime,
             time
         );
 

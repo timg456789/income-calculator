@@ -15,15 +15,9 @@ exports.MONTHS_IN_YEAR = 12;
 
 exports.SAFE_LAST_DAY_OF_MONTH = 28;
 
-exports.BIWEEKLY_PAY_START_DATE = new Date(Date.UTC(2015, 11, 25));
 exports.BIWEEKLY_INTERVAL = 14;
 exports.FRIDAY = 5;
 exports.DAYS_IN_WEEK = 7;
-
-exports.BIWEEKLY_CALENDAR_CONFIG = {
-    firstPayDateTime: exports.BIWEEKLY_PAY_START_DATE.getTime(),
-    interval: exports.BIWEEKLY_INTERVAL
-};
 
 exports.MONTH_NAMES = [ 'January', 'February', 'March', 'April',
     'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
