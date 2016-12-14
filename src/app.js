@@ -1,4 +1,5 @@
 const $ = require('jquery');
+const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
@@ -31,14 +32,9 @@ $(document).ready(function () {
     var priv = getParameterByName('priv');
 
     homeController.init(s3ObjectKey, pub, priv);
-    // I'm working on this now. I should probably hold off, but I want to start working towards this.
-    /*var address = $('#bitcoin-input').val().trim();
-    var url = 'https://blockchain.info/address/' + address + '?format=json';
-    $.getJSON(address, function (data) {
-        $('#header').append('<div>Bitcoin Balance: ' + data.final_balance + '</div>');
-    });*/
 
     $('.alert-dismissible > button.close').click(function () {
         $(this).parent().remove();
     });
+
 });

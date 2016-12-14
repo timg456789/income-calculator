@@ -114160,6 +114160,7 @@ function isNullOrUndefined(arg) {
 
 },{"./XMLBuilder":333,"lodash/object/assign":321}],349:[function(require,module,exports){
 const $ = require('jquery');
+const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
@@ -114192,22 +114193,78 @@ $(document).ready(function () {
     var priv = getParameterByName('priv');
 
     homeController.init(s3ObjectKey, pub, priv);
-    // I'm working on this now. I should probably hold off, but I want to start working towards this.
-    /*var address = $('#bitcoin-input').val().trim();
-    var url = 'https://blockchain.info/address/' + address + '?format=json';
-    $.getJSON(address, function (data) {
-        $('#header').append('<div>Bitcoin Balance: ' + data.final_balance + '</div>');
-    });*/
 
     $('.alert-dismissible > button.close').click(function () {
         $(this).parent().remove();
     });
+
 });
 
-},{"./home-controller":351,"jquery":279}],350:[function(require,module,exports){
+},{"./home-controller":352,"income-calculator/src/calendar":274,"jquery":279}],350:[function(require,module,exports){
+
+function CalendarCalculator() {
+
+    this.getMonthAdjustedByWeek = function (year, month, doDaily, doWeekStart, doWeekEnd) {
+        var result = {};
+
+        result.startOfMonth = this.createByMonth(year, month);
+        result.adjustedStart = this.getFirstDayInWeek(result.startOfMonth);
+        console.log('adjusted start' + JSON.stringify(result.adjustedStart));
+        result.currentDate =  new Date(result.adjustedStart);
+        result.end = this.getNextMonth(result.startOfMonth);
+
+        var dayInWeek;
+        while (result.currentDate.getUTCMonth() !== result.end.getUTCMonth()) {
+            console.log('if exists');
+            if (doWeekStart) {
+                console.log('exists');
+                doWeekStart(result.currentDate, result);
+            }
+
+            for (dayInWeek = result.currentDate.getUTCDay(); dayInWeek < 7; dayInWeek += 1) {
+                if (doDaily) {
+                    doDaily(result.currentDate);
+                }
+
+                result.currentDate.setDate(result.currentDate.getDate() + 1);
+            }
+
+            if (doWeekEnd) {
+                doWeekEnd(result.currentDate);
+            }
+        }
+
+        return result;
+    };
+
+    this.createByMonth = function (year, month) {
+        var startUtcMs = Date.UTC(year, month);
+        var dt = new Date(startUtcMs);
+        return dt;
+    };
+
+    this.getFirstDayInWeek = function (date) {
+        var dt = new Date(date);
+        dt.setUTCDate(dt.getUTCDate() - dt.getUTCDay());
+        return dt;
+    };
+
+    this.getNextMonth = function (date) {
+
+        var dt = new Date(date);
+        dt.setUTCMonth(dt.getUTCMonth() + 1);
+        return dt;
+
+    };
+
+}
+
+module.exports = CalendarCalculator;
+},{}],351:[function(require,module,exports){
 const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
-
+const CalendarCalculator = require('../src/calendar-calculator');
+const calCalc = new CalendarCalculator();
 const NetIncomeCalculator = require('income-calculator/src/net-income-calculator');
 const netIncomeCalculator = new NetIncomeCalculator();
 
@@ -114279,55 +114336,63 @@ function getWeekTarget(date) {
     return 'week-of-' + getDateTarget(date);
 }
 
-exports.build = function (year, month) {
-    'use strict';
-    var date = new Date(year, month);
-
-    $('#months-container').empty();
-
-    var monthContainerId = getMonthContainerId(date);
-
+function addMonthContainer(monthContainerId, date) {
     $('#months-container').append(
         '<div class="month-heading">' + getMonthHeading(date) + '</div>' +
         '<div class="items-container-for-month" id="' +
-            monthContainerId +
+        monthContainerId +
         '"></div>'
     );
+}
 
-    var monthTarget = '#' + monthContainerId;
-
-    $(monthTarget).append('<div class="weeks row"></div>');
-
+function addWeekAbbreviationHeaders(monthTarget) {
     var d;
     for (d = 0; d < 7; d += 1) {
         $(monthTarget + '>' + '.weeks').append(
             '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAME_ABBRS[d] + '</div>');
     }
+}
 
+function addMonth(year, month) {
+    var date = calCalc.createByMonth(year, month);
+    $('#months-container').empty();
+    var monthContainerId = getMonthContainerId(date);
+    addMonthContainer(monthContainerId, date);
+
+    var monthTarget = '#' + monthContainerId;
+    $(monthTarget).append('<div class="weeks row"></div>');
+    addWeekAbbreviationHeaders(monthTarget);
     $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');
 
-    var currentDate = new Date(date);
-    currentDate.setDate(currentDate.getDate() - currentDate.getDay());
-    var transactionsForWeekTarget;
+    return monthContainerId;
+}
+
+exports.build = function (year, month) {
+    'use strict';
+
+    var monthContainerId = addMonth(year, month);
     var dayViewContainer;
-    var dayInWeek;
-    while (currentDate.getMonth() !== date.getMonth() + 1) {
-        transactionsForWeekTarget = getWeekTarget(currentDate);
-        dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
-        $(monthTarget).append(dayViewContainer);
-
-        for (dayInWeek = currentDate.getDay(); dayInWeek < 7; dayInWeek += 1) {
+    var transactionsForWeekTarget;
+    calCalc.getMonthAdjustedByWeek(
+        year,
+        month,
+        function (currentDate) {
+            console.log('inserting into: ' + transactionsForWeekTarget);
+            var dayView = getDayView(currentDate, new Date().getUTCMonth() === currentDate.getUTCMonth());
+            $('.' + transactionsForWeekTarget).append(dayView);
+        },
+        function (currentDate) {
+            transactionsForWeekTarget = getWeekTarget(currentDate);
+            dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
+            var monthTarget = '#' + monthContainerId;
+            $(monthTarget).append(dayViewContainer);
+        },
+        function (currentDate) {
             $('.' + transactionsForWeekTarget).append(
-                getDayView(currentDate, new Date().getUTCMonth() === currentDate.getUTCMonth()));
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        $('.' + transactionsForWeekTarget).append(
-            '<div class="day-view totals-view day-col col-xs-1">' +
-            '</div>'
-        );
-    }
-
+                '<div class="day-view totals-view day-col col-xs-1">' +
+                '</div>'
+            );
+        });
 };
 
 function loadTransactions(items, areActuals) {
@@ -114368,46 +114433,50 @@ function getSummary(budgetSettings, actual, startTime, endTime) {
 
 function loadWeeklyTotals(budgetSettings, actual, start) {
     'use strict';
+
     var weekEnd;
     var summary;
     var type;
-    var currentBudgetDate = new Date(start);
-    var currentTargetDate = new Date(start);
+    var dt = new Date(start);
     var net = 0;
 
-    while (currentTargetDate.getUTCMonth() !== start.getUTCMonth() + 1) {
+    var doOnWeekStart = function (currentDate, result) {
 
-        if (currentTargetDate.getUTCDay() !== 0) {
-            currentTargetDate.setUTCDate(currentTargetDate.getUTCDate() - currentTargetDate.getUTCDay());
-        }
-
-        weekEnd = new Date(currentTargetDate.getTime());
+        weekEnd = new Date(currentDate.getTime());
         weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
 
-        if (weekEnd.getUTCMonth() > currentBudgetDate.getUTCMonth()) {
+        if (weekEnd.getUTCMonth() > currentDate.getUTCMonth()) {
             weekEnd.setUTCDate(1);
+        }
+
+        var summaryStart = currentDate.getTime();
+
+        if (summaryStart === result.adjustedStart.getTime()) {
+            summaryStart = result.startOfMonth.getTime();
         }
 
         summary = getSummary(
             budgetSettings,
             actual,
-            currentBudgetDate.getTime(),
+            summaryStart,
             weekEnd.getTime()
         );
 
-        type = summary.net > 0
-            ? 'income'
-            : 'expense';
+        type = summary.net > 0 ? 'income' : 'expense';
 
-        $('.' + getWeekTarget(currentTargetDate) + ' .totals-view').append(
+        $('.' + getWeekTarget(currentDate) + ' .totals-view').append(
             getTransactionView('', summary.net, type)
         );
 
         net += summary.net;
+    };
 
-        currentTargetDate.setTime(weekEnd.getTime());
-        currentBudgetDate.setTime(weekEnd.getTime());
-    }
+    calCalc.getMonthAdjustedByWeek(
+        dt.getUTCFullYear(),
+        dt.getUTCMonth(),
+        null,
+        doOnWeekStart,
+        null);
 
     return net;
 }
@@ -114429,7 +114498,7 @@ exports.load = function (budgetSettings, actual, start, end) {
     $('#month-net-header-value').attr('data-net-by-weekly-totals', netByWeeklyTotals);
 };
 
-},{"income-calculator/src/calendar":274,"income-calculator/src/calendar-aggregator":272,"income-calculator/src/net-income-calculator":275,"jquery":279}],351:[function(require,module,exports){
+},{"../src/calendar-calculator":350,"income-calculator/src/calendar":274,"income-calculator/src/calendar-aggregator":272,"income-calculator/src/net-income-calculator":275,"jquery":279}],352:[function(require,module,exports){
 function HomeController() {
     'use strict';
 
@@ -114584,7 +114653,9 @@ function HomeController() {
         });
 
         $('#project').click(function () {
-            project();
+            var year = $('#calendar-year');
+            var month = $('#calendar-month');
+            project(year, month);
         });
 
         $('#add-new-monthly-epense').click(function () {
@@ -114612,7 +114683,7 @@ function HomeController() {
 }
 
 module.exports = HomeController;
-},{"./calendar-view":350,"./home-view":352,"aws-sdk":199,"jquery":279}],352:[function(require,module,exports){
+},{"./calendar-view":351,"./home-view":353,"aws-sdk":199,"jquery":279}],353:[function(require,module,exports){
 const $ = require('jquery');
 
 exports.getTransactionView = function (transaction, iteration, type) {

@@ -152,7 +152,9 @@ function HomeController() {
         });
 
         $('#project').click(function () {
-            project();
+            var year = $('#calendar-year');
+            var month = $('#calendar-month');
+            project(year, month);
         });
 
         $('#add-new-monthly-epense').click(function () {
