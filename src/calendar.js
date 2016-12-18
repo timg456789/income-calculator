@@ -12,6 +12,7 @@ exports.NOVEMBER = 10;
 exports.DECEMBER = 11;
 
 exports.MONTHS_IN_YEAR = 12;
+exports.WEEKS_IN_YEAR = 52;
 
 exports.SAFE_LAST_DAY_OF_MONTH = 28;
 
