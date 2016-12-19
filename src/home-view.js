@@ -1,4 +1,7 @@
 const $ = require('jquery');
+const cal = require('income-calculator/src/calendar');
+const CalendarCalculator = require('../src/calendar-calculator');
+const calCalc = new CalendarCalculator();
 
 exports.getTransactionView = function (transaction, iteration, type) {
     'use strict';
@@ -18,11 +21,50 @@ exports.getTransactionView = function (transaction, iteration, type) {
         name = transaction.name;
     }
 
+    var txHtmlInput;
+    var txHtmlDayInput;
+    var currentDayOfWeek;
+    var isDaySelected = '';
+
+    if (iteration === 'weekly') {
+
+        txHtmlInput = '<select class="date form-control inline-group">';
+
+        if (date) {
+            date = new Date(date);
+        } else {
+            date = new Date();
+            date = calCalc.getFirstDayInWeek(date);
+        }
+
+        currentDayOfWeek = calCalc.getFirstDayInWeek(date);
+
+        for (var day = 0; day < 7; day++) {
+            txHtmlDayInput = ' value="' + currentDayOfWeek + '" ';
+
+            if (currentDayOfWeek.getUTCDay() === date.getUTCDay()) {
+                isDaySelected = 'selected="selected"';
+            } else {
+                isDaySelected = '';
+            }
+
+            txHtmlInput += '<option' + txHtmlDayInput + isDaySelected + '>' +
+                cal.DAY_NAMES[day] +
+                '</option>';
+            currentDayOfWeek.setUTCDate(currentDayOfWeek.getUTCDate() + 1);
+        }
+
+        txHtmlInput += '</select>';
+
+    } else {
+        txHtmlInput = '<input class="date form-control inline-group" type="text" value="' + date + '" />';
+    }
+
     var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
             '<div class="input-group-addon">$</div>' +
             '<input class="amount form-control inline-group" type="text" value="' + amount + '" /> ' +
             '<div class="input-group-addon">&#64;</div>' +
-            '<input class="date form-control inline-group" type="text" value="' + date + '" /> ' +
+            txHtmlInput +
             '<input class="name form-control inline-group" type="text" value="' + name + '" /> ' +
             '</div>';
 
@@ -47,7 +89,7 @@ exports.getTransactionView = function (transaction, iteration, type) {
     view.append(removeButton);
 
     return view;
-}
+};
 
 function getTransactionModel(target) {
     'use strict';
@@ -55,11 +97,15 @@ function getTransactionModel(target) {
     var transaction = {};
 
     var amountInput = $(target).children('input.amount');
-    var dateInput = $(target).children('input.date');
+    var dateInput = $(target).children('.date.form-control');
     var nameInput = $(target).children('input.name');
 
     transaction.amount = parseFloat(amountInput.val().trim()) * 100;
-    transaction.date = new Date(dateInput.val().trim());
+
+    var rawDate = dateInput.val();
+    var rawTrimmedDate = rawDate.trim();
+
+    transaction.date = new Date(rawTrimmedDate);
     transaction.name = nameInput.val().trim();
     transaction.type = 'expense';
 

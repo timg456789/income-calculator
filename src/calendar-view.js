@@ -114,7 +114,6 @@ exports.build = function (year, month) {
         year,
         month,
         function (currentDate) {
-            console.log('inserting into: ' + transactionsForWeekTarget);
             var dayView = getDayView(currentDate, new Date().getUTCMonth() === currentDate.getUTCMonth());
             $('.' + transactionsForWeekTarget).append(dayView);
         },

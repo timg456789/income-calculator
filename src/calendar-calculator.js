@@ -6,15 +6,12 @@ function CalendarCalculator() {
 
         result.startOfMonth = this.createByMonth(year, month);
         result.adjustedStart = this.getFirstDayInWeek(result.startOfMonth);
-        console.log('adjusted start' + JSON.stringify(result.adjustedStart));
         result.currentDate =  new Date(result.adjustedStart);
         result.end = this.getNextMonth(result.startOfMonth);
 
         var dayInWeek;
         while (result.currentDate.getUTCMonth() !== result.end.getUTCMonth()) {
-            console.log('if exists');
             if (doWeekStart) {
-                console.log('exists');
                 doWeekStart(result.currentDate, result);
             }
 
