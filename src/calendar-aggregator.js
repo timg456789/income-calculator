@@ -37,7 +37,7 @@ function CalendarAggregator() {
         }
 
         return amounts;
-    };
+    }
 
     function getTotalAmountUnbudgeted(transactions) {
         var total = 0;
@@ -66,11 +66,11 @@ function CalendarAggregator() {
         }
 
         return net;
-    };
+    }
 
     function getNet(budgetedNet, totalOverBudget, unbudgeted) {
         return budgetedNet - totalOverBudget - unbudgeted;
-    };
+    }
 
     function getAmountOverBudget(budget, actuals) {
         var total = 0;
@@ -93,7 +93,7 @@ function CalendarAggregator() {
         }
 
         return total;
-    };
+    }
 
 }
 

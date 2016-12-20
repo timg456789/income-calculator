@@ -106,7 +106,7 @@ function NetIncomeCalculator() {
         var modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
 
         if (modulusIntervalsFromFirstPayDate === 0) {
-            var accrual = {};
+            accrual = {};
             accrual.name = 'biweekly income';
             accrual.amount = amount;
             accrual.date = new Date(time);
