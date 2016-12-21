@@ -1,8 +1,10 @@
 const test = require('tape');
 const YearlyInterest = require('../src/yearly-interest');
+const MonthlyInterest = require('../src/monthly-interest');
 const yearlyInterest = new YearlyInterest();
+const monthlyInterest = new MonthlyInterest();
 
-const WEEKLY_SAVINGS = 90;
+const YEARLY_SAVINGS = 4680;
 const YEARLY_INTEREST = '.08';
 
 // Original
@@ -22,36 +24,39 @@ const YEARLY_INTEREST = '.08';
 // 	4680
 
 test('end of year 1', function(t) {
-    t.plan(1);
-    var expectedToAddEachYear = yearlyInterest.calcSavings(WEEKLY_SAVINGS, 1, YEARLY_INTEREST);
+    t.plan(2);
+    var expectedToAddEachYear = yearlyInterest.calcSavings(YEARLY_SAVINGS, 1, YEARLY_INTEREST);
     t.equal(4680, expectedToAddEachYear, 'expected to add each year');
+
+    var expectedMonthly = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 1, YEARLY_INTEREST/12);
+    t.equal(4680, expectedToAddEachYear, 'expected to save adding on a monthly basis for one year');
 });
 
 test('end of year 2', function(t) {
    t.plan(1);
-   var expectedAtEndOfYear2 = yearlyInterest.calcSavings(WEEKLY_SAVINGS, 2, YEARLY_INTEREST);
+   var expectedAtEndOfYear2 = yearlyInterest.calcSavings(YEARLY_SAVINGS, 2, YEARLY_INTEREST);
    t.equal(9734.4, expectedAtEndOfYear2);
 });
 
 test('end of year 3', function(t) {
     t.plan(1);
-    var expectedAtEndOfYear3 = yearlyInterest.calcSavings(WEEKLY_SAVINGS, 3, YEARLY_INTEREST);
+    var expectedAtEndOfYear3 = yearlyInterest.calcSavings(YEARLY_SAVINGS, 3, YEARLY_INTEREST);
     t.equal(15193.152, expectedAtEndOfYear3);
 });
 
 test('end of year 4', function(t) {
     t.plan(1);
-    t.equal(21088.60416, yearlyInterest.calcSavings(WEEKLY_SAVINGS, 4, YEARLY_INTEREST));
+    t.equal(21088.60416, yearlyInterest.calcSavings(YEARLY_SAVINGS, 4, YEARLY_INTEREST));
 });
 
 test('end of year 10 @ 20%', function(t) {
     t.plan(1);
-    t.equal(121486.63228416, yearlyInterest.calcSavings(WEEKLY_SAVINGS, 10, '.20'));
+    t.equal(121486.63228416, yearlyInterest.calcSavings(YEARLY_SAVINGS, 10, '.20'));
 });
 
 test('end of year 10 @ 15%', function(t) {
     t.plan(1);
-    t.equal(95021.40135408679, yearlyInterest.calcSavings(WEEKLY_SAVINGS, 10, '.15'));
+    t.equal(95021.40135408679, yearlyInterest.calcSavings(YEARLY_SAVINGS, 10, '.15'));
 });
 
 /*
@@ -66,5 +71,5 @@ test('end of year 10 @ 10%', function(t) {
     t.plan(2);
     var contributionsOverTenYears = 4680 * 10;
     t.equal(74587.14713268001 - contributionsOverTenYears, 27787.14713268001, 'interest after 10 years');
-    t.equal(74587.14713268001, yearlyInterest.calcSavings(WEEKLY_SAVINGS, 10, '.10'));
+    t.equal(74587.14713268001, yearlyInterest.calcSavings(YEARLY_SAVINGS, 10, '.10'));
 });
