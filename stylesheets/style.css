@@ -161,7 +161,7 @@ h3 > .btn-success {
 }
 
 .day-view.out-of-month {
-    background-color: #ddd;
+    background-color: #eee;
 }
 
 .day-view.out-of-month > .calendar-day-number {
