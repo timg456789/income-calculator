@@ -23,6 +23,58 @@ const YEARLY_INTEREST = '.08';
 // 	1215 interest on 15192 @ 8%
 // 	4680
 
+// here are the monthly tests
+//month 1
+//390
+
+//month 2
+//existing: 390
+//accrual: 2.574
+
+//month 3
+//782.574
+//5.1649884
+
+//month 4
+//1177.7389884
+//7.77307732344
+
+//month 5
+//1575.51206572344
+//10.3983796337747
+
+//month 6
+//1975.910445357215
+//13.04100893935762
+
+//month 7
+//2378.951454296573
+//15.70107959835738
+
+//month 8
+//2784.65253389493
+//18.37870672370654
+
+//month 9
+//3193.031240618637
+//21.074006188083
+
+//month 10
+//3604.10524680672
+//23.78709462892435
+
+//month 11
+//4017.892341435644
+//26.51808945347525
+
+//month 12
+//4434.410430889119
+//29.26710884386819
+
+//year 2 month 1
+//4853.677539732987
+
+
 test('end of year 1', function(t) {
     t.plan(2);
     var expectedToAddEachYear = yearlyInterest.calcSavings(YEARLY_SAVINGS, 1, YEARLY_INTEREST);
