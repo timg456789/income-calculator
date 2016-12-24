@@ -14,7 +14,9 @@ function NetIncomeCalculator() {
             if (mre) {
                 getMonthlyExpenses(mre, current, breakdown);
             }
-            getWeeklyExpenses(wre, current, breakdown);
+            if (wre) {
+                getWeeklyExpenses(wre, current, breakdown);
+            }
             if (config.oneTime) {
                 getOne(config.oneTime, current, breakdown);
             }
@@ -26,7 +28,7 @@ function NetIncomeCalculator() {
                     config.biWeeklyIncome.date.getTime());
             }
 
-            current.setDate(current.getDate() + 1);
+            current.setUTCDate(current.getUTCDate() + 1);
         }
 
         return breakdown;
@@ -35,8 +37,12 @@ function NetIncomeCalculator() {
     function getMonthlyExpenses(monthlyExpenses, current, breakdown) {
         var mre = monthlyExpenses;
         for (var i = 0; i < mre.length; i++) {
-            if ((current.getDate() == cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
-                (mre[i].date && mre[i].date.getDate() === current.getDate())) {
+
+            var shouldAdd =
+                (current.getUTCDate() === cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
+                (mre[i].date && mre[i].date.getUTCDate() === current.getUTCDate());
+
+            if (shouldAdd) {
                 var processed = {};
                 processed.name = mre[i].name;
                 processed.amount = mre[i].amount;
@@ -68,7 +74,7 @@ function NetIncomeCalculator() {
                 processed.amount = wre[i].amount;
                 processed.date = new Date(current.getTime());
                 processed.endDate = new Date(current.getTime());
-                processed.endDate.setDate(processed.endDate.getDate() + 7);
+                processed.endDate.setUTCDate(processed.endDate.getUTCDate() + 7);
                 processed.type = 'expense';
                 breakdown.push(processed);
             }
