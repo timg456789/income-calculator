@@ -114685,6 +114685,74 @@ const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
 
+function getTxInputHtmlMonthly(date) {
+    var txHtmlInput = '<select class="date form-control inline-group">';
+    var txHtmlDayInput;
+    var currentDayOfWeek;
+    var isDaySelected = '';
+
+    if (date) {
+        date = new Date(date);
+    } else {
+        date = calCalc.createByMonth(new Date().getUTCFullYear(), new Date().getUTCMonth());
+    }
+
+    currentDayOfWeek = new Date(date.getTime());
+    currentDayOfWeek.setUTCDate(1);
+
+    for (var day = 1; day <= 28; day++) {
+        txHtmlDayInput = ' value="' + currentDayOfWeek + '" ';
+
+        if (currentDayOfWeek.getUTCDate() === date.getUTCDate()) {
+            isDaySelected = 'selected="selected"';
+        } else {
+            isDaySelected = '';
+        }
+
+        txHtmlInput += '<option' + txHtmlDayInput + isDaySelected + '>' +
+            day +
+            '</option>';
+        currentDayOfWeek.setUTCDate(currentDayOfWeek.getUTCDate() + 1);
+    }
+
+    txHtmlInput += '</select>';
+    return txHtmlInput;
+}
+
+function getTxInputHtmlWeekly(date) {
+    var txHtmlInput = '<select class="date form-control inline-group">';
+    var txHtmlDayInput;
+    var currentDayOfWeek;
+    var isDaySelected = '';
+
+    if (date) {
+        date = new Date(date);
+    } else {
+        date = new Date();
+        date = calCalc.getFirstDayInWeek(date);
+    }
+
+    currentDayOfWeek = calCalc.getFirstDayInWeek(date);
+
+    for (var day = 0; day < 7; day++) {
+        txHtmlDayInput = ' value="' + currentDayOfWeek + '" ';
+
+        if (currentDayOfWeek.getUTCDay() === date.getUTCDay()) {
+            isDaySelected = 'selected="selected"';
+        } else {
+            isDaySelected = '';
+        }
+
+        txHtmlInput += '<option' + txHtmlDayInput + isDaySelected + '>' +
+            cal.DAY_NAMES[day] +
+            '</option>';
+        currentDayOfWeek.setUTCDate(currentDayOfWeek.getUTCDate() + 1);
+    }
+
+    txHtmlInput += '</select>';
+    return txHtmlInput;
+}
+
 exports.getTransactionView = function (transaction, iteration, type) {
     'use strict';
 
@@ -114704,41 +114772,11 @@ exports.getTransactionView = function (transaction, iteration, type) {
     }
 
     var txHtmlInput;
-    var txHtmlDayInput;
-    var currentDayOfWeek;
-    var isDaySelected = '';
 
     if (iteration === 'weekly') {
-
-        txHtmlInput = '<select class="date form-control inline-group">';
-
-        if (date) {
-            date = new Date(date);
-        } else {
-            console.log('creating date new');
-            date = new Date();
-            date = calCalc.getFirstDayInWeek(date);
-        }
-
-        currentDayOfWeek = calCalc.getFirstDayInWeek(date);
-
-        for (var day = 0; day < 7; day++) {
-            txHtmlDayInput = ' value="' + currentDayOfWeek + '" ';
-
-            if (currentDayOfWeek.getUTCDay() === date.getUTCDay()) {
-                isDaySelected = 'selected="selected"';
-            } else {
-                isDaySelected = '';
-            }
-
-            txHtmlInput += '<option' + txHtmlDayInput + isDaySelected + '>' +
-                cal.DAY_NAMES[day] +
-                '</option>';
-            currentDayOfWeek.setUTCDate(currentDayOfWeek.getUTCDate() + 1);
-        }
-
-        txHtmlInput += '</select>';
-
+        txHtmlInput = getTxInputHtmlWeekly(date);
+    } else if (iteration === 'monthly') {
+        txHtmlInput = getTxInputHtmlMonthly(date);
     } else {
         txHtmlInput = '<input class="date form-control inline-group" type="text" value="' + date + '" />';
     }
