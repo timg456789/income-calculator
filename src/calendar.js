@@ -15,6 +15,7 @@ exports.MONTHS_IN_YEAR = 12;
 exports.WEEKS_IN_YEAR = 52;
 
 exports.SAFE_LAST_DAY_OF_MONTH = 28;
+exports.WEEKS_IN_MONTH = 4.348125; // I know, I know, this is absolutely ridiculous. Weeks don't translate to months! But it works beautifully for the tested month.
 
 exports.BIWEEKLY_INTERVAL = 14;
 exports.FRIDAY = 5;

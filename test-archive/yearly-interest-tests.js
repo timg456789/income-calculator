@@ -7,81 +7,87 @@ const monthlyInterest = new MonthlyInterest();
 const YEARLY_SAVINGS = 4680;
 const YEARLY_INTEREST = '.08';
 
-// Original
-// 90 dollars saved per week (10 % of yearly income)
-// 4680 year 1 = no interest
-// 9734 year 2 = interest paid on year start at 8%
-// 	4680
-// 	374 interest on 4,680 @ 8%
-// 	4680
-// 15192 year 3
-// 	9734
-// 	778 interest on 9734 @ 8%
-// 	4680
-// 21087 year 4
-// 	15192
-// 	1215 interest on 15192 @ 8%
-// 	4680
+test('end of month 1', function(t) {
+   t.plan(1);
+   var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 1, YEARLY_INTEREST);
+   t.equal(monthEnd, 390);
+});
 
-// here are the monthly tests
-//month 1
-//390
+test('end of month 2', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 2, YEARLY_INTEREST);
+    t.equal(monthEnd, 782.6);
+});
 
-//month 2
-//existing: 390
-//accrual: 2.574
+test('end of month 3', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 3, YEARLY_INTEREST);
+    t.equal(monthEnd, 1177.8173333333334);
+});
 
-//month 3
-//782.574
-//5.1649884
+test('end of month 4', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 4, YEARLY_INTEREST);
+    t.equal(monthEnd, 1575.6694488888888);
+});
 
-//month 4
-//1177.7389884
-//7.77307732344
+test('end of month 5', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 5, YEARLY_INTEREST);
+    t.equal(monthEnd, 1976.1739118814814);
+});
 
-//month 5
-//1575.51206572344
-//10.3983796337747
+test('end of month 6', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 6, YEARLY_INTEREST);
+    t.equal(monthEnd, 2379.348404627358);
+});
 
-//month 6
-//1975.910445357215
-//13.04100893935762
+test('end of month 7', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 7, YEARLY_INTEREST);
+    t.equal(monthEnd, 2785.2107273248735);
+});
 
-//month 7
-//2378.951454296573
-//15.70107959835738
+test('end of month 8', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 8, YEARLY_INTEREST);
+    t.equal(monthEnd, 3193.7787988403725);
+});
 
-//month 8
-//2784.65253389493
-//18.37870672370654
+test('end of month 9', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 9, YEARLY_INTEREST);
+    t.equal(monthEnd, 3605.0706574993083);
+});
 
-//month 9
-//3193.031240618637
-//21.074006188083
+test('end of month 10', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 10, YEARLY_INTEREST);
+    t.equal(monthEnd, 4019.104461882637);
+});
 
-//month 10
-//3604.10524680672
-//23.78709462892435
 
-//month 11
-//4017.892341435644
-//26.51808945347525
+test('end of month 11', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 11, YEARLY_INTEREST);
+    t.equal(monthEnd, 4435.898491628522);
+});
 
-//month 12
-//4434.410430889119
-//29.26710884386819
 
-//year 2 month 1
-//4853.677539732987
-
+test('end of month 12', function(t) {
+    t.plan(1);
+    var monthEnd = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 12, YEARLY_INTEREST);
+    t.equal(monthEnd, 4855.471148239379);
+});
 
 test('end of year 1', function(t) {
     t.plan(2);
     var expectedToAddEachYear = yearlyInterest.calcSavings(YEARLY_SAVINGS, 1, YEARLY_INTEREST);
     t.equal(4680, expectedToAddEachYear, 'expected to add each year');
 
-    var expectedMonthly = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 1, YEARLY_INTEREST/12);
-    t.equal(4680, expectedToAddEachYear, 'expected to save adding on a monthly basis for one year');
+    var expectedMonthly = monthlyInterest.calcSavings(YEARLY_SAVINGS/12, 12, YEARLY_INTEREST);
+    t.equal(4855.471148239379, expectedMonthly, 'expected to save adding on a monthly basis for one year');
 });
 
 test('end of year 2', function(t) {
@@ -111,14 +117,6 @@ test('end of year 10 @ 15%', function(t) {
     t.equal(95021.40135408679, yearlyInterest.calcSavings(YEARLY_SAVINGS, 10, '.15'));
 });
 
-/*
-    ugh idk, at 10 years the interest and amount both become substantial.
-    the problem is it's not even accounting for inflation between 3.5 and 7% conservatively.
-
-    really things change at around 15%. but fuck how do you reliably get 15% returns?
-    after 5 years in stocks I just once got 20%, and changed the mix so that certainly will not happen again,
-    and that's consdiered extremely good coming up from a bad year so it's not in any way consistent as required.
- */
 test('end of year 10 @ 10%', function(t) {
     t.plan(2);
     var contributionsOverTenYears = 4680 * 10;

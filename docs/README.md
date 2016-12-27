@@ -47,6 +47,22 @@
 
 ### Cost of Food
 
+I can't budget below $42 for food as an aboslute minimum where I'm cooking every meal and shouldn't spend over $85 on a regular basis.
+
+#### Sources
 [USDA Month by Month Cost of Food](http://www.cnpp.usda.gov/USDAFoodPlansCostofFood/reports)
 
-[USDA Cost of Food June 2016](http://www.cnpp.usda.gov/sites/default/files/CostofFoodMay2016.pdf)
+**November 2016**
+Male aged 19-50 years
+
+Weekly
+Thrifty: $42.40
+Low-Cost: $54.80
+Moderate: $68.80 (Current)
+Liberal: $84.70
+
+Monthly
+$183.60
+$237.50
+$298.00
+$367.20

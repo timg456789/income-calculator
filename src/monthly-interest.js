@@ -1,19 +1,19 @@
 
-function YearlyInterest() {
+function MonthlyInterest() {
 
-    function getYearsEndTotal(yearStartTotal, yearlyAddition, yearlyInterestRate) {
-        var total = yearStartTotal * yearlyInterestRate;
-        total += yearlyAddition;
-        return total;
+    function getInterest(total, rate) {
+        return total * rate;
     }
 
-    this.calcSavings = function (yearlyAddition, years, yearlyInterestRate) {
-        const cal = require('../src/calendar');
-        var total = yearlyAddition;
+    this.calcSavings = function (monthlyAddition, months, yearlyInterestRate) {
+        var total = monthlyAddition;
+        var monthlyInterestRate = yearlyInterestRate/12;
 
-        // if more than one year.
-        for (var currentCompleteYear = 1; currentCompleteYear < years; currentCompleteYear++) {
-            total += getYearsEndTotal(total, yearlyAddition, yearlyInterestRate);
+        // if more than one month.
+        for (var currentCompleteMonth = 1; currentCompleteMonth < months; currentCompleteMonth++) {
+            var interest = getInterest(total, monthlyInterestRate);
+            var newTotal = interest + monthlyAddition;
+            total += newTotal;
         }
 
         return total;
@@ -21,4 +21,4 @@ function YearlyInterest() {
 
 }
 
-module.exports = YearlyInterest;
+module.exports = MonthlyInterest;

@@ -32,6 +32,9 @@ Currently the best option is to use an external payment calculator and plug in t
 ### Accrue
 To receive income.
 
+### Annual Percentage Rate (APR)
+The APR represents the amount of interest accrued on a yearly period. An APR may be converted to be used in other periods by simply dividing **down to a montly period**. After a monthhly period e.g. weekly or daily interest is generally not accrued and based upon a monthly period then the number of weeks or days in that period.
+
 ### Biweekly Income
 Income accrued on a 14 day interval determined by an initial start date. Biweekly income is detailed in docs/README.md under the **Income - Accruals** section.
 
@@ -55,6 +58,3 @@ Payment of goods or services.
 
 ## Future Work
 
-Query a bitcoin address and get a BTC sum. This would be added as an actual income for the current date at some conversion rate.
-
-User authentication and authorization.
