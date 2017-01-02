@@ -65,11 +65,11 @@ h3 > .btn-success {
 }
 
 .transaction-input-view .date {
-    width: 50%;
+    width: 100%;
 }
 
 .transaction-input-view .name {
-    width: 50%;
+    width: 100%;
 }
 
 /* with a budget */

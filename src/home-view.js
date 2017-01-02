@@ -2,6 +2,7 @@ const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
+const BalanceViewModel = require('./balance-view-model');
 
 function getTxInputHtmlMonthly(date) {
     var txHtmlInput = '<select class="date form-control inline-group">';
@@ -103,9 +104,10 @@ exports.getTransactionView = function (transaction, iteration, type) {
             '<div class="input-group-addon">$</div>' +
             '<input class="amount form-control inline-group" type="text" value="' + amount + '" /> ' +
             '<div class="input-group-addon">&#64;</div>' +
-            txHtmlInput +
-            '<input class="name form-control inline-group" type="text" value="' + name + '" /> ' +
-            '</div>';
+            txHtmlInput;
+    html += '<div class="input-group-addon">name</div>';
+    html += '<input class="name form-control inline-group" type="text" value="' + name + '" />';
+    html += '</div>';
 
     var view = $(html);
 
@@ -170,8 +172,53 @@ function insertTransactionViews(transactions, target, iteration, type) {
     }
 }
 
+function getTransactionByName (txns, name) {
+    for (var i = 0; i < txns.length; i++) {
+        if (txns[i].name === name) {
+            return txns[i];
+        }
+    }
+
+    return null;
+}
+
+function setBalances(budget) {
+    var balanceTarget = '#balance-input-group';
+    $(balanceTarget).empty();
+    var i;
+    var balanceView;
+
+    for (i = 0; i < budget.balances.length; i += 1) {
+
+        var weeklyAmount;
+        var monthlyTxn = getTransactionByName(budget.monthlyRecurringExpenses, budget.balances[i].name);
+        if (monthlyTxn) {
+            weeklyAmount = (monthlyTxn.amount/100) / cal.WEEKS_IN_MONTH;
+        } else {
+            var weeklyTxn = getTransactionByName(budget.weeklyRecurringExpenses, budget.balances[i].name);
+            if (weeklyTxn) {
+                weeklyAmount = weeklyTxn.amount/100;
+            } else {
+                weeklyAmount = 0;
+            }
+        }
+
+        balanceView = BalanceViewModel.getBalanceView(
+            budget.balances[i].amount,
+            budget.balances[i].name,
+            budget.balances[i].rate,
+            weeklyAmount
+        );
+        $(balanceTarget).append(balanceView);
+    }
+}
+
 exports.setView = function (budget) {
     'use strict';
+
+    if (budget.balances) {
+        setBalances(budget);
+    }
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
@@ -213,6 +260,8 @@ exports.getModel = function () {
     $('.actual-expense-item').each(function () {
         budgetSettings.actual.push(getTransactionModel(this));
     });
+
+    budgetSettings.balances = BalanceViewModel.getModels();
 
     return budgetSettings;
 };

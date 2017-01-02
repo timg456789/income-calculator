@@ -22,24 +22,25 @@
               <input id="budget-url" class="form-control" type="text" />
           </div>
           <input id="load-budget" type="button" value="Load" class="hide btn btn-primary" />
-          <h2>Create a Budget</h2>
+          <h2>Budget</h2>
           <p>
               Enter your biweekly income and expenses.
               Then you will be shown your transactions on a calendar.
           </p>
           <h3>
-              Biweekly(14 day) Income
+              Biweekly Income
           </h3>
           <div id="biweekly-input-group" class="form-group">
               <div class="input-group">
                   <div class="input-group-addon">$</div>
-                  <input id="biweekly-input" type="text" class="form-control" value="1335" />
+                  <input id="biweekly-input" type="text" class="form-control" value="1" />
                   <div class="input-group-addon">.00</div>
               </div>
           </div>
+
           <h3>
               Monthly Expenses
-              <button id="add-new-monthly-epense" type="button" class="btn btn-success pull-right">
+              <button id="add-new-monthly" type="button" class="btn btn-success pull-right">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               </button>
           </h3>
@@ -47,7 +48,7 @@
 
           <h3>
               Weekly Expenses
-              <button id="add-new-weekly-expense" type="button" class="btn btn-success pull-right">
+              <button id="add-new-weekly" type="button" class="btn btn-success pull-right">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
               </button>
           </h3>
@@ -69,7 +70,15 @@
           </h3>
           <div id="actuals-input-group" class="form-group"></div>
 
-          <input id="project" type="button" value="Create" class="btn btn-primary" />
+          <h3>
+              Loans
+              <button id="add-new-balance" type="button" class="btn btn-success pull-right">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </button>
+          </h3>
+          <div id="balance-input-group" class="form-group"></div>
+
+          <input id="project" type="button" value="Save &amp; View Payment Schedule" class="btn btn-primary" />
       </form>
   </div>
   <div id="months-container" class="container-fluid"></div>

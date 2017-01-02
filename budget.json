@@ -1,60 +1,102 @@
 {
     "biWeeklyIncome": {
-        "amount": 133500
+        "amount": 177500,
+        "date": "2015-12-25T00:00:00.000Z"
     },
     "monthlyRecurringExpenses": [
         {
-            "name": "rent",
-            "amount": 55000,
-            "date": "2016-09-27T00:00:00.000Z"
+            "amount": 104500,
+            "date": "2015-12-25T00:00:00.000Z",
+            "name": "rent: washer, dryer, cable, waste, renters insurance",
+            "type": "expense"
         },
         {
-            "name": "utilities",
+            "amount": 28200,
+            "date": "2015-12-28T00:00:00.000Z",
+            "name": "student loan",
+            "type": "expense"
+        },
+        {
+            "amount": 27900,
+            "date": "2015-12-25T00:00:00.000Z",
+            "name": "car insurance",
+            "type": "expense"
+        },
+        {
             "amount": 10000,
-            "date": "2016-09-20T00:00:00.000Z"
+            "date": "2017-01-25T00:00:00.000Z",
+            "name": "water and electricity",
+            "type": "expense"
+        },
+        {
+            "amount": 7700,
+            "date": "2017-01-25T00:00:00.000Z",
+            "name": "phone",
+            "type": "expense"
+        },
+        {
+            "amount": 1500,
+            "date": "2017-01-25T00:00:00.000Z",
+            "name": "gym",
+            "type": "expense"
+        },
+        {
+            "amount": 1000,
+            "date": "2017-01-25T00:00:00.000Z",
+            "name": "music",
+            "type": "expense"
+        },
+        {
+            "amount": 7500,
+            "date": "2017-01-25T00:00:00.000Z",
+            "name": "clothing",
+            "type": "expense"
         }
     ],
     "weeklyRecurringExpenses": [
         {
-            "name": "food",
-            "amount": 7500
-        }
-        ],
-        "oneTime": [
+            "amount": 17000,
+            "date": "2016-12-23T04:54:36.000Z",
+            "name": "car",
+            "type": "expense"
+        },
         {
-            "name": "taxes",
-            "amount": 40000,
-            "date": "2016-09-17T00:00:00.000Z"
+            "amount": 7500,
+            "date": "2016-12-18T04:54:53.000Z",
+            "name": "savings",
+            "type": "expense"
+        },
+        {
+            "amount": 7700,
+            "date": "2016-12-18T04:56:25.000Z",
+            "name": "food",
+            "type": "expense"
+        },
+        {
+            "amount": 3000,
+            "date": "2017-01-01T16:43:10.000Z",
+            "name": "gas",
+            "type": "expense"
+        },
+        {
+            "amount": 1000,
+            "date": "2017-01-01T16:43:50.000Z",
+            "name": "oil change contribution",
+            "type": "expense"
         }
     ],
-    "actual": [
+    "oneTime": [],
+    "actual": [],
+    "balances": [
         {
-            "name": "groceries",
-            "amount": 5000,
-            "date": "2016-09-02T00:00:00.000Z",
-            "type": "expense",
-            "budget": "food"
+            "amount": "19000",
+            "name": "student loan",
+            "rate": ".1720"
         },
         {
-            "name": "groceries",
-            "amount": 5000,
-            "date": "2016-09-03T00:00:00.000Z",
-            "type": "expense",
-            "budget": "food"
-        },
-        {
-            "name": "groceries",
-            "amount": 5000,
-            "date": "2016-09-17T00:00:00.000Z",
-            "type": "expense",
-            "budget": "food"
-        },
-        {
-            "name": "ice cream",
-            "amount": 1000,
-            "date": "2016-09-22T00:00:00.000Z",
-            "type": "expense",
-            "budget": ""
+            "amount": "5085",
+            "name": "car",
+            "rate": ".19720"
         }
     ]
 }

@@ -4,6 +4,7 @@ function HomeController() {
     var $ = require('jquery');
     const calendarView = require('./calendar-view');
     const homeView = require('./home-view');
+    const BalanceViewModel = require('./balance-view-model');
     var bucket = 'income-calculator';
     var s3ObjKey;
     var accessKeyId;
@@ -141,6 +142,12 @@ function HomeController() {
             homeView.setView(JSON.parse(data.Body.toString('utf-8')));
         });
     }
+    
+    function initGroup(name) {
+        $('#add-new-' + name).click(function () {
+            $('#' + name + '-input-group').append(homeView.getTransactionView({}, name, 'expense'));
+        });
+    }
 
     this.init = function (s3ObjKeyIn, accessKeyIdIn, secretAccessKeyIn) {
         s3ObjKey = s3ObjKeyIn;
@@ -157,13 +164,8 @@ function HomeController() {
             project(year, month);
         });
 
-        $('#add-new-monthly-epense').click(function () {
-            $('#monthly-input-group').append(homeView.getTransactionView({}, 'monthly', 'expense'));
-        });
-
-        $('#add-new-weekly-expense').click(function () {
-            $('#weekly-input-group').append(homeView.getTransactionView({}, 'weekly', 'expense'));
-        });
+        initGroup('monthly');
+        initGroup('weekly');
 
         $('#add-new-one-time-expense').click(function () {
             $('#one-time-input-group').append(homeView.getTransactionView({}, 'one-time', 'expense'));
@@ -173,6 +175,9 @@ function HomeController() {
             $('#actuals-input-group').append(homeView.getTransactionView({budget: ''}, 'actual', 'expense'));
         });
 
+        $('#add-new-balance').click(function () {
+            $('#balance-input-group').append(BalanceViewModel.getBalanceView(100, 'new balance', '.035'));
+        });
 
         if (s3ObjKey) {
             refresh();
