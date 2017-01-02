@@ -14,8 +14,10 @@ function PayoffDateCalculator() {
     };
 
     this.getPayoffDate = function(params) {
-        var currentDate = new Date(params.startTime);
         var balance = params.totalAmount;
+        var response = {};
+        response.date = new Date(params.startTime);
+        response.totalInterest = 0;
 
         if (!params.rate) {
             params.rate = 0;
@@ -23,18 +25,24 @@ function PayoffDateCalculator() {
 
         while (balance > 0) {
 
-            if (currentDate.getUTCDay() === params.DayOfTheWeek) {
+            if (response.date.getUTCDay() === params.DayOfTheWeek) {
                 var weeklyInterest = this.getWeeklyInterest(balance, params.rate);
+                response.totalInterest += weeklyInterest;
+
+                if (weeklyInterest > params.payment) {
+                    throw 'payment must be greater than interest accrued.';
+                }
+
                 var principle = params.payment - weeklyInterest;
                 balance -= principle;
             }
 
-            currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+            response.date.setUTCDate(response.date.getUTCDate() + 1);
         }
 
-        currentDate.setUTCDate(currentDate.getUTCDate() - 1);
+        response.date.setUTCDate(response.date.getUTCDate() - 1);
 
-        return currentDate;
+        return response;
     };
 
 }

@@ -12,9 +12,7 @@ test('payoff date test', function(t) {
     params.payment = 125;
     params.DayOfTheWeek = cal.FRIDAY;
 
-    var expectedToAddEachYear = payoffDateCalculator.getPayoffDate(
-        params
-    );
+    var expectedToAddEachYear = payoffDateCalculator.getPayoffDate(params).date;
 
     var expectedEndTime = Date.UTC(2017, cal.NOVEMBER, 17);
     t.equal(
@@ -50,13 +48,68 @@ test('payoff date with monthly interest test', function(t) {
     params.DayOfTheWeek = cal.FRIDAY;
     params.rate = '.19720';
 
-    var expectedToAddEachYear = payoffDateCalculator.getPayoffDate(
-        params
-    );
+    var expectedToAddEachYear = payoffDateCalculator.getPayoffDate(params).date;
 
-    var expectedEndTime = Date.UTC(2017, cal.DECEMBER, 29); // Damn, off by one week.
+    var expectedEndTime = Date.UTC(2017, cal.DECEMBER, 29);
+
     t.equal(
         JSON.stringify(expectedToAddEachYear),
+        JSON.stringify(new Date(expectedEndTime)),
+        'weekly payment date (without considering interest)');
+
+});
+
+test('payments must be greater than interest accrued.', function(t) {
+    t.plan(1);
+
+    var params = {};
+    params.startTime = Date.UTC(2017, 1, 2);
+    params.totalAmount = 19000;
+
+    params.payment = 71;
+    params.DayOfTheWeek = cal.FRIDAY;
+    params.rate = '.19720';
+
+    try {
+        payoffDateCalculator.getPayoffDate(params);
+        t.fail();
+    } catch (err) {
+        t.equal(err, 'payment must be greater than interest accrued.');
+    }
+
+});
+
+test('student loan.', function(t) {
+    t.plan(1);
+
+    var loan = {};
+    loan.startTime = Date.UTC(2017, 1, 2);
+    loan.totalAmount = 19000;
+    loan.DayOfTheWeek = cal.FRIDAY;
+    loan.rate = '.19720';
+
+    var actual;
+    var response;
+
+    for (loan.payment = 72; loan.payment < 250; loan.payment += 1) {
+        response = payoffDateCalculator.getPayoffDate(loan);
+        actual = response.date;
+
+        var msg =
+            'monthly payment: ' + Math.ceil(loan.payment * cal.WEEKS_IN_MONTH) +
+            ' payoff date: ' + JSON.stringify(actual) +
+            ' total interest: ' + Math.ceil(response.totalInterest);
+
+        //console.log(msg);
+    }
+
+    loan.payment = 72;
+    actual = payoffDateCalculator.getPayoffDate(loan).date;
+
+    var expectedEndTime = Date.UTC(2047, cal.MARCH, 22);
+
+    t.equal(
+        JSON.stringify(actual),
         JSON.stringify(new Date(expectedEndTime)),
         'weekly payment date (without considering interest)');
 

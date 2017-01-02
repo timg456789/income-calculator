@@ -58,7 +58,7 @@ Male aged 19-50 years
 Weekly
 Thrifty: $42.40
 Low-Cost: $54.80
-Moderate: $68.80 (Current)
+Moderate: $68.80
 Liberal: $84.70
 
 Monthly
