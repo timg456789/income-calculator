@@ -1,4 +1,3 @@
-const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
@@ -103,7 +102,7 @@ exports.getTransactionView = function (transaction, iteration, type) {
     var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
             '<div class="input-group-addon">$</div>' +
             '<input class="amount form-control inline-group" type="text" value="' + amount + '" /> ' +
-            '<div class="input-group-addon">&#64;</div>' +
+            '<div class="input-group-addon">on</div>' +
             txHtmlInput;
     html += '<div class="input-group-addon">name</div>';
     html += '<input class="name form-control inline-group" type="text" value="' + name + '" />';

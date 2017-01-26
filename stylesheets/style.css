@@ -45,11 +45,19 @@ h3 > .btn-success {
     margin-bottom: 0px;
 }
 
-#input-form > .form-label {
-    clear: left;
+.toggle-account-settings {
+    display: inline-block;
+    float: right;
+    cursor: pointer;
+    margin-right: 3px;
 }
 
-#input-form > .glyphicon-plus {
+.toggle-account-settings > span {
+    font-size: .8em;
+}
+
+#input-form > .form-label {
+    clear: left;
 }
 
 #input-form .btn-primary {

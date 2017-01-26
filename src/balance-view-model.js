@@ -1,4 +1,3 @@
-const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 const PayoffDateCalculator = require('income-calculator/src/payoff-date-calculator');
 const payoffDateCalculator = new PayoffDateCalculator();

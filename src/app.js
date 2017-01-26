@@ -1,12 +1,11 @@
-const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 var HomeController = require('./home-controller');
 var homeController = new HomeController();
 
-function getParameterByName(name, url) {
+function getParameterByName(name) {
     'use strict';
 
-    url = location.href;
+    var url = location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
     var results = regex.exec(url);
@@ -16,22 +15,22 @@ function getParameterByName(name, url) {
     if (!results[2]) {
         return '';
     }
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    return results[2];
 }
 
 $(document).ready(function () {
     'use strict';
 
-    var s3ObjectKey;
+    var settings = {};
     var optionalOverride = getParameterByName('data');
     if (optionalOverride) {
-        s3ObjectKey = optionalOverride;
+        settings.s3ObjectKey = optionalOverride;
     }
 
-    var pub = getParameterByName('pub');
-    var priv = getParameterByName('priv');
-
-    homeController.init(s3ObjectKey, pub, priv);
+    settings.pub = getParameterByName('pub');
+    settings.priv = getParameterByName('priv');
+    settings.s3Bucket = getParameterByName('s3Bucket');
+    homeController.init(settings);
 
     $('.alert-dismissible > button.close').click(function () {
         $(this).parent().remove();

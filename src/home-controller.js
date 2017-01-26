@@ -1,11 +1,11 @@
+
 function HomeController() {
     'use strict';
 
-    var $ = require('jquery');
     const calendarView = require('./calendar-view');
     const homeView = require('./home-view');
     const BalanceViewModel = require('./balance-view-model');
-    var bucket = 'income-calculator';
+    var bucket;
     var s3ObjKey;
     var accessKeyId;
     var secretAccessKey;
@@ -83,8 +83,11 @@ function HomeController() {
     }
 
     function save() {
-        if (!s3ObjKey) {
-            s3ObjKey = guid() + '.json';
+        var budgetDisplayName;
+        if (s3ObjKey) {
+            budgetDisplayName = getParameterByName('data');
+        } else {
+            budgetDisplayName = guid();
         }
 
         var s3 = dataFactory();
@@ -97,7 +100,7 @@ function HomeController() {
                 log('failure saving settings: ' + JSON.stringify(err, 0, 4));
             }
 
-            var url = updateQueryStringParameter(location.href, 'data', options.Key);
+            var url = updateQueryStringParameter(location.href, 'data', budgetDisplayName);
             $('#output').append('<p>You can view this budget at anytime by viewing this ' +
                     '<a href="' + url + '">' + url + '</a>.' +
                     '</p>');
@@ -149,10 +152,28 @@ function HomeController() {
         });
     }
 
-    this.init = function (s3ObjKeyIn, accessKeyIdIn, secretAccessKeyIn) {
-        s3ObjKey = s3ObjKeyIn;
-        accessKeyId = accessKeyIdIn;
-        secretAccessKey = secretAccessKeyIn;
+    this.init = function (settings) {
+
+        var budgetName = settings.s3ObjectKey;
+        bucket = settings.s3Bucket;
+        s3ObjKey = budgetName + '.json';
+        accessKeyId = settings.pub;
+        secretAccessKey = settings.priv;
+
+        $('#account-settings-button').click(function () {
+            $('#account-settings-view').modal({
+                backdrop: 'static'
+            });
+        });
+
+        $('#account-settings-save-close-button').click(function () {
+            saveAndClose();
+        });
+
+        $('#awsBucket').val(bucket);
+        $('#budgetName').val(budgetName);
+        $('#awsAccessKeyId').val(settings.pub);
+        $('#awsSecretAccessKey').val(settings.priv);
 
         $('#load-budget').click(function () {
             refresh();
@@ -183,6 +204,34 @@ function HomeController() {
             refresh();
         }
     };
+
+    function saveAndClose() {
+        var url = window.location.hash.split('?')[0];
+        url += 'index.html?';
+
+        url += 'pub=' + $('#awsAccessKeyId').val();
+        url += '&priv=' + $('#awsSecretAccessKey').val();
+        url += '&data=' + $('#budgetName').val();
+        url += '&s3Bucket=' + $('#awsBucket').val();
+
+        window.location.href = url;
+    }
+
+    function getParameterByName(name) {
+        'use strict';
+
+        var url = location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+        var results = regex.exec(url);
+        if (!results) {
+            return null;
+        }
+        if (!results[2]) {
+            return '';
+        }
+        return results[2];
+    }
 
 }
 

@@ -1,4 +1,3 @@
-const $ = require('jquery');
 const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
