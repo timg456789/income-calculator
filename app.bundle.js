@@ -113004,7 +113004,7 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
             });
 
             payoffDate = balanceStatement.date.getUTCFullYear() + '-' +
-                balanceStatement.date.getUTCMonth() + '-' +
+                balanceStatement.date.getUTCMonth() + 1 + '-' +
                 balanceStatement.date.getUTCDate();
             totalInterest = Math.ceil(balanceStatement.totalInterest);
         } catch (err) {
