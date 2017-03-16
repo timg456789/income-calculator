@@ -7,6 +7,6 @@
     "test": "tape *test.js ./test-archive/*.js"
   },
   "devDependencies": {
-    "tape": "^4.5.1"
+    "tape": "4.5.1"
   }
 }
