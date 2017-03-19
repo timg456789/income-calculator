@@ -20,7 +20,7 @@ function CalendarCalculator() {
                     doDaily(result.currentDate);
                 }
 
-                result.currentDate.setDate(result.currentDate.getUTCDate() + 1);
+                result.currentDate.setUTCDate(result.currentDate.getUTCDate() + 1);
             }
 
             if (doWeekEnd) {

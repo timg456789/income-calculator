@@ -113003,7 +113003,6 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
                 rate: rate
             });
 
-            console.log(balanceStatement.date);
             payoffDate = balanceStatement.date.getUTCFullYear() + '-' +
                 (balanceStatement.date.getUTCMonth() + 1) + '-' +
                 balanceStatement.date.getUTCDate();
@@ -113064,7 +113063,7 @@ function CalendarCalculator() {
                     doDaily(result.currentDate);
                 }
 
-                result.currentDate.setDate(result.currentDate.getUTCDate() + 1);
+                result.currentDate.setUTCDate(result.currentDate.getUTCDate() + 1);
             }
 
             if (doWeekEnd) {
