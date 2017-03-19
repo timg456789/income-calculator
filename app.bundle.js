@@ -113003,8 +113003,9 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
                 rate: rate
             });
 
+            console.log(balanceStatement.date);
             payoffDate = balanceStatement.date.getUTCFullYear() + '-' +
-                balanceStatement.date.getUTCMonth() + 1 + '-' +
+                (balanceStatement.date.getUTCMonth() + 1) + '-' +
                 balanceStatement.date.getUTCDate();
             totalInterest = Math.ceil(balanceStatement.totalInterest);
         } catch (err) {
@@ -113063,7 +113064,7 @@ function CalendarCalculator() {
                     doDaily(result.currentDate);
                 }
 
-                result.currentDate.setDate(result.currentDate.getDate() + 1);
+                result.currentDate.setDate(result.currentDate.getUTCDate() + 1);
             }
 
             if (doWeekEnd) {
@@ -113159,7 +113160,7 @@ function getDayView(date, inMonth) {
         ? 'out-of-month'
         : '';
     css += ' day-view'
-    css = css.trim()
+    css = css.trim();
     var dayViewHtml = '<div class="' + css + ' day-col col-xs-1 ' +
             getDayTarget(date) + '">' +
             '<span class="calendar-day-number">' +
@@ -113352,24 +113353,10 @@ function HomeController() {
     }
 
     function checkNet() {
-        const EXPECTED_MONTHLY_NET = 172000;
-
         var displayedNet = parseInt($('#month-net-header-value').html());
-        if (displayedNet !== EXPECTED_MONTHLY_NET / 100) {
-            log('expected net of ' +
-                    (EXPECTED_MONTHLY_NET / 100) +
-                    ' for October 2016, but was: ' + displayedNet);
-        }
-
         var displayedNetByWeek = $('#month-net-header-value')
             .attr('data-net-by-weekly-totals');
         displayedNetByWeek = parseInt(displayedNetByWeek);
-        if (displayedNetByWeek !== EXPECTED_MONTHLY_NET) {
-            log('expected net of ' +
-                    EXPECTED_MONTHLY_NET +
-                    ' for October 2016, but was: ' + displayedNetByWeek);
-        }
-
     }
 
     function getS3Params() {

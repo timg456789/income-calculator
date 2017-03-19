@@ -16,24 +16,10 @@ function HomeController() {
     }
 
     function checkNet() {
-        const EXPECTED_MONTHLY_NET = 172000;
-
         var displayedNet = parseInt($('#month-net-header-value').html());
-        if (displayedNet !== EXPECTED_MONTHLY_NET / 100) {
-            log('expected net of ' +
-                    (EXPECTED_MONTHLY_NET / 100) +
-                    ' for October 2016, but was: ' + displayedNet);
-        }
-
         var displayedNetByWeek = $('#month-net-header-value')
             .attr('data-net-by-weekly-totals');
         displayedNetByWeek = parseInt(displayedNetByWeek);
-        if (displayedNetByWeek !== EXPECTED_MONTHLY_NET) {
-            log('expected net of ' +
-                    EXPECTED_MONTHLY_NET +
-                    ' for October 2016, but was: ' + displayedNetByWeek);
-        }
-
     }
 
     function getS3Params() {

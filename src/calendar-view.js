@@ -59,7 +59,7 @@ function getDayView(date, inMonth) {
         ? 'out-of-month'
         : '';
     css += ' day-view'
-    css = css.trim()
+    css = css.trim();
     var dayViewHtml = '<div class="' + css + ' day-col col-xs-1 ' +
             getDayTarget(date) + '">' +
             '<span class="calendar-day-number">' +
