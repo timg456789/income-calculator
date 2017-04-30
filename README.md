@@ -3,10 +3,13 @@
 https://timg456789.github.io/income-calculator/index.html?pub=AKIAIK55UZKQLOXZXTXA&priv=0NrOvLNJN+KTc0T0OaveGfk3ES0qD3bR7vX4sAAa&data=test-budget&s3Bucket=income-calculator-test
 
 ![Budget](https://timg456789.github.io/income-calculator/docs/sample-budget.png)
+(Budget)
 
 ![Settings](https://timg456789.github.io/income-calculator/docs/sample-budget-settings.png)
+(Budget Settings)
 
 ![Detail](https://timg456789.github.io/income-calculator/docs/sample-budget-breakdown.png)
+(Budget Breakdown)
 
 Responsible for projecting net income with the following transaction types:
 
@@ -27,6 +30,8 @@ In only **three minutes** one can enter their sources of income and expected exp
 Weekly totals only take into account the days in the week for the month being considered. For example if a week spans across september and october, portions of the week's transactions will be in september and portions of the week's transactions will be in october. No transaction in the week will overlap and be repeated in both september and october. This methodology supports transparent monthly totals.
 
 ## Getting Started
+
+A test bucket is provided. It provides general security if you make the budget name a long random number. For optimal security follow the steps below and save the files to your personal s3 bucket.
 
 ### 1. Setup API User
 Within [AWS](https://console.aws.amazon.com/console/home), create a new IAM user. Then create a new access key for the user. Save the access key id and secret access key for later.
