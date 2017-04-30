@@ -30,6 +30,7 @@ $(document).ready(function () {
     settings.pub = getParameterByName('pub');
     settings.priv = getParameterByName('priv');
     settings.s3Bucket = getParameterByName('s3Bucket');
+    settings.agreedToLicense = getParameterByName('agreedToLicense');
     homeController.init(settings);
 
     $('.alert-dismissible > button.close').click(function () {

@@ -138,6 +138,10 @@ function HomeController() {
         });
     }
 
+    function agreedToLicense() {
+        return $('#acceptLicense').is(':checked');
+    }
+
     this.init = function (settings) {
 
         var budgetName = settings.s3ObjectKey;
@@ -160,15 +164,18 @@ function HomeController() {
         $('#budgetName').val(budgetName);
         $('#awsAccessKeyId').val(settings.pub);
         $('#awsSecretAccessKey').val(settings.priv);
+        $('#acceptLicense').prop('checked', settings.agreedToLicense);
 
         $('#load-budget').click(function () {
             refresh();
         });
 
         $('#project').click(function () {
-            var year = $('#calendar-year');
-            var month = $('#calendar-month');
-            project(year, month);
+            if (agreedToLicense()) {
+                var year = $('#calendar-year');
+                var month = $('#calendar-month');
+                project(year, month);
+            }
         });
 
         initGroup('monthly');
@@ -199,6 +206,7 @@ function HomeController() {
         url += '&priv=' + $('#awsSecretAccessKey').val();
         url += '&data=' + $('#budgetName').val();
         url += '&s3Bucket=' + $('#awsBucket').val();
+        url += '&agreedToLicense=' + agreedToLicense();
 
         window.location.href = url;
     }
