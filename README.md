@@ -2,11 +2,11 @@
 
 https://timg456789.github.io/income-calculator/index.html?pub=AKIAIK55UZKQLOXZXTXA&priv=0NrOvLNJN+KTc0T0OaveGfk3ES0qD3bR7vX4sAAa&data=test-budget&s3Bucket=income-calculator-test
 
-![Budget](https://timg456789.github.io/journal/docs/sample-budget.png)
+![Budget](https://timg456789.github.io/income-calculator/docs/sample-budget.png)
 
-![Settings](https://timg456789.github.io/journal/docs/sample-budget-settings.png)
+![Settings](https://timg456789.github.io/income-calculator/docs/sample-budget-settings.png)
 
-![Detail](https://timg456789.github.io/journal/docs/sample-budget-breakdown.png)
+![Detail](https://timg456789.github.io/income-calculator/docs/sample-budget-breakdown.png)
 
 Responsible for projecting net income with the following transaction types:
 
