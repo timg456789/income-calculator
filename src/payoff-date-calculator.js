@@ -25,6 +25,11 @@ function PayoffDateCalculator() {
 
         while (balance > 0) {
 
+            if (params.abortDate &&
+                params.abortDate.getTime() <= response.date.getTime()) {
+                break;
+            }
+
             if (response.date.getUTCDay() === params.DayOfTheWeek) {
                 var weeklyInterest = this.getWeeklyInterest(balance, params.rate);
                 response.totalInterest += weeklyInterest;

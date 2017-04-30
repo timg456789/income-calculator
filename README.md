@@ -73,6 +73,13 @@ May be positive or negative. Negative values aren't being saved, but they should
 "on" refers to the date of the transaction and must occur at midnight UTC. The calendar is intended to function as if the browser's time zone were removed. Transaction dates must be in the following format: 2017-02-21T00:00:00.000Z
 
 ### Loans
+
+An 18% APR loan paid weekly with a balance of $500 in the last week of December 2016 assuming 4.348125 weeks per month will have the first week's payment shown below.
+
+    $500 at 18% interest = $90 interest per year
+    $90 interest over 12 months = $7.50 interest per month
+    $7.50 interest over 4 weeks (4.348125) = $1.72488141 per week
+
 Fields
 
 $: Amount in dollars
@@ -117,8 +124,3 @@ The action of incurring an expense or accruing income.
 
 ### Weekly Recurring Expense (WRE)
 An expense that is incurred every seven days. WRE's are incurred on Friday's by default.
-
-## Future Work
-
-The ability to automatically calculate the most effective payment strategy considering multiple loans.
-

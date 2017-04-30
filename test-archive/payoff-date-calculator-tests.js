@@ -3,6 +3,26 @@ const cal = require('../src/calendar');
 const PayoffDateCalculator = require('../src/payoff-date-calculator');
 const payoffDateCalculator = new PayoffDateCalculator();
 
+test('$500 credit card loan at 18%APR paid weekly with interest calculated monthly', function(t) {
+    t.plan(2);
+
+    var params = {};
+    params.startTime = Date.UTC(2017, 0, 1);
+    params.totalAmount = 500;
+    params.payment = 23;
+    params.DayOfTheWeek = cal.FRIDAY;
+    params.rate = ".18";
+    params.abortDate = new Date(Date.UTC(2017, 0, 8));
+
+    var result = payoffDateCalculator.getPayoffDate(params);
+    var expectedToAddEachYear = result.date;
+
+    var expectedEndTime = Date.UTC(2017, cal.NOVEMBER, 17);
+    t.equal(result.date.toISOString(), '2017-01-07T00:00:00.000Z');
+    t.equal(result.totalInterest,  1.72488141440276, 'interest for first week');
+
+});
+
 test('payoff date test', function(t) {
     t.plan(1);
 
