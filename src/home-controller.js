@@ -87,6 +87,7 @@ function HomeController() {
             }
 
             var url = updateQueryStringParameter(location.href, 'data', budgetDisplayName);
+            url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
             $('#output').append('<p>You can view this budget at anytime by viewing this ' +
                     '<a href="' + url + '">' + url + '</a>.' +
                     '</p>');
@@ -206,7 +207,6 @@ function HomeController() {
         url += '&priv=' + $('#awsSecretAccessKey').val();
         url += '&data=' + $('#budgetName').val();
         url += '&s3Bucket=' + $('#awsBucket').val();
-        url += '&agreedToLicense=' + agreedToLicense();
 
         window.location.href = url;
     }

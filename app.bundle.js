@@ -112936,7 +112936,7 @@ $(document).ready(function () {
     settings.pub = getParameterByName('pub');
     settings.priv = getParameterByName('priv');
     settings.s3Bucket = getParameterByName('s3Bucket');
-    settings.agreedToLicense = getParameterByName('agreedToLicense') === true;
+    settings.agreedToLicense = getParameterByName('agreedToLicense') === 'true';
     homeController.init(settings);
 
     $('.alert-dismissible > button.close').click(function () {
@@ -113421,6 +113421,7 @@ function HomeController() {
             }
 
             var url = updateQueryStringParameter(location.href, 'data', budgetDisplayName);
+            url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
             $('#output').append('<p>You can view this budget at anytime by viewing this ' +
                     '<a href="' + url + '">' + url + '</a>.' +
                     '</p>');
@@ -113540,7 +113541,6 @@ function HomeController() {
         url += '&priv=' + $('#awsSecretAccessKey').val();
         url += '&data=' + $('#budgetName').val();
         url += '&s3Bucket=' + $('#awsBucket').val();
-        url += '&agreedToLicense=' + agreedToLicense();
 
         window.location.href = url;
     }
