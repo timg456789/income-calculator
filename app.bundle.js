@@ -113257,10 +113257,6 @@ function getSummary(budgetSettings, actual, startTime, endTime) {
         endTime
     );
 
-    console.log(budget);
-    console.log('start: ' + new Date(startTime).toISOString());
-    console.log('end: ' + new Date(endTime).toISOString());
-
     var summary = calendarAggregator.getSummary(
         startTime,
         endTime,
@@ -113285,9 +113281,6 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
         weekEnd = new Date(currentDate.getTime());
         weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
 
-        if (weekEnd.getUTCMonth() > currentDate.getUTCMonth()) {
-            weekEnd.setUTCDate(1);
-        }
 
         var summaryStart = currentDate.getTime();
 
@@ -113295,14 +113288,11 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
             summaryStart = result.startOfMonth.getTime();
         }
 
-        console.log('summary start: ' + new Date(summaryStart).toISOString());
-        console.log('summary end: ' + JSON.stringify(result));
-
         summary = getSummary(
             budgetSettings,
             actual,
             summaryStart,
-            currentDate.getTime()
+            weekEnd.getTime()
         );
 
         type = summary.net > 0 ? 'income' : 'expense';
