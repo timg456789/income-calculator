@@ -112936,7 +112936,7 @@ $(document).ready(function () {
     settings.pub = getParameterByName('pub');
     settings.priv = getParameterByName('priv');
     settings.s3Bucket = getParameterByName('s3Bucket');
-    settings.agreedToLicense = getParameterByName('agreedToLicense');
+    settings.agreedToLicense = getParameterByName('agreedToLicense') === true;
     homeController.init(settings);
 
     $('.alert-dismissible > button.close').click(function () {
@@ -113257,6 +113257,10 @@ function getSummary(budgetSettings, actual, startTime, endTime) {
         endTime
     );
 
+    console.log(budget);
+    console.log('start: ' + new Date(startTime).toISOString());
+    console.log('end: ' + new Date(endTime).toISOString());
+
     var summary = calendarAggregator.getSummary(
         startTime,
         endTime,
@@ -113291,11 +113295,14 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
             summaryStart = result.startOfMonth.getTime();
         }
 
+        console.log('summary start: ' + new Date(summaryStart).toISOString());
+        console.log('summary end: ' + JSON.stringify(result));
+
         summary = getSummary(
             budgetSettings,
             actual,
             summaryStart,
-            weekEnd.getTime()
+            currentDate.getTime()
         );
 
         type = summary.net > 0 ? 'income' : 'expense';
