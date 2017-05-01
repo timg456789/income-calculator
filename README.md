@@ -1,7 +1,5 @@
 # Income Calculator
 
-https://timg456789.github.io/income-calculator/index.html?pub=AKIAIK55UZKQLOXZXTXA&priv=0NrOvLNJN+KTc0T0OaveGfk3ES0qD3bR7vX4sAAa&data=test-budget&s3Bucket=income-calculator-test
-
 Budget
 
 ![Budget](https://timg456789.github.io/income-calculator/docs/sample-budget.png)
