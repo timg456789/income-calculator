@@ -115697,6 +115697,13 @@ exports.getModel = function () {
     $('.monthly-expense-item').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
+    budgetSettings.monthlyRecurringExpenses.sort(function(a,b) {
+        return a.amount === b.amount
+            ? 0
+            : a.amount > b.amount
+                ? 1
+                : -1
+    });
 
     budgetSettings.weeklyRecurringExpenses = [];
     $('.weekly-expense-item').each(function () {
