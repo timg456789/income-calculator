@@ -179,6 +179,9 @@ function loadWeeklyTotals(budgetSettings, actual, start) {
 
         weekEnd = new Date(currentDate.getTime());
         weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
+        if (weekEnd.getUTCMonth() > currentDate.getUTCMonth()) {
+            weekEnd.setUTCDate(0);
+        }
 
 
         var summaryStart = currentDate.getTime();
