@@ -239,11 +239,7 @@ exports.getModel = function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
     budgetSettings.monthlyRecurringExpenses.sort(function(a,b) {
-        return a.amount === b.amount
-            ? 0
-            : a.amount > b.amount
-                ? 1
-                : -1
+        return b.amount - a.amount;
     });
 
     budgetSettings.weeklyRecurringExpenses = [];
@@ -251,13 +247,8 @@ exports.getModel = function () {
         budgetSettings.weeklyRecurringExpenses.push(getTransactionModel(this));
     });
     budgetSettings.weeklyRecurringExpenses.sort(function(a,b) {
-        return a.amount === b.amount
-            ? 0
-            : a.amount > b.amount
-                ? 1
-                : -1
+        return b.amount - a.amount;
     });
-
 
     budgetSettings.oneTime = [];
     $('.one-time-expense-item').each(function () {
