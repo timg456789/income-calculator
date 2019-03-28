@@ -2,6 +2,7 @@ const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
 const BalanceViewModel = require('./balance-view-model');
+const AssetViewModel = require('./asset-view-model');
 
 function getTxInputHtmlMonthly(date) {
     var txHtmlInput = '<select class="date form-control inline-group">';
@@ -181,6 +182,16 @@ function getTransactionByName (txns, name) {
     return null;
 }
 
+function setAssets(budget) {
+    $('#asset-input-group').empty();
+    for (var i = 0; i < budget.assets.length; i += 1) {
+        let asset = budget.assets[i];
+        $('#asset-input-group').append(AssetViewModel.getBalanceView(
+            asset.amount, asset.name
+        ));
+    }
+}
+
 function setBalances(budget) {
     var balanceTarget = '#balance-input-group';
     $(balanceTarget).empty();
@@ -218,6 +229,11 @@ exports.setView = function (budget) {
     if (budget.balances) {
         setBalances(budget);
     }
+
+    if (budget.assets) {
+        setAssets(budget);
+    }
+
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
@@ -267,6 +283,7 @@ exports.getModel = function () {
     });
 
     budgetSettings.balances = BalanceViewModel.getModels();
+    budgetSettings.assets = AssetViewModel.getModels();
 
     return budgetSettings;
 };

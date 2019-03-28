@@ -194,6 +194,10 @@ function HomeController() {
             $('#balance-input-group').append(BalanceViewModel.getBalanceView(100, 'new balance', '.035'));
         });
 
+        $('#add-new-asset').click(function () {
+            $('#asset-input-group').append(BalanceViewModel.getBalanceView(100, 'new asset'));
+        });
+
         if (s3ObjKey) {
             refresh();
         }
