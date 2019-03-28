@@ -184,12 +184,15 @@ function getTransactionByName (txns, name) {
 
 function setAssets(budget) {
     $('#asset-input-group').empty();
+    let total = 0;
     for (var i = 0; i < budget.assets.length; i += 1) {
         let asset = budget.assets[i];
+        total += parseInt(asset.amount);
         $('#asset-input-group').append(AssetViewModel.getBalanceView(
             asset.amount, asset.name
         ));
     }
+    $('#asset-total-amount').append(AssetViewModel.getTotal(total));
 }
 
 function setBalances(budget) {

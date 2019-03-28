@@ -5,6 +5,7 @@ function HomeController() {
     const calendarView = require('./calendar-view');
     const homeView = require('./home-view');
     const BalanceViewModel = require('./balance-view-model');
+    const AssetViewModel = require('./asset-view-model');
     var bucket;
     var s3ObjKey;
     var accessKeyId;
@@ -195,7 +196,7 @@ function HomeController() {
         });
 
         $('#add-new-asset').click(function () {
-            $('#asset-input-group').append(BalanceViewModel.getBalanceView(100, 'new asset'));
+            $('#asset-input-group').append(AssetViewModel.getBalanceView(100, 'new asset'));
         });
 
         if (s3ObjKey) {

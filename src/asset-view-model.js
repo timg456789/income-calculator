@@ -23,6 +23,14 @@ exports.getModel = function (target) {
     return balance;
 };
 
+exports.getTotal = function (amount) {
+    'use strict';
+    return $(`<div class="input-group transaction-input-view">
+                    <div class="input-group-addon">Total $</div>
+                    <input class="amount form-control inline-group" type="text" value="${amount}" />
+               </div>`);
+};
+
 exports.getBalanceView = function (amount, name) {
     'use strict';
 
