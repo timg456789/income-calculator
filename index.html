@@ -13,8 +13,11 @@
   </head>
   <body>
   <h1>Income Calculator
-      <span id="account-settings-button" class="toggle-account-settings">
+      <span id="account-settings-button" class="toggle-account-settings" title="settings">
           <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+      </span>
+      <span id="budget-download" class="budget-download-styles" title="download">
+          <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
       </span>
   </h1>
   <div id="header" class="container">
@@ -85,6 +88,14 @@
           <div id="asset-input-group" class="form-group"></div>
           <div id="asset-total-amount"></div>
 
+          <h3>
+              Bonds
+              <button id="add-new-bond" type="button" class="btn btn-success pull-right">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </button>
+          </h3>
+          <div id="bond-input-group" class="form-group"></div>
+
           <form>
               <div class="form-group">
                   <label for="acceptLicense">
@@ -136,7 +147,5 @@
           </div>
       </div>
   </div>
-
-
   </body>
 </html>

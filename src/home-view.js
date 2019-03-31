@@ -3,6 +3,7 @@ const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
 const BalanceViewModel = require('./balance-view-model');
 const AssetViewModel = require('./asset-view-model');
+const BondViewModel = require('./bond-view-model');
 
 function getTxInputHtmlMonthly(date) {
     var txHtmlInput = '<select class="date form-control inline-group">';
@@ -237,6 +238,15 @@ exports.setView = function (budget) {
         setAssets(budget);
     }
 
+    if (budget.bonds) {
+        $('#bonds-input-group').empty();
+        for (var i = 0; i < budget.bonds.length; i += 1) {
+            $('#bond-input-group').append(BondViewModel.getBondView(
+                budget.bonds[i].amount, budget.bonds[i].name, budget.bonds[i].maturityDate
+            ));
+        }
+    }
+
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
@@ -287,6 +297,7 @@ exports.getModel = function () {
 
     budgetSettings.balances = BalanceViewModel.getModels();
     budgetSettings.assets = AssetViewModel.getModels();
+    budgetSettings.bonds = BondViewModel.getModels();
 
     return budgetSettings;
 };

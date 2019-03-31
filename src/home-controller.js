@@ -6,6 +6,7 @@ function HomeController() {
     const homeView = require('./home-view');
     const BalanceViewModel = require('./balance-view-model');
     const AssetViewModel = require('./asset-view-model');
+    const BondViewModel = require('./bond-view-model');
     var bucket;
     var s3ObjKey;
     var accessKeyId;
@@ -70,13 +71,9 @@ function HomeController() {
     }
 
     function save() {
-        var budgetDisplayName;
-        if (s3ObjKey) {
-            budgetDisplayName = getParameterByName('data');
-        } else {
-            budgetDisplayName = guid();
+        if (!s3ObjKey) {
+            s3ObjKey = guid();
         }
-
         var s3 = dataFactory();
         var options = {};
         options.Bucket = bucket;
@@ -87,7 +84,7 @@ function HomeController() {
                 log('failure saving settings: ' + JSON.stringify(err, 0, 4));
             }
 
-            var url = updateQueryStringParameter(location.href, 'data', budgetDisplayName);
+            var url = updateQueryStringParameter(location.href, 'data', s3ObjKey);
             url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
             $('#output').append('<p>You can view this budget at anytime by viewing this ' +
                     '<a href="' + url + '">' + url + '</a>.' +
@@ -146,9 +143,8 @@ function HomeController() {
 
     this.init = function (settings) {
 
-        var budgetName = settings.s3ObjectKey;
         bucket = settings.s3Bucket;
-        s3ObjKey = budgetName + '.json';
+        s3ObjKey = settings.s3ObjectKey;
         accessKeyId = settings.pub;
         secretAccessKey = settings.priv;
 
@@ -158,12 +154,44 @@ function HomeController() {
             });
         });
 
+        $('#budget-download').click(function () {
+            dataFactory().getObject(getS3Params(), function (err, data) {
+                if (err) {
+                    log(JSON.stringify(err, 0, 4));
+                }
+                let pom = document.createElement('a');
+                pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.Body.toString('utf-8')));
+                pom.setAttribute('download', getParameterByName('data'));
+                if (document.createEvent) {
+                    var event = document.createEvent('MouseEvents');
+                    event.initEvent('click', true, true);
+                    pom.dispatchEvent(event);
+                }
+                else {
+                    pom.click();
+                }
+            });
+        });
         $('#account-settings-save-close-button').click(function () {
-            saveAndClose();
+            let newFileName = $('#budgetName').val().trim();
+            let options = {
+                Bucket: bucket,
+                Key: newFileName,
+                Body: JSON.stringify(homeView.getModel(), 0, 4)
+            };
+            let s3 = dataFactory();
+            s3.upload(options, function (err) {
+                if (err) {
+                    log('failure saving settings: ' + JSON.stringify(err, 0, 4));
+                }
+                let url = updateQueryStringParameter(location.href, 'data', newFileName);
+                url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
+                window.location.href = url;
+            });
         });
 
         $('#awsBucket').val(bucket);
-        $('#budgetName').val(budgetName);
+        $('#budgetName').val(s3ObjKey);
         $('#awsAccessKeyId').val(settings.pub);
         $('#awsSecretAccessKey').val(settings.priv);
         $('#acceptLicense').prop('checked', settings.agreedToLicense);
@@ -174,9 +202,7 @@ function HomeController() {
 
         $('#project').click(function () {
             if (agreedToLicense()) {
-                var year = $('#calendar-year');
-                var month = $('#calendar-month');
-                project(year, month);
+                project();
             }
         });
 
@@ -199,22 +225,14 @@ function HomeController() {
             $('#asset-input-group').append(AssetViewModel.getBalanceView(100, 'new asset'));
         });
 
+        $('#add-new-bond').click(function () {
+           $('#bond-input-group').append(BondViewModel.getBondView(100, '4-Week Bill', new Date().toISOString()));
+        });
+
         if (s3ObjKey) {
             refresh();
         }
     };
-
-    function saveAndClose() {
-        var url = window.location.hash.split('?')[0];
-        url += 'index.html?';
-
-        url += 'pub=' + $('#awsAccessKeyId').val();
-        url += '&priv=' + $('#awsSecretAccessKey').val();
-        url += '&data=' + $('#budgetName').val();
-        url += '&s3Bucket=' + $('#awsBucket').val();
-
-        window.location.href = url;
-    }
 
     function getParameterByName(name) {
         'use strict';

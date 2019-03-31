@@ -50,11 +50,16 @@ h4 {
     margin-bottom: 0px;
 }
 
-.toggle-account-settings {
+.toggle-account-settings,
+.budget-download-styles {
     display: inline-block;
     float: right;
     cursor: pointer;
     margin-right: 3px;
+}
+
+.budget-download-styles {
+    margin-right: 10px;
 }
 
 .toggle-account-settings > span {
