@@ -36,7 +36,7 @@ exports.getBondView = function (amount, name, maturityDate) {
                     <div class="input-group-addon">name</div>
                     <input class="name form-control inline-group" type="text" value="${name}" />`);
 
-    var removeButton = $(`<div class="input-group-addon remove">
+    var removeButton = $(`<div class="input-group-addon remove" title="Remove Bond">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </div>`);
 

@@ -20,15 +20,16 @@ h2, h3, h4 {
     font-weight: 700;
 }
 
-h2, h3, h4 {
+h3, h4 {
     color: #885c13;
 }
 
 h2, .month-heading {
-    font-size: 1.5em;
+    font-size: 2em;
     margin-top: 15px;
     margin-bottom: 15px;
     clear: both;
+    color: #cc9900;
 }
 
 h3 {
@@ -43,6 +44,23 @@ h3 > .btn-success {
 h4 {
     font-size: 1.1em;
     height: 30px;
+}
+
+.subtotal, .total {
+    font-size: 1.3em;
+}
+
+.subtotal {
+    border-bottom: 1px solid black;
+}
+
+.total {
+    margin-top: 20px;
+    border-bottom: 6px double;
+}
+
+.tree-view {
+    cursor: pointer;
 }
 
 #header .alert-warning {
@@ -71,6 +89,7 @@ h4 {
 }
 
 #input-form .btn-primary {
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
@@ -121,6 +140,14 @@ h4 {
 .inline-group {
     display: inline-block;
     width: auto;
+}
+
+.month-heading {
+    font-size: 2em;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    clear: both;
+    color: #885c13;
 }
 
 .week-name {

@@ -78,9 +78,9 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
 
     var view = $(html);
 
-    var removeButtonHtml = '<div class="input-group-addon remove">' +
-        '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
-        '</div>';
+    var removeButtonHtml = `<div class="input-group-addon remove" title="Remove Loan">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </div>`;
 
     var removeButton = $(removeButtonHtml);
 

@@ -119467,12 +119467,13 @@ exports.getModel = function (target) {
     return balance;
 };
 
-exports.getTotal = function (amount) {
+exports.format = function(amount) {
+    return '$' + new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
+};
+
+exports.getTotal = function (name, amount) {
     'use strict';
-    return $(`<div class="input-group transaction-input-view">
-                    <div class="input-group-addon">Total $</div>
-                    <input class="amount form-control inline-group" type="text" value="${amount}" />
-               </div>`);
+    return $(`<div class="subtotal">Total ${name}<span class="pull-right">${this.format(amount)}</span></div>`);
 };
 
 exports.getBalanceView = function (amount, name) {
@@ -119485,9 +119486,9 @@ exports.getBalanceView = function (amount, name) {
     html += '<input class="name form-control inline-group" type="text" value="' + name + '" />';
     var view = $(html);
 
-    var removeButtonHtml = '<div class="input-group-addon remove">' +
-        '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
-        '</div>';
+    var removeButtonHtml = `<div class="input-group-addon remove" title="Remove Cash or Stock">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </div>`;
 
     var removeButton = $(removeButtonHtml);
 
@@ -119581,9 +119582,9 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
 
     var view = $(html);
 
-    var removeButtonHtml = '<div class="input-group-addon remove">' +
-        '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
-        '</div>';
+    var removeButtonHtml = `<div class="input-group-addon remove" title="Remove Loan">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </div>`;
 
     var removeButton = $(removeButtonHtml);
 
@@ -119635,7 +119636,7 @@ exports.getBondView = function (amount, name, maturityDate) {
                     <div class="input-group-addon">name</div>
                     <input class="name form-control inline-group" type="text" value="${name}" />`);
 
-    var removeButton = $(`<div class="input-group-addon remove">
+    var removeButton = $(`<div class="input-group-addon remove" title="Remove Bond">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </div>`);
 
@@ -120380,27 +120381,13 @@ function getTransactionByName (txns, name) {
     return null;
 }
 
-function setAssets(budget) {
-    $('#asset-input-group').empty();
-    let total = 0;
-    for (var i = 0; i < budget.assets.length; i += 1) {
-        let asset = budget.assets[i];
-        total += parseInt(asset.amount);
-        $('#asset-input-group').append(AssetViewModel.getBalanceView(
-            asset.amount, asset.name
-        ));
-    }
-    $('#asset-total-amount').append(AssetViewModel.getTotal(total));
-}
-
 function setBalances(budget) {
     var balanceTarget = '#balance-input-group';
     $(balanceTarget).empty();
     var i;
     var balanceView;
-
+    let total = 0;
     for (i = 0; i < budget.balances.length; i += 1) {
-
         var weeklyAmount;
         var monthlyTxn = getTransactionByName(budget.monthlyRecurringExpenses, budget.balances[i].name);
         if (monthlyTxn) {
@@ -120413,7 +120400,7 @@ function setBalances(budget) {
                 weeklyAmount = 0;
             }
         }
-
+        total += parseInt(budget.balances[i].amount);
         balanceView = BalanceViewModel.getBalanceView(
             budget.balances[i].amount,
             budget.balances[i].name,
@@ -120422,6 +120409,20 @@ function setBalances(budget) {
         );
         $(balanceTarget).append(balanceView);
     }
+    $('#loan-total-amount').append(AssetViewModel.getTotal('Loans', total));
+}
+
+function setupToggle(container, detail) {
+    $(container).click(function () {
+        $(container).empty();
+        if ($(detail).is(':visible')) {
+            $(detail).hide();
+            $(container).append($('<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>'));
+        } else {
+            $(detail).show();
+            $(container).append($('<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>'));
+        }
+    });
 }
 
 exports.setView = function (budget) {
@@ -120431,24 +120432,41 @@ exports.setView = function (budget) {
         setBalances(budget);
     }
 
+    let totalCashAndStocks = 0;
     if (budget.assets) {
-        setAssets(budget);
+        $('#asset-input-group').empty();
+        for (var i = 0; i < budget.assets.length; i += 1) {
+            let asset = budget.assets[i];
+            totalCashAndStocks += parseInt(asset.amount);
+            $('#asset-input-group').append(AssetViewModel.getBalanceView(
+                asset.amount, asset.name
+            ));
+        }
+        $('#cash-and-stocks-total-amount').append(AssetViewModel.getTotal('Cash &amp; Stocks', totalCashAndStocks));
     }
-
+    let totalBonds = 0;
     if (budget.bonds) {
         $('#bonds-input-group').empty();
         for (var i = 0; i < budget.bonds.length; i += 1) {
+            totalBonds += parseInt(budget.bonds[i].amount);
             $('#bond-input-group').append(BondViewModel.getBondView(
                 budget.bonds[i].amount, budget.bonds[i].name, budget.bonds[i].maturityDate
             ));
         }
+        $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
     }
+    let totalAssets = totalCashAndStocks + totalBonds;
+    $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${AssetViewModel.format(totalAssets)}</span></div>`));
 
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
     insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
+
+    setupToggle('#tree-view-loans','#balance-input-group');
+    setupToggle('#tree-view-cash-or-stock','#asset-input-group');
+    setupToggle('#tree-view-bonds','#bond-input-group');
 };
 
 exports.getModel = function () {

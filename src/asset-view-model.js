@@ -23,12 +23,13 @@ exports.getModel = function (target) {
     return balance;
 };
 
-exports.getTotal = function (amount) {
+exports.format = function(amount) {
+    return '$' + new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
+};
+
+exports.getTotal = function (name, amount) {
     'use strict';
-    return $(`<div class="input-group transaction-input-view">
-                    <div class="input-group-addon">Total $</div>
-                    <input class="amount form-control inline-group" type="text" value="${amount}" />
-               </div>`);
+    return $(`<div class="subtotal">Total ${name}<span class="pull-right">${this.format(amount)}</span></div>`);
 };
 
 exports.getBalanceView = function (amount, name) {
@@ -41,9 +42,9 @@ exports.getBalanceView = function (amount, name) {
     html += '<input class="name form-control inline-group" type="text" value="' + name + '" />';
     var view = $(html);
 
-    var removeButtonHtml = '<div class="input-group-addon remove">' +
-        '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
-        '</div>';
+    var removeButtonHtml = `<div class="input-group-addon remove" title="Remove Cash or Stock">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </div>`;
 
     var removeButton = $(removeButtonHtml);
 
