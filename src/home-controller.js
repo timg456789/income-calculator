@@ -185,8 +185,8 @@ function HomeController() {
                     log('failure saving settings: ' + JSON.stringify(err, 0, 4));
                 }
                 let url = updateQueryStringParameter(location.href, 'data', newFileName);
-                url = updateQueryStringParameter(location.href, 'pub', $('#awsAccessKeyId').val().trim());
-                url = updateQueryStringParameter(location.href, 'priv', $('#awsSecretAccessKey').val().trim());
+                url = updateQueryStringParameter(url, 'pub', $('#awsAccessKeyId').val().trim());
+                url = updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
                 url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
                 window.location.href = url;
             });
