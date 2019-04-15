@@ -19,6 +19,7 @@
   "homepage": "https://github.com/timg456789/income-calculator/tree/gh-pages#readme",
   "dependencies": {
     "aws-sdk": "2.7.19",
+    "currency.js": "^1.2.1",
     "income-calculator": "git+https://github.com/timg456789/income-calculator.git",
     "jquery": "3.1.0",
     "moment": "^2.24.0"

@@ -4,6 +4,7 @@ const calCalc = new CalendarCalculator();
 const BalanceViewModel = require('./balance-view-model');
 const AssetViewModel = require('./asset-view-model');
 const BondViewModel = require('./bond-view-model');
+const Currency = require('currency.js');
 
 function getTxInputHtmlMonthly(date) {
     var txHtmlInput = '<select class="date form-control inline-group">';
@@ -234,17 +235,18 @@ exports.setView = function (budget) {
         setBalances(budget);
     }
 
-    let totalCashAndStocks = 0;
+    let totalCashAndStocks = Currency(0);
     if (budget.assets) {
         $('#asset-input-group').empty();
         for (var i = 0; i < budget.assets.length; i += 1) {
+            totalCashAndStocks = totalCashAndStocks.add(budget.assets[i].amount);
+        }
+        for (var i = 0; i < budget.assets.length; i += 1) {
             let asset = budget.assets[i];
-            totalCashAndStocks += parseInt(asset.amount);
             $('#asset-input-group').append(AssetViewModel.getBalanceView(
-                asset.amount, asset.name
+                asset.amount, asset.name, totalCashAndStocks.toString()
             ));
         }
-        $('#cash-and-stocks-total-amount').append(AssetViewModel.getTotal('Cash &amp; Stocks', totalCashAndStocks));
     }
     let totalBonds = 0;
     if (budget.bonds) {
@@ -255,9 +257,19 @@ exports.setView = function (budget) {
                 budget.bonds[i].amount, budget.bonds[i].name, budget.bonds[i].maturityDate
             ));
         }
-        $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
     }
-    let totalAssets = totalCashAndStocks + totalBonds;
+    let totalAssets = Currency(totalCashAndStocks).add(totalBonds);
+
+    let cashAndStocksAllocation = Currency(totalCashAndStocks, {precision: 4}).divide(totalAssets).multiply(100).toString();
+    cashAndStocksAllocation = Currency(cashAndStocksAllocation, {precision: 2}).toString() + "%";
+    $('#cash-and-stocks-allocation').append($(`<div class="subtotal">Allocation of Cash &amp; Stocks<span class="pull-right">${cashAndStocksAllocation.toString()}</span></div>`));
+    $('#cash-and-stocks-total-amount').append(AssetViewModel.getTotal('Cash &amp; Stocks', totalCashAndStocks.toString()));
+
+    let bondAllocation = Currency(totalBonds, {precision: 4}).divide(totalAssets).multiply(100).toString();
+    bondAllocation = Currency(bondAllocation, {precision: 2}).toString() + "%";
+    $('#bond-allocation').append($(`<div class="subtotal">Allocation of Bonds<span class="pull-right">${bondAllocation.toString()}</span></div>`));
+    $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
+
     $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${AssetViewModel.format(totalAssets)}</span></div>`));
 
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
