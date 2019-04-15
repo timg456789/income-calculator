@@ -64,20 +64,10 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
             payoffDate = err;
             totalInterest = err;
         }
-
-        html += '<div class="input-group-addon">payment: ' + Math.ceil(weeklyAmount) +
-            ' payoff:' + payoffDate +
-            ' interest: ' + totalInterest;
-
-        html += '</div>';
+        html += `<div class="input-group-addon">payoff:${payoffDate} interest: ${totalInterest}</div>`;
     }
-
-
-
     html += '</div>';
-
     var view = $(html);
-
     var removeButtonHtml = `<div class="input-group-addon remove" title="Remove Loan">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </div>`;
