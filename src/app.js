@@ -1,6 +1,5 @@
-const cal = require('income-calculator/src/calendar');
-var HomeController = require('./home-controller');
-var homeController = new HomeController();
+const HomeController = require('./home-controller');
+const BalanceSheetController = require('./balance-sheet-controller');
 
 function getParameterByName(name) {
     'use strict';
@@ -31,10 +30,13 @@ $(document).ready(function () {
     settings.priv = getParameterByName('priv');
     settings.s3Bucket = getParameterByName('s3Bucket');
     settings.agreedToLicense = getParameterByName('agreedToLicense') === 'true';
-    homeController.init(settings);
 
-    $('.alert-dismissible > button.close').click(function () {
-        $(this).parent().remove();
-    });
+    var controller;
+    if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('index.html')) {
+        controller = new HomeController();
+    } else {
+        controller = new BalanceSheetController();
+    }
+    controller.init(settings);
 
 });

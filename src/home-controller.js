@@ -19,26 +19,6 @@ function HomeController() {
         $('#debug-console').append('<div>' + error + '</div>');
     }
 
-    function checkNet() {
-        var displayedNet = parseInt($('#month-net-header-value').html());
-        var displayedNetByWeek = $('#month-net-header-value')
-            .attr('data-net-by-weekly-totals');
-        displayedNetByWeek = parseInt(displayedNetByWeek);
-    }
-
-    // REMOVE
-    function dataFactory() {
-        var AWS = require('aws-sdk');
-        AWS.config.update(
-            {
-                accessKeyId: accessKeyId,
-                secretAccessKey: secretAccessKey,
-                region: 'us-east-1'
-            }
-        );
-        return new AWS.S3();
-    }
-
     function hasCredentials() {
         return accessKeyId && secretAccessKey;
     }
@@ -66,26 +46,19 @@ function HomeController() {
             s4() + '-' + s4() + s4() + s4();
     }
 
-    function save() {
+    async function save() {
         if (!s3ObjKey) {
             s3ObjKey = guid();
         }
-        var s3 = dataFactory();
-        var options = {};
-        options.Bucket = bucket;
-        options.Key = s3ObjKey;
-        options.Body = JSON.stringify(homeView.getModel(), 0, 4);
-        s3.upload(options, function (err) {
-            if (err) {
-                log('failure saving settings: ' + JSON.stringify(err, 0, 4));
-            }
-
+        let data = homeView.getModel();
+        try {
+            let response = await dataClient.patch(s3ObjKey, data);
             var url = updateQueryStringParameter(location.href, 'data', s3ObjKey);
             url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
-            $('#output').append('<p>You can view this budget at anytime by viewing this ' +
-                    '<a href="' + url + '">' + url + '</a>.' +
-                    '</p>');
 
+            $('#output').append('<p>You can view this budget at anytime by viewing this ' +
+                '<a href="' + url + '">' + url + '</a>.' +
+                '</p>');
             $('#months-container').prepend(
                 '<div id="calendar-legend">' +
                 'Legend&nbsp;' +
@@ -96,8 +69,10 @@ function HomeController() {
                 'Budgeted Expense</span>' +
                 '</div>'
             );
-
-        });
+        } catch (err) {
+            console.log(err);
+            log('failure saving settings: ' + JSON.stringify(err, 0, 4));
+        }
     }
 
     function project() {
@@ -109,7 +84,6 @@ function HomeController() {
         end.setUTCMonth(end.getUTCMonth() + 1);
         calendarView.build(year, month);
         calendarView.load(budgetSettings, budgetSettings.actual, start, end);
-        checkNet();
         $('#input-form').hide();
         $('#output').empty();
 
@@ -205,26 +179,6 @@ function HomeController() {
 
         initGroup('monthly');
         initGroup('weekly');
-
-        $('#add-new-one-time-expense').click(function () {
-            $('#one-time-input-group').append(homeView.getTransactionView({}, 'one-time', 'expense'));
-        });
-
-        $('#add-new-actual-expense').click(function () {
-            $('#actuals-input-group').append(homeView.getTransactionView({budget: ''}, 'actual', 'expense'));
-        });
-
-        $('#add-new-balance').click(function () {
-            $('#balance-input-group').append(BalanceViewModel.getBalanceView(100, 'new balance', '.035'));
-        });
-
-        $('#add-new-asset').click(function () {
-            $('#asset-input-group').append(AssetViewModel.getBalanceView(100, 'new asset'));
-        });
-
-        $('#add-new-bond').click(function () {
-           $('#bond-input-group').append(BondViewModel.getBondView(100, '4-Week Bill', new Date().toISOString()));
-        });
 
         if (s3ObjKey) {
             refresh();

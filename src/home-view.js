@@ -283,15 +283,20 @@ exports.setView = function (budget) {
     setupToggle('#tree-view-bonds','#bond-input-group');
 };
 
+exports.getBalanceSheetModel = function () {
+    var model = {};
+    model.balances = BalanceViewModel.getModels();
+    model.assets = AssetViewModel.getModels();
+    model.bonds = BondViewModel.getModels();
+    return model;
+};
+
 exports.getModel = function () {
     'use strict';
-
     var budgetSettings = {};
-
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
     budgetSettings.biWeeklyIncome.date = new Date(Date.UTC(2015, 11, 25));
-
     budgetSettings.monthlyRecurringExpenses = [];
     $('.monthly-expense-item').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
@@ -299,7 +304,6 @@ exports.getModel = function () {
     budgetSettings.monthlyRecurringExpenses.sort(function(a,b) {
         return b.amount - a.amount;
     });
-
     budgetSettings.weeklyRecurringExpenses = [];
     $('.weekly-expense-item').each(function () {
         budgetSettings.weeklyRecurringExpenses.push(getTransactionModel(this));
@@ -307,12 +311,5 @@ exports.getModel = function () {
     budgetSettings.weeklyRecurringExpenses.sort(function(a,b) {
         return b.amount - a.amount;
     });
-
-    /*
-    budgetSettings.balances = BalanceViewModel.getModels();
-    budgetSettings.assets = AssetViewModel.getModels();
-    budgetSettings.bonds = BondViewModel.getModels();
-    */
-
     return budgetSettings;
 };

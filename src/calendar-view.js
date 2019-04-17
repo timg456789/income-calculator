@@ -221,7 +221,6 @@ exports.load = function (budgetSettings, actual, start, end) {
     var summary = getSummary(budgetSettings, actual, start.getTime(), end.getTime());
 
     loadTransactions(summary.budgetItems);
-    loadTransactions(summary.actualsForWeek, true);
 
     $('#month-net-header-value').append(summary.net / 100);
 
