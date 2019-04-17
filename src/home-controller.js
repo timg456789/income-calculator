@@ -27,14 +27,6 @@ function HomeController() {
     }
 
     // REMOVE
-    function getS3Params() {
-        return {
-            Bucket: bucket,
-            Key: s3ObjKey
-        };
-    }
-
-    // REMOVE
     function dataFactory() {
         var AWS = require('aws-sdk');
         AWS.config.update(
@@ -130,7 +122,7 @@ function HomeController() {
 
         try {
             let data = await dataClient.getData();
-            homeView.setView(JSON.parse(data.Body.toString('utf-8')));
+            homeView.setView(data);
         } catch (err) {
             log(JSON.stringify(err, 0, 4));
         }
@@ -161,41 +153,38 @@ function HomeController() {
         });
 
         $('#budget-download').click(function () {
-            dataFactory().getObject(getS3Params(), function (err, data) {
-                if (err) {
+            dataClient.getData()
+                .then(data => {
+                    let downloadLink = document.createElement('a');
+                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.Body.toString('utf-8')));
+                    downloadLink.setAttribute('download', getParameterByName('data'));
+                    if (document.createEvent) {
+                        var event = document.createEvent('MouseEvents');
+                        event.initEvent('click', true, true);
+                        downloadLink.dispatchEvent(event);
+                    }
+                    else {
+                        downloadLink.click();
+                    }
+                })
+                .catch(err => {
                     log(JSON.stringify(err, 0, 4));
-                }
-                let pom = document.createElement('a');
-                pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.Body.toString('utf-8')));
-                pom.setAttribute('download', getParameterByName('data'));
-                if (document.createEvent) {
-                    var event = document.createEvent('MouseEvents');
-                    event.initEvent('click', true, true);
-                    pom.dispatchEvent(event);
-                }
-                else {
-                    pom.click();
-                }
-            });
+                });
         });
         $('#account-settings-save-close-button').click(function () {
             let newFileName = $('#budgetName').val().trim();
-            let options = {
-                Bucket: bucket,
-                Key: newFileName,
-                Body: JSON.stringify(homeView.getModel(), 0, 4)
-            };
-            let s3 = dataFactory();
-            s3.upload(options, function (err) {
-                if (err) {
+            dataClient.patch(newFileName,homeView.getModel())
+                .then(data => {
+                    let url = updateQueryStringParameter(location.href, 'data', newFileName);
+                    url = updateQueryStringParameter(url, 'pub', $('#awsAccessKeyId').val().trim());
+                    url = updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
+                    url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
+                    window.location.href = url;
+                })
+                .catch(err => {
+                    log(err);
                     log('failure saving settings: ' + JSON.stringify(err, 0, 4));
-                }
-                let url = updateQueryStringParameter(location.href, 'data', newFileName);
-                url = updateQueryStringParameter(url, 'pub', $('#awsAccessKeyId').val().trim());
-                url = updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
-                url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
-                window.location.href = url;
-            });
+                })
         });
 
         $('#awsBucket').val(bucket);

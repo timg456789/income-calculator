@@ -21,7 +21,19 @@ function DataClient(settings) {
     }
 
     this.getData = async function () {
-        return dataFactory().getObject(getS3Params()).promise();
+        let response = await dataFactory().getObject(getS3Params()).promise();
+        return JSON.parse(response.Body.toString('utf-8'));
+    };
+
+    this.patch = async function (name, data) {
+        let original = await this.getData();
+        let options = {
+            Bucket: settings.s3Bucket,
+            Key: name,
+            Body: JSON.stringify(Object.assign(original, data), 0, 4)
+        };
+        let response = await dataFactory().upload(options).promise();
+        return response;
     }
 
 }

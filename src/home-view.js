@@ -308,25 +308,11 @@ exports.getModel = function () {
         return b.amount - a.amount;
     });
 
-    budgetSettings.oneTime = [];
-    $('.one-time-expense-item').each(function () {
-        var ote = getTransactionModel(this);
-        if (ote.amount > 0) {
-            ote.type = 'income';
-        } else {
-            ote.amount = ote.amount * -1;
-        }
-        budgetSettings.oneTime.push(ote);
-    });
-
-    budgetSettings.actual = [];
-    $('.actual-expense-item').each(function () {
-        budgetSettings.actual.push(getTransactionModel(this));
-    });
-
+    /*
     budgetSettings.balances = BalanceViewModel.getModels();
     budgetSettings.assets = AssetViewModel.getModels();
     budgetSettings.bonds = BondViewModel.getModels();
+    */
 
     return budgetSettings;
 };
