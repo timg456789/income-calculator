@@ -89,7 +89,7 @@ function HomeController() {
             dataClient.getData()
                 .then(data => {
                     let downloadLink = document.createElement('a');
-                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.Body.toString('utf-8')));
+                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, 0, 4)));
                     downloadLink.setAttribute('download', getParameterByName('data'));
                     if (document.createEvent) {
                         var event = document.createEvent('MouseEvents');

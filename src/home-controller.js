@@ -130,8 +130,9 @@ function HomeController() {
             dataClient.getData()
                 .then(data => {
                     let downloadLink = document.createElement('a');
-                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.Body.toString('utf-8')));
+                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, 0, 4)));
                     downloadLink.setAttribute('download', getParameterByName('data'));
+                    console.log('downloading');
                     if (document.createEvent) {
                         var event = document.createEvent('MouseEvents');
                         event.initEvent('click', true, true);
@@ -142,6 +143,7 @@ function HomeController() {
                     }
                 })
                 .catch(err => {
+                    console.log(err);
                     log(JSON.stringify(err, 0, 4));
                 });
         });
