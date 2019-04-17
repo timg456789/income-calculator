@@ -7,10 +7,12 @@ function HomeController() {
     const BalanceViewModel = require('./balance-view-model');
     const AssetViewModel = require('./asset-view-model');
     const BondViewModel = require('./bond-view-model');
+    const DataClient = require('./data-client');
     var bucket;
     var s3ObjKey;
     var accessKeyId;
     var secretAccessKey;
+    var dataClient;
 
     function log(error) {
         console.log(error);
@@ -24,6 +26,7 @@ function HomeController() {
         displayedNetByWeek = parseInt(displayedNetByWeek);
     }
 
+    // REMOVE
     function getS3Params() {
         return {
             Bucket: bucket,
@@ -31,6 +34,7 @@ function HomeController() {
         };
     }
 
+    // REMOVE
     function dataFactory() {
         var AWS = require('aws-sdk');
         AWS.config.update(
@@ -122,13 +126,14 @@ function HomeController() {
         }
     }
 
-    function refresh() {
-        dataFactory().getObject(getS3Params(), function (err, data) {
-            if (err) {
-                log(JSON.stringify(err, 0, 4));
-            }
+    async function refresh() {
+
+        try {
+            let data = await dataClient.getData();
             homeView.setView(JSON.parse(data.Body.toString('utf-8')));
-        });
+        } catch (err) {
+            log(JSON.stringify(err, 0, 4));
+        }
     }
     
     function initGroup(name) {
@@ -147,6 +152,7 @@ function HomeController() {
         s3ObjKey = settings.s3ObjectKey;
         accessKeyId = settings.pub;
         secretAccessKey = settings.priv;
+        dataClient = new DataClient(settings);
 
         $('#account-settings-button').click(function () {
             $('#account-settings-view').modal({
