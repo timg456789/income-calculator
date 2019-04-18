@@ -1,6 +1,12 @@
 body {
     font-family: Tahoma, Verdana, Arial, sans-serif;
-    font-size: 1.2em;
+}
+body,
+body p,
+body input.form-control,
+body select.form-control,
+body textarea.form-control {
+    font-size: 1.3em;
 }
 h1, .tab-nav-bar, .container {
     min-width: 480px;
