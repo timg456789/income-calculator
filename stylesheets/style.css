@@ -13,11 +13,9 @@ h1, .tab-nav-bar, .container {
 }
 /* nav */
 .tab-nav-bar {
-
     padding-top: 3px;
-    padding-bottom: 10px;
-    /*background: rgba(230,230,230,0.8);*/
-    background-color: orange;
+    padding-bottom: 7px;
+    background: rgba(230,230,230,0.8);
 }
 .tab-nav-bar .ac-gn-item{
     display: inline-block;
