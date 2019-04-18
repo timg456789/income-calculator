@@ -13,7 +13,8 @@ h1, .tab-nav-bar, .container {
 }
 /* nav */
 .tab-nav-bar {
-    height: 40px;
+    padding-top: 3px;
+    padding-bottom: 10px;
     background: rgba(230,230,230,0.8);
 }
 .tab-nav-bar .ac-gn-item{
