@@ -23,6 +23,7 @@ h1, .tab-nav-bar, .container {
     font-size:1.5em;
     line-height:2.5;
     color:#000;
+    text-decoration: underline;
 }
 .tab-nav-bar .tab-nav-item:not(:first-child) {
     padding-left: 2%;
