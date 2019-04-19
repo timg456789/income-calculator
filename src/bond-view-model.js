@@ -26,7 +26,7 @@ exports.getBondView = function (model) {
     'use strict';
 
     let issueDateText = moment(model.issueDate).format('YYYY-MM-DD UTC Z');
-    let maturityDateText = moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD UTC Z');
+    let maturityDateText = moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD');
 
     var view = $(`<div class="bond-item input-group transaction-input-view">
                     <div class="input-group-addon">Face Value $</div>
