@@ -50,8 +50,8 @@ exports.getBalanceView = function (amount, name, total) {
                     <input class="amount form-control inline-group" type="text" value="${amount}" />
                     <div class="input-group-addon">name</div>
                     <input class="name form-control inline-group" type="text" value="${name}" />
-                    <div class="input-group-addon">allocation</div>
-                    <input class="form-control inline-group" type="text" value="${allocation.toString()}" />`);
+                    <div class="input-group-addon">allocation: ${allocation.toString()}</div>
+    `);
     var removeButton = $(`<div class="input-group-addon remove" title="Remove Cash or Stock">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </div>`);

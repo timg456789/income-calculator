@@ -63,7 +63,7 @@ function HomeController() {
             let data = await dataClient.getData();
             homeView.setView(data);
         } catch (err) {
-            log(JSON.stringify(err, 0, 4));
+            log(err);
         }
     }
 
@@ -145,7 +145,7 @@ function HomeController() {
         });
 
         $('#add-new-bond').click(function () {
-           $('#bond-input-group').append(BondViewModel.getBondView(100, '4-Week Bill', new Date().toISOString()));
+           $('#bond-input-group').append(BondViewModel.getBondView({ amount: 100, issueDate: new Date().toISOString()}));
         });
 
         if (s3ObjKey) {

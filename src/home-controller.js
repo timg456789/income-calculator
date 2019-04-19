@@ -93,12 +93,12 @@ function HomeController() {
     }
 
     async function refresh() {
-
         try {
             let data = await dataClient.getData();
             homeView.setView(data);
         } catch (err) {
-            log(JSON.stringify(err, 0, 4));
+            console.log('set view error');
+            log(err);
         }
     }
     

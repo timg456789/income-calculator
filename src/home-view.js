@@ -251,9 +251,7 @@ exports.setView = function (budget) {
         $('#bonds-input-group').empty();
         for (var i = 0; i < budget.bonds.length; i += 1) {
             totalBonds += parseInt(budget.bonds[i].amount);
-            $('#bond-input-group').append(BondViewModel.getBondView(
-                budget.bonds[i].amount, budget.bonds[i].name, budget.bonds[i].maturityDate
-            ));
+            $('#bond-input-group').append(BondViewModel.getBondView(budget.bonds[i]));
         }
     }
     let totalAssets = Currency(totalCashAndStocks).add(totalBonds);
