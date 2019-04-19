@@ -32,7 +32,7 @@ exports.getBondView = function (model) {
                     <div class="input-group-addon">Face Value $</div>
                     <input class="amount form-control inline-group" type="text" value="${model.amount}" />
                     
-                    <div class="input-group-addon">issue date</div>
+                    <div class="input-group-addon">issued</div>
                     <input class="issue-date form-control inline-group" type="text" value="${issueDateText}" />
                     
                     <div class="input-group-addon">type</div>
@@ -41,7 +41,7 @@ exports.getBondView = function (model) {
                         <option value="56" ${model.daysToMaturation == 56 ? 'selected="selected"' : ''}">8 Weeks</option>
                     </select>
                     
-                    <div class="input-group-addon">maturity date: ${maturityDateText}</div>
+                    <div class="input-group-addon">matures: ${maturityDateText}</div>
     `);
 
     var removeButton = $(`<div class="input-group-addon remove" title="Remove Bond">
