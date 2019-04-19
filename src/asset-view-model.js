@@ -1,27 +1,35 @@
 const Currency = require('currency.js');
 
 exports.getModels = function() {
-    var assets = [];
-
+    var models = [];
     $('.asset-item').each(function () {
-        assets.push(exports.getModel(this));
+        models.push(exports.getModel(this));
     });
+    models.sort((a, b) => b.amount - a.amount);
+    return models;
+};
 
-    return assets;
+exports.getAssetTotal = function (assets) {
+    let total = Currency(0);
+    for (var i = 0; i < assets.length; i += 1) {
+        total = total.add(assets[i].amount);
+    }
+    return total.toString();
 };
 
 exports.getModel = function (target) {
     'use strict';
-
     var balance = {};
-
     var amountInput = $(target).children('input.amount');
     var nameInput = $(target).children('input.name');
-
     balance.amount = amountInput.val().trim();
     balance.name = nameInput.val().trim();
-
     return balance;
+};
+
+exports.getAllocation = function (total, subtotal) {
+    let allocation = Currency(subtotal, {precision: 4}).divide(total).multiply(100).toString();
+    return Currency(allocation, {precision: 2}).toString() + "%";
 };
 
 exports.format = function(amount) {

@@ -235,12 +235,10 @@ exports.setView = function (budget) {
         setBalances(budget);
     }
 
-    let totalCashAndStocks = Currency(0);
+    let totalCashAndStocks = Currency(0).toString();
     if (budget.assets) {
         $('#asset-input-group').empty();
-        for (var i = 0; i < budget.assets.length; i += 1) {
-            totalCashAndStocks = totalCashAndStocks.add(budget.assets[i].amount);
-        }
+        totalCashAndStocks = AssetViewModel.getAssetTotal(budget.assets);
         for (var i = 0; i < budget.assets.length; i += 1) {
             let asset = budget.assets[i];
             $('#asset-input-group').append(AssetViewModel.getBalanceView(
@@ -259,19 +257,11 @@ exports.setView = function (budget) {
         }
     }
     let totalAssets = Currency(totalCashAndStocks).add(totalBonds);
-
-    let cashAndStocksAllocation = Currency(totalCashAndStocks, {precision: 4}).divide(totalAssets).multiply(100).toString();
-    cashAndStocksAllocation = Currency(cashAndStocksAllocation, {precision: 2}).toString() + "%";
-    $('#cash-and-stocks-allocation').append($(`<div class="subtotal">Allocation of Cash &amp; Stocks<span class="pull-right">${cashAndStocksAllocation.toString()}</span></div>`));
+    $('#cash-and-stocks-allocation').append($(`<div class="subtotal">Allocation of Cash &amp; Stocks<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
     $('#cash-and-stocks-total-amount').append(AssetViewModel.getTotal('Cash &amp; Stocks', totalCashAndStocks.toString()));
-
-    let bondAllocation = Currency(totalBonds, {precision: 4}).divide(totalAssets).multiply(100).toString();
-    bondAllocation = Currency(bondAllocation, {precision: 2}).toString() + "%";
-    $('#bond-allocation').append($(`<div class="subtotal">Allocation of Bonds<span class="pull-right">${bondAllocation.toString()}</span></div>`));
+    $('#bond-allocation').append($(`<div class="subtotal">Allocation of Bonds<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalBonds).toString()}</span></div>`));
     $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
-
     $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${AssetViewModel.format(totalAssets)}</span></div>`));
-
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');

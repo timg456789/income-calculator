@@ -7,6 +7,8 @@ exports.getModels = function() {
         models.push(exports.getModel(this));
     });
 
+    models.sort((a, b) => a.maturityDate.valueOf() - b.maturityDate.valueOf());
+
     return models;
 };
 
