@@ -75,16 +75,22 @@ h4 {
     content: normal;
 }
 
-.subtotal, .total {
+.allocation,
+.subtotal,
+.total {
     font-size: 1.3em;
+}
+
+.allocation {
+    border-bottom: 1px solid black;
 }
 
 .subtotal {
     border-bottom: 1px solid black;
+    margin-bottom: 20px;
 }
 
 .total {
-    margin-top: 20px;
     border-bottom: 6px double;
 }
 
@@ -126,10 +132,6 @@ h4 {
     margin-bottom: 10px;
 }
 
-.transaction-input-view .amount {
-    width: 100%;
-}
-
 .transaction-input-view .date {
     width: 100%;
 }
@@ -155,15 +157,49 @@ h4 {
     width: 38%;
 }
 
-.transaction-input-view > .remove {
+.table-header-row {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.add-remove-btn {
+    width: 100%;
+}
+
+.add-remove-btn-container,
+.remove-button-container {
+    height: 40px;
+}
+
+.transaction-input-view > .remove,
+.remove {
     background-color: #d9534f;
     color: white;
     cursor: pointer;
 }
 
-.transaction-input-view > .remove:hover {
+.transaction-input-view > .remove:hover,
+.remove:hover {
     background-color: #c9302c;
     border-color: #ac2925;
+}
+
+.amount-description-column {
+    height: 32px;
+}
+
+.group-row {
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.vertical-align {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
 }
 
 .inline-group {

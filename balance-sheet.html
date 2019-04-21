@@ -38,40 +38,75 @@
   <div class="container">
       <form id="input-form" class="container-fluid form">
           <h2>Balance Sheet</h2>
-          <h3>
-              <span id="tree-view-loans" class="tree-view">
-                  <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-              </span>
-              Loans
-              <button id="add-new-balance" type="button" class="btn btn-success pull-right" title="Add Loan">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              </button>
-          </h3>
+          <div class="row group-row">
+              <div class="col-xs-11">
+                  <h3>
+                      <span id="tree-view-loans" class="tree-view">
+                          <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                      </span>
+                      Loans
+                  </h3>
+              </div>
+              <div class="col-xs-1 remove-button-container">
+                  <button id="add-new-balance" type="button" class="btn btn-success pull-right remove-button-container add-remove-btn" title="Add Loan">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  </button>
+              </div>
+          </div>
+          <div class="row table-header-row">
+              <div class="col-xs-2">Amount</div>
+              <div class="col-xs-3">Name</div>
+              <div class="col-xs-2">Rate</div>
+              <div class="col-xs-2">Payoff Date</div>
+              <div class="col-xs-2">Interest at Payoff</div>
+          </div>
           <div id="balance-input-group" class="form-group"></div>
           <div id="loan-total-amount"></div>
-          <h2>Assets</h2>
-          <h3>
-              <span id="tree-view-cash-or-stock" class="tree-view">
-                  <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-              </span>
-              Cash &amp; Stocks
-              <button id="add-new-asset" type="button" class="btn btn-success pull-right" title="Add Cash or Stock">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              </button>
-          </h3>
+          <div class="row group-row">
+              <div class="col-xs-11">
+                  <h3>
+                    <span id="tree-view-cash-or-stock" class="tree-view">
+                        <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                    </span>
+                      Cash &amp; Stocks
+                  </h3>
+              </div>
+              <div class="col-xs-1">
+                  <button id="add-new-asset" type="button" class="btn btn-success pull-right remove-button-container add-remove-btn" title="Add Cash or Stock">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  </button>
+              </div>
+          </div>
+          <div class="row table-header-row">
+              <div class="col-xs-4">Amount</div>
+              <div class="col-xs-4">Name</div>
+              <div class="col-xs-3">Allocation</div>
+          </div>
           <div id="asset-input-group" class="form-group"></div>
           <div id="cash-and-stocks-allocation"></div>
           <div id="cash-and-stocks-total-amount"></div>
+          <div class="row group-row">
+              <div class="col-xs-11">
+                  <h3>
+                      <span id="tree-view-bonds" class="tree-view">
+                          <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                      </span>
+                      Bonds
+                      </h3>
+              </div>
+              <div class="col-xs-1">
+                  <button id="add-new-bond" type="button" class="btn btn-success pull-right remove-button-container add-remove-btn" title="Add Bond">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  </button>
+              </div>
+          </div>
 
-          <h3>
-              <span id="tree-view-bonds" class="tree-view">
-                  <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-              </span>
-              Bonds
-              <button id="add-new-bond" type="button" class="btn btn-success pull-right" title="Add Bond">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              </button>
-          </h3>
+          <div class="row table-header-row">
+              <div class="col-xs-2">Face Value</div>
+              <div class="col-xs-4">Issue Date</div>
+              <div class="col-xs-3">Time to Maturity</div>
+              <div class="col-xs-2">Maturity Date</div>
+          </div>
           <div id="bond-input-group" class="form-group"></div>
           <div id="bond-allocation"></div>
           <div id="bond-total-amount"></div>

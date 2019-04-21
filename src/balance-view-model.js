@@ -1,6 +1,7 @@
 const cal = require('income-calculator/src/calendar');
 const PayoffDateCalculator = require('income-calculator/src/payoff-date-calculator');
 const payoffDateCalculator = new PayoffDateCalculator();
+const AssetViewModel = require('./asset-view-model');
 
 exports.getModels = function() {
     var balances = [];
@@ -13,36 +14,31 @@ exports.getModels = function() {
 };
 
 exports.getModel = function (target) {
-    'use strict';
-
-    var balance = {};
-
-    var amountInput = $(target).children('input.amount');
-    var nameInput = $(target).children('input.name');
-    var rateInput = $(target).children('input.rate');
-
+    let balance = {};
+    let amountInput = $(target).children('input.amount');
+    let nameInput = $(target).children('input.name');
+    let rateInput = $(target).children('input.rate');
     balance.amount = amountInput.val().trim();
     balance.name = nameInput.val().trim();
     balance.rate = rateInput.val().trim();
-
     return balance;
 };
 
 exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
-    'use strict';
-
-    var html = '<div class="balance-item input-group transaction-input-view">' +
-        '<div class="input-group-addon">$</div>' +
-        '<input class="amount form-control inline-group" type="text" value="' + amount + '" />';
-    html += '<div class="input-group-addon">name</div>';
-    html += '<input class="name form-control inline-group" type="text" value="' + name + '" />';
-    html += '<div class="input-group-addon">rate</div>';
-    html += '<input class="rate form-control inline-group" type="text" value="' + rate + '" />';
-
+    var html = `<div class="balance-item row transaction-input-view">
+                    <div class="col-xs-2">
+                        <div class="input-group">
+                            <div class="input-group-addon ">$</div>
+                            <input class="amount form-control text-right" type="text" value="${amount}" />
+                            <div class="input-group-addon">.00</div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3"><input class="name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-2"><input class="rate form-control text-right" type="text" value="${rate}" /></div>
+    `;
     if (weeklyAmount) {
         var payoffDate;
         var totalInterest;
-
         try {
             var balanceStatement = payoffDateCalculator.getPayoffDate({
                 startTime: Date.UTC(
@@ -64,12 +60,15 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
             payoffDate = err;
             totalInterest = err;
         }
-        html += `<div class="input-group-addon">payoff:${payoffDate} interest: ${totalInterest}</div>`;
+        html += `<div class="col-xs-2 text-center vertical-align amount-description-column">${payoffDate}</div>`;
+        html += `<div class="col-xs-2 text-right vertical-align amount-description-column">${AssetViewModel.format(totalInterest)}</div>`;
     }
     html += '</div>';
     var view = $(html);
-    var removeButtonHtml = `<div class="input-group-addon remove" title="Remove Loan">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    var removeButtonHtml = `<div class="col-xs-1 remove-button-container">
+                                <button class="btn remove add-remove-btn-container add-remove-btn" title="Remove Loan">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
                             </div>`;
 
     var removeButton = $(removeButtonHtml);

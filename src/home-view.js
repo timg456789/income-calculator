@@ -75,62 +75,45 @@ function getTxInputHtmlWeekly(date) {
 }
 
 exports.getTransactionView = function (transaction, iteration, type) {
-    'use strict';
-
-    var amount = '';
+    let amount = '';
     if (transaction.amount) {
         amount = transaction.amount / 100;
     }
-
-    var date = '';
+    let date = '';
     if (transaction.date) {
         date = transaction.date;
     }
-
-    var name = '';
+    let name = '';
     if (transaction.name) {
         name = transaction.name;
     }
-
-    var txHtmlInput;
-
-    if (iteration === 'weekly') {
-        txHtmlInput = getTxInputHtmlWeekly(date);
-    } else if (iteration === 'monthly') {
-        txHtmlInput = getTxInputHtmlMonthly(date);
-    } else {
-        txHtmlInput = '<input class="date form-control inline-group" type="text" value="' + date + '" />';
-    }
-
-    var html = '<div class="' + iteration + '-' + type + '-item input-group transaction-input-view">' +
-            '<div class="input-group-addon">$</div>' +
-            '<input class="amount form-control inline-group" type="text" value="' + amount + '" /> ' +
-            '<div class="input-group-addon">on</div>' +
-            txHtmlInput;
-    html += '<div class="input-group-addon">name</div>';
-    html += '<input class="name form-control inline-group" type="text" value="' + name + '" />';
-    html += '</div>';
-
-    var view = $(html);
-
-    if (transaction.budget !== undefined) {
-        var budgetInput = '<input class="budget form-control inline-group" ' +
-                'type="text" value="' + transaction.budget + '" /> ';
-        view.append(budgetInput);
-    }
-
-    var removeButtonHtml = '<div class="input-group-addon remove">' +
-            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>' +
-            '</div>';
-
-    var removeButton = $(removeButtonHtml);
-
+    let txHtmlInput = iteration === 'weekly'
+        ? getTxInputHtmlWeekly(date)
+        : getTxInputHtmlMonthly(date);
+    let html = `
+        <div class="row transaction-input-view">
+            <div class="col-xs-4">
+                <div class="input-group">
+                    <div class="input-group-addon ">$</div>
+                    <input class="amount form-control" type="text" value="${amount}" />
+                    <div class="input-group-addon">.00</div>
+                </div>
+            </div>
+            <div class="col-xs-3">${txHtmlInput}</div>
+            <div class="col-xs-4"><input class="name form-control" type="text" value="${name}" /></div>
+        </div>`;
+    let view = $(html);
+    let removeButtonHtml = `
+        <div class="col-xs-1 add-remove-btn-container">
+            <button class="btn remove add-remove-btn-container add-remove-btn">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+        </div>`;
+    let removeButton = $(removeButtonHtml);
     removeButton.click(function () {
         view.remove();
     });
-
     view.append(removeButton);
-
     return view;
 };
 
@@ -160,17 +143,12 @@ function getTransactionModel(target) {
     return transaction;
 }
 
-function insertTransactionView(transaction, target, iteration, type) {
-    'use strict';
-    $(target).append(exports.getTransactionView(transaction, iteration, type));
-}
-
 function insertTransactionViews(transactions, target, iteration, type) {
     'use strict';
     $(target).empty();
     var i;
     for (i = 0; i < transactions.length; i += 1) {
-        insertTransactionView(transactions[i], target, iteration, type);
+        $(target).append(exports.getTransactionView(transactions[i], target, iteration, type));
     }
 }
 
@@ -255,17 +233,14 @@ exports.setView = function (budget) {
         }
     }
     let totalAssets = Currency(totalCashAndStocks).add(totalBonds);
-    $('#cash-and-stocks-allocation').append($(`<div class="subtotal">Allocation of Cash &amp; Stocks<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
+    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Allocation of Cash &amp; Stocks<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
     $('#cash-and-stocks-total-amount').append(AssetViewModel.getTotal('Cash &amp; Stocks', totalCashAndStocks.toString()));
-    $('#bond-allocation').append($(`<div class="subtotal">Allocation of Bonds<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalBonds).toString()}</span></div>`));
+    $('#bond-allocation').append($(`<div class="allocation">Allocation of Bonds<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalBonds).toString()}</span></div>`));
     $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
     $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${AssetViewModel.format(totalAssets)}</span></div>`));
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
-    insertTransactionViews(budget.oneTime, '#one-time-input-group', 'one-time', 'expense');
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
-    insertTransactionViews(budget.actual, '#actuals-input-group', 'actual', 'expense');
-
     setupToggle('#tree-view-loans','#balance-input-group');
     setupToggle('#tree-view-cash-or-stock','#asset-input-group');
     setupToggle('#tree-view-bonds','#bond-input-group');

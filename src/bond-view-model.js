@@ -23,30 +23,31 @@ exports.getModel = function (target) {
 };
 
 exports.getBondView = function (model) {
-    'use strict';
-
     let issueDateText = moment(model.issueDate).format('YYYY-MM-DD UTC Z');
     let maturityDateText = moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD');
-
-    var view = $(`<div class="bond-item input-group transaction-input-view">
-                    <div class="input-group-addon">Face Value $</div>
-                    <input class="amount form-control inline-group" type="text" value="${model.amount}" />
-                    
-                    <div class="input-group-addon">issued</div>
-                    <input class="issue-date form-control inline-group" type="text" value="${issueDateText}" />
-                    
-                    <div class="input-group-addon">type</div>
-                    <select class="type form-control inline-group">
-                        <option value="28" ${model.daysToMaturation == 28 ? 'selected="selected"' : ''}>4 Weeks</option>
-                        <option value="56" ${model.daysToMaturation == 56 ? 'selected="selected"' : ''}">8 Weeks</option>
-                    </select>
-                    
-                    <div class="input-group-addon">matures: ${maturityDateText}</div>
+    var view = $(`<div class="bond-item transaction-input-view row">
+                    <div class="col-xs-2">
+                        <div class="input-group">
+                            <div class="input-group-addon ">$</div>
+                            <input class="amount form-control text-right" type="text" value="${model.amount}" />
+                            <div class="input-group-addon">.00</div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4"><input class="col-xs-3 issue-date form-control" type="text" value="${issueDateText}" /></div>
+                    <div class="col-xs-3">
+                        <select class="type form-control">
+                            <option value="28" ${model.daysToMaturation == 28 ? 'selected="selected"' : ''}>4 Weeks</option>
+                            <option value="56" ${model.daysToMaturation == 56 ? 'selected="selected"' : ''}">8 Weeks</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
     `);
 
-    var removeButton = $(`<div class="input-group-addon remove" title="Remove Bond">
+    var removeButton = $(`<div class="col-xs-1 remove-button-container">
+                            <button class="btn remove add-remove-btn-container add-remove-btn" title="Remove Bond">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </div>`);
+                            </button>
+                          </div>`);
 
     removeButton.click(function () {
         view.remove();

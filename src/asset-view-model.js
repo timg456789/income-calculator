@@ -45,16 +45,23 @@ exports.getBalanceView = function (amount, name, total) {
     'use strict';
     let allocation = Currency(amount, {precision: 4}).divide(total).multiply(100).toString();
     allocation = Currency(allocation, {precision: 2}).toString() + "%";
-    var view = $(`<div class="asset-item input-group transaction-input-view">
-                    <div class="input-group-addon">$</div>
-                    <input class="amount form-control inline-group" type="text" value="${amount}" />
-                    <div class="input-group-addon">name</div>
-                    <input class="name form-control inline-group" type="text" value="${name}" />
-                    <div class="input-group-addon">allocation: ${allocation.toString()}</div>
+    var view = $(`<div class="asset-item row transaction-input-view">
+                    <div class="col-xs-4">
+                        <div class="input-group">
+                            <div class="input-group-addon ">$</div>
+                            <input class="amount form-control text-right" type="text" value="${amount}" />
+                            <div class="input-group-addon">.00</div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4"><input class="name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-3 text-right vertical-align amount-description-column">${allocation.toString()}</div>
     `);
-    var removeButton = $(`<div class="input-group-addon remove" title="Remove Cash or Stock">
+    var removeButton = $(`<div class="col-xs-1 remove-button-container">
+                            <button class="btn remove add-remove-btn-container add-remove-btn" title="Remove Cash or Stock">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </div>`);
+                            </button>
+                          </div>
+    `);
     removeButton.click(function () {
         view.remove();
     });
