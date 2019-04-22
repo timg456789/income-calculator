@@ -18,13 +18,10 @@ exports.getAssetTotal = function (assets) {
 };
 
 exports.getModel = function (target) {
-    'use strict';
-    var balance = {};
-    var amountInput = $(target).children('input.amount');
-    var nameInput = $(target).children('input.name');
-    balance.amount = amountInput.val().trim();
-    balance.name = nameInput.val().trim();
-    return balance;
+    let model = {};
+    model.amount = $(target).find('input.amount').val().trim();
+    model.name = $(target).find('input.name').val().trim();
+    return model;
 };
 
 exports.getAllocation = function (total, subtotal) {

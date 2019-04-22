@@ -16,9 +16,9 @@ exports.getModels = function() {
 
 exports.getModel = function (target) {
     return {
-        amount: $(target).children('input.amount').val().trim(),
-        issueDate: moment($(target).children('input.issue-date').val().trim(), 'YYYY-MM-DD UTC Z'),
-        daysToMaturation: $(target).children('select.type').val().trim()
+        amount: $(target).find('input.amount').val().trim(),
+        issueDate: moment($(target).find('input.issue-date').val().trim(), 'YYYY-MM-DD UTC Z'),
+        daysToMaturation: $(target).find('select.type').val().trim()
     };
 };
 

@@ -14,14 +14,11 @@ exports.getModels = function() {
 };
 
 exports.getModel = function (target) {
-    let balance = {};
-    let amountInput = $(target).children('input.amount');
-    let nameInput = $(target).children('input.name');
-    let rateInput = $(target).children('input.rate');
-    balance.amount = amountInput.val().trim();
-    balance.name = nameInput.val().trim();
-    balance.rate = rateInput.val().trim();
-    return balance;
+    return {
+        "amount": $(target).find('input.amount').val().trim(),
+        "balance": $(target).find('input.name').val().trim(),
+        "rate": $(target).find('input.rate').val().trim()
+    };
 };
 
 exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
