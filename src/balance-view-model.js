@@ -16,7 +16,7 @@ exports.getModels = function() {
 exports.getModel = function (target) {
     return {
         "amount": $(target).find('input.amount').val().trim(),
-        "balance": $(target).find('input.name').val().trim(),
+        "name": $(target).find('input.name').val().trim(),
         "rate": $(target).find('input.rate').val().trim()
     };
 };

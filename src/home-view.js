@@ -91,7 +91,7 @@ exports.getTransactionView = function (transaction, iteration, type) {
         ? getTxInputHtmlWeekly(date)
         : getTxInputHtmlMonthly(date);
     let html = `
-        <div class="row transaction-input-view">
+        <div class="row transaction-input-view ${iteration}-expense-item">
             <div class="col-xs-4">
                 <div class="input-group">
                     <div class="input-group-addon ">$</div>
@@ -119,27 +119,16 @@ exports.getTransactionView = function (transaction, iteration, type) {
 
 function getTransactionModel(target) {
     'use strict';
-
     var transaction = {};
-
-    var amountInput = $(target).children('input.amount');
-    var dateInput = $(target).children('.date.form-control');
-    var nameInput = $(target).children('input.name');
-
+    var amountInput = $(target).find('input.amount');
+    var dateInput = $(target).find('.date.form-control');
+    var nameInput = $(target).find('input.name');
     transaction.amount = parseFloat(amountInput.val().trim()) * 100;
-
     var rawDate = dateInput.val();
     var rawTrimmedDate = rawDate.trim();
-
     transaction.date = new Date(rawTrimmedDate);
     transaction.name = nameInput.val().trim();
     transaction.type = 'expense';
-
-    var budgetInput = $(target).children('input.budget');
-    if (budgetInput && budgetInput.length > 0) {
-        transaction.budget = budgetInput.val().trim();
-    }
-
     return transaction;
 }
 
