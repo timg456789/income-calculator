@@ -104,7 +104,7 @@ function HomeController() {
     
     function initGroup(name) {
         $('#add-new-' + name).click(function () {
-            $('#' + name + '-input-group').append(homeView.getTransactionView({}, name, 'expense'));
+            $('#' + name + '-input-group').append(homeView.getTransactionView({}, name));
         });
     }
 

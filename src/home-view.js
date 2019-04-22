@@ -74,7 +74,7 @@ function getTxInputHtmlWeekly(date) {
     return txHtmlInput;
 }
 
-exports.getTransactionView = function (transaction, iteration, type) {
+exports.getTransactionView = function (transaction, iteration) {
     let amount = '';
     if (transaction.amount) {
         amount = transaction.amount / 100;
@@ -132,12 +132,12 @@ function getTransactionModel(target) {
     return transaction;
 }
 
-function insertTransactionViews(transactions, target, iteration, type) {
+function insertTransactionViews(transactions, target, iteration) {
     'use strict';
     $(target).empty();
     var i;
     for (i = 0; i < transactions.length; i += 1) {
-        $(target).append(exports.getTransactionView(transactions[i], target, iteration, type));
+        $(target).append(exports.getTransactionView(transactions[i], iteration));
     }
 }
 
@@ -228,8 +228,8 @@ exports.setView = function (budget) {
     $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
     $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${AssetViewModel.format(totalAssets)}</span></div>`));
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
-    insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly', 'expense');
-    insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly', 'expense');
+    insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly');
+    insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly');
     setupToggle('#tree-view-loans','#balance-input-group');
     setupToggle('#tree-view-cash-or-stock','#asset-input-group');
     setupToggle('#tree-view-bonds','#bond-input-group');
