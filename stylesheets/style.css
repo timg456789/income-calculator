@@ -207,6 +207,11 @@ h4 {
     width: auto;
 }
 
+.items-container-for-month > .row {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .month-heading {
     font-size: 2em;
     margin-top: 15px;
@@ -260,7 +265,7 @@ h4 {
 }
 
 .day-col {
-    width: 12.5%;
+    width: 14.1%;
     padding-left: 0px;
     padding-right: 0px;
 }

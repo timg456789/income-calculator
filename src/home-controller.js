@@ -4,9 +4,6 @@ function HomeController() {
 
     const calendarView = require('./calendar-view');
     const homeView = require('./home-view');
-    const BalanceViewModel = require('./balance-view-model');
-    const AssetViewModel = require('./asset-view-model');
-    const BondViewModel = require('./bond-view-model');
     const DataClient = require('./data-client');
     var bucket;
     var s3ObjKey;
@@ -55,19 +52,12 @@ function HomeController() {
             let response = await dataClient.patch(s3ObjKey, data);
             var url = updateQueryStringParameter(location.href, 'data', s3ObjKey);
             url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
-
-            $('#output').append('<p>You can view this budget at anytime by viewing this ' +
-                '<a href="' + url + '">' + url + '</a>.' +
-                '</p>');
+            $('#output').append(`<p>You can view this budget at anytime by viewing this <a href="${url}">${url}</a>.</p>`);
             $('#months-container').prepend(
-                '<div id="calendar-legend">' +
-                'Legend&nbsp;' +
-                '<span class="transaction-view expense budgeted" title="expenditure that occurred within budget">' +
-                'Budgeted Spending</span>' +
-                '</span>' +
-                '<span class="transaction-view expense" title="budgeted expense">' +
-                'Budgeted Expense</span>' +
-                '</div>'
+                `<div id="calendar-legend"><strong>Legend</strong><br />
+                    <span class="transaction-view expense income" title="income">Income</span><br />
+                    <span class="transaction-view expense" title="budgeted expense">Expense</span>
+                </div>`
             );
         } catch (err) {
             console.log(err);

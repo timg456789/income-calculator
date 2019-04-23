@@ -1,6 +1,8 @@
 const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
+const Currency = require('currency.js');
+const AssetViewModel = require('./asset-view-model');
 const NetIncomeCalculator = require('income-calculator/src/net-income-calculator');
 const netIncomeCalculator = new NetIncomeCalculator();
 
@@ -98,7 +100,6 @@ function addMonth(year, month) {
     var monthTarget = '#' + monthContainerId;
     $(monthTarget).append('<div class="weeks row"></div>');
     addWeekAbbreviationHeaders(monthTarget);
-    $(monthTarget + '>' + '.weeks').append('<div class="day-col col-xs-1 week-name">Totals</div>');
 
     return monthContainerId;
 }
@@ -121,12 +122,6 @@ exports.build = function (year, month) {
             dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
             var monthTarget = '#' + monthContainerId;
             $(monthTarget).append(dayViewContainer);
-        },
-        function (currentDate) {
-            $('.' + transactionsForWeekTarget).append(
-                '<div class="day-view totals-view day-col col-xs-1">' +
-                '</div>'
-            );
         });
 };
 
@@ -166,53 +161,6 @@ function getSummary(budgetSettings, actual, startTime, endTime) {
     return summary;
 }
 
-function loadWeeklyTotals(budgetSettings, actual, start) {
-    'use strict';
-
-    var weekEnd;
-    var summary;
-    var type;
-    var dt = new Date(start);
-    var net = 0;
-
-    var doOnWeekStart = function (currentDate, result) {
-
-        weekEnd = new Date(currentDate.getTime());
-        weekEnd.setUTCDate(weekEnd.getUTCDate() + cal.DAYS_IN_WEEK);
-
-
-        var summaryStart = currentDate.getTime();
-
-        if (summaryStart === result.adjustedStart.getTime()) {
-            summaryStart = result.startOfMonth.getTime();
-        }
-
-        summary = getSummary(
-            budgetSettings,
-            actual,
-            summaryStart,
-            weekEnd.getTime()
-        );
-
-        type = summary.net > 0 ? 'income' : 'expense';
-
-        $('.' + getWeekTarget(currentDate) + ' .totals-view').append(
-            getTransactionView('', summary.net, type)
-        );
-
-        net += summary.net;
-    };
-
-    calCalc.getMonthAdjustedByWeek(
-        dt.getUTCFullYear(),
-        dt.getUTCMonth(),
-        null,
-        doOnWeekStart,
-        null);
-
-    return net;
-}
-
 exports.load = function (budgetSettings, actual, start, end) {
     'use strict';
     $('#debug-console').append('<div>Showing from: ' + start.toISOString() + ' UTC</div>');
@@ -221,10 +169,7 @@ exports.load = function (budgetSettings, actual, start, end) {
     var summary = getSummary(budgetSettings, actual, start.getTime(), end.getTime());
 
     loadTransactions(summary.budgetItems);
-
-    $('#month-net-header-value').append(summary.net / 100);
-
-    var netByWeeklyTotals = loadWeeklyTotals(budgetSettings, actual, start);
-
-    $('#month-net-header-value').attr('data-net-by-weekly-totals', netByWeeklyTotals);
+    var netDollars = Currency(summary.net).divide(100).toString();
+    var netDollarsFormatted = AssetViewModel.format(netDollars);
+    $('#month-net-header-value').append(netDollarsFormatted);
 };
