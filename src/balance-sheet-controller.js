@@ -1,17 +1,16 @@
+const homeView = require('./home-view');
+const BalanceViewModel = require('./balance-view-model');
+const AssetViewModel = require('./asset-view-model');
+const BondViewModel = require('./bond-view-model');
+const DataClient = require('./data-client');
+
 function HomeController() {
     'use strict';
-
-    const homeView = require('./home-view');
-    const BalanceViewModel = require('./balance-view-model');
-    const AssetViewModel = require('./asset-view-model');
-    const BondViewModel = require('./bond-view-model');
-    const DataClient = require('./data-client');
-    var bucket;
-    var s3ObjKey;
-    var accessKeyId;
-    var secretAccessKey;
-    var dataClient;
-
+    let bucket;
+    let s3ObjKey;
+    let accessKeyId;
+    let secretAccessKey;
+    let dataClient;
     function log(error) {
         console.log(error);
         $('#debug-console').append('<div>' + error + '</div>');

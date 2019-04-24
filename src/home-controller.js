@@ -1,15 +1,15 @@
+const calendarView = require('./calendar-view');
+const homeView = require('./home-view');
+const DataClient = require('./data-client');
 
 function HomeController() {
     'use strict';
 
-    const calendarView = require('./calendar-view');
-    const homeView = require('./home-view');
-    const DataClient = require('./data-client');
-    var bucket;
-    var s3ObjKey;
-    var accessKeyId;
-    var secretAccessKey;
-    var dataClient;
+    let bucket;
+    let s3ObjKey;
+    let accessKeyId;
+    let secretAccessKey;
+    let dataClient;
 
     function log(error) {
         console.log(error);

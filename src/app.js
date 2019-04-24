@@ -1,5 +1,7 @@
 const HomeController = require('./home-controller');
 const BalanceSheetController = require('./balance-sheet-controller');
+const PayDaysController = require('./pay-days-controller');
+const Nav = require('./nav');
 
 function getParameterByName(name) {
     'use strict';
@@ -20,6 +22,8 @@ function getParameterByName(name) {
 $(document).ready(function () {
     'use strict';
 
+    Nav.initNav($('.tab-nav-bar'));
+
     var settings = {};
     var optionalOverride = getParameterByName('data');
     if (optionalOverride) {
@@ -31,12 +35,15 @@ $(document).ready(function () {
     settings.s3Bucket = getParameterByName('s3Bucket');
     settings.agreedToLicense = getParameterByName('agreedToLicense') === 'true';
 
-    var controller;
+    let controller;
     if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('index.html')) {
         controller = new HomeController();
-    } else {
+    } else if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('balance-sheet.html')) {
         controller = new BalanceSheetController();
+    } else if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('pay-days.html')) {
+        controller = new PayDaysController();
     }
+
     controller.init(settings);
 
 });
