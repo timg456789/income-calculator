@@ -28,7 +28,7 @@
       <form id="input-form" class="container-fluid form">
           <h2>401k</h2>
           <div class="form-group row">
-              <label class="col-xs-3 col-form-label col-form-label-lg">Contributions for the Year</label>
+              <label class="col-xs-3 col-form-label col-form-label-lg">Employee contributions for the Year</label>
               <div class="col-xs-9">
                   <div class="input-group">
                       <div class="input-group-addon">$</div>
@@ -37,7 +37,7 @@
               </div>
           </div>
           <div class="form-group row">
-              <label class="col-xs-3 col-form-label col-form-label-lg">Contribution Per Pay Check</label>
+              <label class="col-xs-3 col-form-label col-form-label-lg">Employee Contribution Per Pay Check</label>
               <div class="col-xs-9">
                   <div class="input-group">
                       <div class="input-group-addon">$</div>
@@ -51,9 +51,11 @@
           </p>
           <h3>Contribution Limit</h3>
           <p>
+              The max an employee may contribute to their 401k for the 2019 tax year is
               <a href="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-401k-and-profit-sharing-plan-contribution-limits">
-                  The max contribution for 2019 is <span id="max-401k-contribution"></span>.
+                  <span id="max-401k-contribution"></span>.
               </a>
+              <span class="font-italic">Employer contributions don't count toward the employee max contribution limit.</span>
           </p>
           <p>
               To reach the max contribution limit by the end of 2019 with <span id="paychecks-remaining"></span> paychecks remaining,
