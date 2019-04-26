@@ -2,6 +2,7 @@ const HomeController = require('./home-controller');
 const BalanceSheetController = require('./balance-sheet-controller');
 const PayDaysController = require('./pay-days-controller');
 const Nav = require('./nav');
+const AccountSettingsView = require('./views/account-settings-view');
 
 function getParameterByName(name) {
     'use strict';
@@ -43,6 +44,9 @@ $(document).ready(function () {
     } else if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('pay-days.html')) {
         controller = new PayDaysController();
     }
+
+    $('#command-buttons-container').append(AccountSettingsView.getCommandButtonsContainerView());
+    $('#account-settings-container').append(AccountSettingsView.getAccountSettingsView());
 
     controller.init(settings);
 

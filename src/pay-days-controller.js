@@ -4,27 +4,19 @@ const UtcDay = require('income-calculator/src/utc-day');
 const DataClient = require('./data-client');
 const Currency = require('currency.js');
 const AssetViewModel = require('./asset-view-model');
+const AccountSettingsController = require('./controllers/account-settings-controller');
+const PayDaysView = require('./views/pay-days-view');
+const Util = require('./util');
 
 function PayDaysController() {
     'use strict';
     let dataClient;
     let settings;
 
-    function log(error) {
-        console.log(error);
-        $('#debug-console').append('<div>' + error + '</div>');
-    }
-    function agreedToLicense() {
-        return $('#acceptLicense').is(':checked');
-    }
     function getView(paymentNumber, payDate) {
         return `<div class="row">
-                    <div class="col-xs-1 text-right">
-                        ${paymentNumber}
-                    </div>
-                    <div class="col-xs-11">
-                        ${payDate}
-                    </div>
+                    <div class="col-xs-1 text-right">${paymentNumber}</div>
+                    <div class="col-xs-11">${payDate}</div>
                 </div>`;
     }
 
@@ -73,28 +65,23 @@ function PayDaysController() {
         $('#total-should-contribute-for-year').text(AssetViewModel.format(totalShouldcontribute.toString()));
 
         $('#pay-days-save').click(function () {
-            if (!agreedToLicense()) {
+            if (!Util.agreedToLicense()) {
                 return;
             }
-            let patch = {};
-            patch['401k-contribution-for-year'] = Currency($('#401k-contribution-for-year').val().trim()).toString();
-            patch['401k-contribution-per-pay-check'] = Currency($('#401k-contribution-per-pay-check').val().trim()).toString();
-            dataClient.patch(settings.s3ObjectKey, patch)
+            dataClient.patch(settings.s3ObjectKey, PayDaysView.getModel())
                 .then(data => {
                     window.location='./pay-days.html'+window.location.search;
                 })
-                .catch(err => {
-                    log(err);
-                    log('failure saving settings: ' + JSON.stringify(err, 0, 4));
-                })
+                .catch(err => { Util.log(err); })
         });
     }
 
     this.init = function (settingsIn) {
         settings = settingsIn;
         dataClient = new DataClient(settings);
+        new AccountSettingsController().init(settings, PayDaysView);
         initAsync()
-            .catch(err => { log(err); });
+            .catch(err => { Util.log(err); });
     };
 
 }

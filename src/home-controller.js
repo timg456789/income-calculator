@@ -1,6 +1,8 @@
 const calendarView = require('./calendar-view');
 const homeView = require('./home-view');
 const DataClient = require('./data-client');
+const AccountSettingsController = require('./controllers/account-settings-controller');
+const Util = require('./util');
 
 function HomeController() {
     'use strict';
@@ -10,27 +12,6 @@ function HomeController() {
     let accessKeyId;
     let secretAccessKey;
     let dataClient;
-
-    function log(error) {
-        console.log(error);
-        $('#debug-console').append('<div>' + error + '</div>');
-    }
-
-    function hasCredentials() {
-        return accessKeyId && secretAccessKey;
-    }
-
-    function updateQueryStringParameter(uri, key, value) {
-        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-        var separator = uri.indexOf('?') !== -1
-            ? "&"
-            : "?";
-        if (uri.match(re)) {
-            return uri.replace(re, '$1' + key + "=" + value + '$2');
-        } else {
-            return uri + separator + key + "=" + value;
-        }
-    }
 
     function guid() {
         function s4() {
@@ -50,8 +31,8 @@ function HomeController() {
         let data = homeView.getModel();
         try {
             let response = await dataClient.patch(s3ObjKey, data);
-            var url = updateQueryStringParameter(location.href, 'data', s3ObjKey);
-            url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
+            var url = Util.updateQueryStringParameter(location.href, 'data', s3ObjKey);
+            url = Util.updateQueryStringParameter(url, 'agreedToLicense', Util.agreedToLicense());
             $('#output').append(`<p>You can view this budget at anytime by viewing this <a href="${url}">${url}</a>.</p>`);
             $('#months-container').prepend(
                 `<div id="calendar-legend"><strong>Legend</strong><br />
@@ -60,8 +41,7 @@ function HomeController() {
                 </div>`
             );
         } catch (err) {
-            console.log(err);
-            log('failure saving settings: ' + JSON.stringify(err, 0, 4));
+            Util.log(err);
         }
     }
 
@@ -77,7 +57,7 @@ function HomeController() {
         $('#input-form').hide();
         $('#output').empty();
 
-        if (hasCredentials()) {
+        if (Util.hasCredentials()) {
             save();
         }
     }
@@ -87,7 +67,6 @@ function HomeController() {
             let data = await dataClient.getData();
             homeView.setView(data);
         } catch (err) {
-            console.log('set view error');
             log(err);
         }
     }
@@ -98,61 +77,13 @@ function HomeController() {
         });
     }
 
-    function agreedToLicense() {
-        return $('#acceptLicense').is(':checked');
-    }
-
     this.init = function (settings) {
-
         bucket = settings.s3Bucket;
         s3ObjKey = settings.s3ObjectKey;
         accessKeyId = settings.pub;
         secretAccessKey = settings.priv;
         dataClient = new DataClient(settings);
-
-        $('#account-settings-button').click(function () {
-            $('#account-settings-view').modal({
-                backdrop: 'static'
-            });
-        });
-
-        $('#budget-download').click(function () {
-            dataClient.getData()
-                .then(data => {
-                    let downloadLink = document.createElement('a');
-                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, 0, 4)));
-                    downloadLink.setAttribute('download', getParameterByName('data'));
-                    console.log('downloading');
-                    if (document.createEvent) {
-                        var event = document.createEvent('MouseEvents');
-                        event.initEvent('click', true, true);
-                        downloadLink.dispatchEvent(event);
-                    }
-                    else {
-                        downloadLink.click();
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    log(JSON.stringify(err, 0, 4));
-                });
-        });
-        $('#account-settings-save-close-button').click(function () {
-            let newFileName = $('#budgetName').val().trim();
-            dataClient.patch(newFileName,homeView.getModel())
-                .then(data => {
-                    let url = updateQueryStringParameter(location.href, 'data', newFileName);
-                    url = updateQueryStringParameter(url, 'pub', $('#awsAccessKeyId').val().trim());
-                    url = updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
-                    url = updateQueryStringParameter(url, 'agreedToLicense', agreedToLicense());
-                    window.location.href = url;
-                })
-                .catch(err => {
-                    log(err);
-                    log('failure saving settings: ' + JSON.stringify(err, 0, 4));
-                })
-        });
-
+        new AccountSettingsController().init(settings, homeView);
         $('#awsBucket').val(bucket);
         $('#budgetName').val(s3ObjKey);
         $('#awsAccessKeyId').val(settings.pub);
@@ -164,7 +95,7 @@ function HomeController() {
         });
 
         $('#project').click(function () {
-            if (agreedToLicense()) {
+            if (Util.agreedToLicense()) {
                 project();
             }
         });
@@ -176,22 +107,6 @@ function HomeController() {
             refresh();
         }
     };
-
-    function getParameterByName(name) {
-        'use strict';
-
-        var url = location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-        var results = regex.exec(url);
-        if (!results) {
-            return null;
-        }
-        if (!results[2]) {
-            return '';
-        }
-        return results[2];
-    }
 
 }
 

@@ -235,14 +235,6 @@ exports.setView = function (budget) {
     setupToggle('#tree-view-bonds','#bond-input-group');
 };
 
-exports.getBalanceSheetModel = function () {
-    var model = {};
-    model.balances = BalanceViewModel.getModels();
-    model.assets = AssetViewModel.getModels();
-    model.bonds = BondViewModel.getModels();
-    return model;
-};
-
 exports.getModel = function () {
     'use strict';
     var budgetSettings = {};
