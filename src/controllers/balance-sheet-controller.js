@@ -14,6 +14,7 @@ function HomeController() {
         try {
             let data = await dataClient.getData();
             homeView.setView(data);
+            balanceSheetView.setView(data);
         } catch (err) {
             Util.log(err);
         }
