@@ -8,12 +8,28 @@ function AccountSettingsController() {
     let accessKeyId;
     let secretAccessKey;
     let dataClient;
-    this.init = function (settings, view) {
+    let view;
+    async function save() {
+        let data = view.getModel();
+        try {
+            let response = await dataClient.patch(s3ObjKey, data);
+            window.location=window.location;
+        } catch (err) {
+            Util.log(err);
+        }
+    }
+    this.init = function (settings, viewIn) {
+        view = viewIn;
         bucket = settings.s3Bucket;
         s3ObjKey = settings.s3ObjectKey;
         accessKeyId = settings.pub;
         secretAccessKey = settings.priv;
         dataClient = new DataClient(settings);
+        $('#save').click(function () {
+            if (Util.agreedToLicense()) {
+                save();
+            }
+        });
         $('#account-settings-button').click(function () {
             $('#account-settings-view').modal({
                 backdrop: 'static'

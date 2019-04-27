@@ -1,6 +1,6 @@
-const HomeController = require('./home-controller');
-const BalanceSheetController = require('./balance-sheet-controller');
-const PayDaysController = require('./pay-days-controller');
+const HomeController = require('./controllers/home-controller');
+const BalanceSheetController = require('./controllers/balance-sheet-controller');
+const PayDaysController = require('./controllers/pay-days-controller');
 const Nav = require('./nav');
 const AccountSettingsView = require('./views/account-settings-view');
 
