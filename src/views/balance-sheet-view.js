@@ -6,10 +6,23 @@ const Currency = require('currency.js');
 exports.getModel = function () {
     var model = {};
     model.balances = BalanceViewModel.getModels();
-    model.assets = AssetViewModel.getModels();
+    model.assets = new AssetViewModel().getModels();
     model.bonds = BondViewModel.getModels();
     return model;
 };
+
+function setupToggle(container, detail) {
+    $(container).click(function () {
+        $(container).empty();
+        if ($(detail).is(':visible')) {
+            $(detail).hide();
+            $(container).append($('<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>'));
+        } else {
+            $(detail).show();
+            $(container).append($('<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>'));
+        }
+    });
+}
 
 function getTransactionByName (txns, name) {
     for (var i = 0; i < txns.length; i++) {
@@ -49,7 +62,7 @@ function setBalances(budget) {
         );
         $(balanceTarget).append(balanceView);
     }
-    $('#loan-total-amount').append(AssetViewModel.getTotal('Loans', total));
+    $('#loan-total-amount').append(new AssetViewModel().getTotal('Loans', total));
 }
 
 exports.setView = function (budget) {
@@ -59,28 +72,30 @@ exports.setView = function (budget) {
     let totalCashAndStocks = Currency(0).toString();
     if (budget.assets) {
         $('#asset-input-group').empty();
-        totalCashAndStocks = AssetViewModel.getAssetTotal(budget.assets);
+        totalCashAndStocks = new AssetViewModel().getAssetTotal(budget.assets);
         for (var i = 0; i < budget.assets.length; i += 1) {
             let asset = budget.assets[i];
-            $('#asset-input-group').append(AssetViewModel.getBalanceView(
+            $('#asset-input-group').append(new AssetViewModel().getBalanceView(
                 asset.amount, asset.name, totalCashAndStocks.toString()
             ));
         }
     }
-    let totalBonds = 0;
+    let totalBonds = Currency(0);
     if (budget.bonds) {
         $('#bonds-input-group').empty();
         for (var i = 0; i < budget.bonds.length; i += 1) {
-            totalBonds += parseInt(budget.bonds[i].amount);
+            totalBonds = totalBonds.add(Currency(budget.bonds[i].amount));
             $('#bond-input-group').append(BondViewModel.getBondView(budget.bonds[i]));
         }
     }
     let totalAssets = Currency(totalCashAndStocks).add(totalBonds);
-    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Allocation of Cash &amp; Stocks<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
-    $('#cash-and-stocks-total-amount').append(AssetViewModel.getTotal('Cash &amp; Stocks', totalCashAndStocks.toString()));
-    $('#bond-allocation').append($(`<div class="allocation">Allocation of Bonds<span class="pull-right">${AssetViewModel.getAllocation(totalAssets, totalBonds).toString()}</span></div>`));
-    $('#bond-total-amount').append(AssetViewModel.getTotal('Bonds', totalBonds));
-    $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${AssetViewModel.format(totalAssets)}</span></div>`));
+    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Allocation of Cash &amp; Stocks<span class="pull-right">${new AssetViewModel().getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
+    $('#cash-and-stocks-total-amount').append(new AssetViewModel().getTotal('Cash &amp; Stocks', totalCashAndStocks.toString()));
+    $('#bond-allocation').append($(`<div class="allocation">Allocation of Bonds<span class="pull-right">${new AssetViewModel().getAllocation(totalAssets, totalBonds).toString()}</span></div>`));
+    $('#bond-total-amount').append(
+        (`<div class="subtotal">Total Bonds<span class="pull-right">${new AssetViewModel().format(totalBonds.toString())}</span></div>`)
+    );
+    $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${new AssetViewModel().format(totalAssets)}</span></div>`));
     setupToggle('#tree-view-loans','#balance-input-group');
     setupToggle('#tree-view-cash-or-stock','#asset-input-group');
     setupToggle('#tree-view-bonds','#bond-input-group');

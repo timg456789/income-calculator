@@ -39,7 +39,7 @@ function PayDaysController() {
         $('#acceptLicense').prop('checked', settings.agreedToLicense);
 
         let max401kContribution = 19000;
-        $('#max-401k-contribution').text(AssetViewModel.format(max401kContribution));
+        $('#max-401k-contribution').text(Util.format(max401kContribution));
 
         let payDates = getPayDates();
         payDates.forEach((paymentDate, index) => {
@@ -48,16 +48,16 @@ function PayDaysController() {
         let projectedContributionForYear = Currency(data['401k-contribution-for-year']).add(
             Currency(data['401k-contribution-per-pay-check']).multiply(payDates.length)
         );
-        $('#projected-contribution-for-year').text(AssetViewModel.format(projectedContributionForYear.toString()));
+        $('#projected-contribution-for-year').text(Util.format(projectedContributionForYear.toString()));
         $('#paychecks-remaining').text(payDates.length);
         let shouldContributePerPaycheck = Currency(19000)
             .subtract(data['401k-contribution-for-year'])
             .divide(payDates.length);
         let remainingShouldContribute = shouldContributePerPaycheck.multiply(payDates.length);
         let totalShouldcontribute = remainingShouldContribute.add(data['401k-contribution-for-year']);
-        $('#should-contribute-for-max').text(AssetViewModel.format(shouldContributePerPaycheck.toString()));
-        $('#remaining-should-contribute-for-year').text(AssetViewModel.format(remainingShouldContribute.toString()));
-        $('#total-should-contribute-for-year').text(AssetViewModel.format(totalShouldcontribute.toString()));
+        $('#should-contribute-for-max').text(Util.format(shouldContributePerPaycheck.toString()));
+        $('#remaining-should-contribute-for-year').text(Util.format(remainingShouldContribute.toString()));
+        $('#total-should-contribute-for-year').text(Util.format(totalShouldcontribute.toString()));
     }
     this.init = function (settingsIn) {
         settings = settingsIn;

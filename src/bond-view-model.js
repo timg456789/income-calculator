@@ -30,7 +30,6 @@ exports.getBondView = function (model) {
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
                             <input class="amount form-control text-right" type="text" value="${model.amount}" />
-                            <div class="input-group-addon">.00</div>
                         </div>
                     </div>
                     <div class="col-xs-4"><input class="col-xs-3 issue-date form-control" type="text" value="${issueDateText}" /></div>

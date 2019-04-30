@@ -1,9 +1,6 @@
 const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
-const BalanceViewModel = require('./balance-view-model');
-const AssetViewModel = require('./asset-view-model');
-const BondViewModel = require('./bond-view-model');
 const Currency = require('currency.js');
 
 function getTxInputHtmlMonthly(date) {
@@ -139,19 +136,6 @@ function insertTransactionViews(transactions, target, iteration) {
     for (i = 0; i < transactions.length; i += 1) {
         $(target).append(exports.getTransactionView(transactions[i], iteration));
     }
-}
-
-function setupToggle(container, detail) {
-    $(container).click(function () {
-        $(container).empty();
-        if ($(detail).is(':visible')) {
-            $(detail).hide();
-            $(container).append($('<span class="glyphicon glyphicon-expand" aria-hidden="true"></span>'));
-        } else {
-            $(detail).show();
-            $(container).append($('<span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>'));
-        }
-    });
 }
 
 exports.setView = function (budget) {

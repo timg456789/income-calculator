@@ -1,5 +1,6 @@
 const cal = require('income-calculator/src/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
+const Util = require('./util');
 const calCalc = new CalendarCalculator();
 const Currency = require('currency.js');
 const AssetViewModel = require('./asset-view-model');
@@ -170,6 +171,6 @@ exports.load = function (budgetSettings, actual, start, end) {
 
     loadTransactions(summary.budgetItems);
     var netDollars = Currency(summary.net).divide(100).toString();
-    var netDollarsFormatted = AssetViewModel.format(netDollars);
+    var netDollarsFormatted = Util.format(netDollars);
     $('#month-net-header-value').append(netDollarsFormatted);
 };

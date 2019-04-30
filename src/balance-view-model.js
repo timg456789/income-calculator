@@ -5,11 +5,9 @@ const AssetViewModel = require('./asset-view-model');
 
 exports.getModels = function() {
     var balances = [];
-
     $('.balance-item').each(function () {
         balances.push(exports.getModel(this));
     });
-
     return balances;
 };
 
@@ -27,7 +25,6 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
                             <input class="amount form-control text-right" type="text" value="${amount}" />
-                            <div class="input-group-addon">.00</div>
                         </div>
                     </div>
                     <div class="col-xs-3"><input class="name form-control" type="text" value="${name}" /></div>
@@ -58,7 +55,7 @@ exports.getBalanceView = function (amount, name, rate, weeklyAmount) {
             totalInterest = err;
         }
         html += `<div class="col-xs-2 text-center vertical-align amount-description-column">${payoffDate}</div>`;
-        html += `<div class="col-xs-2 text-right vertical-align amount-description-column">${AssetViewModel.format(totalInterest)}</div>`;
+        html += `<div class="col-xs-2 text-right vertical-align amount-description-column">${new AssetViewModel().format(totalInterest)}</div>`;
     }
     html += '</div>';
     var view = $(html);
