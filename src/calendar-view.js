@@ -3,7 +3,6 @@ const CalendarCalculator = require('../src/calendar-calculator');
 const Util = require('./util');
 const calCalc = new CalendarCalculator();
 const Currency = require('currency.js');
-const AssetViewModel = require('./asset-view-model');
 const NetIncomeCalculator = require('income-calculator/src/net-income-calculator');
 const netIncomeCalculator = new NetIncomeCalculator();
 

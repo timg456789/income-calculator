@@ -3,7 +3,6 @@ const cal = require('income-calculator/src/calendar');
 const UtcDay = require('income-calculator/src/utc-day');
 const DataClient = require('../data-client');
 const Currency = require('currency.js/dist/currency.js');
-const AssetViewModel = require('../asset-view-model');
 const AccountSettingsController = require('./account-settings-controller');
 const PayDaysView = require('../views/pay-days-view');
 const Util = require('../util');

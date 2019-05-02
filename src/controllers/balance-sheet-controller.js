@@ -1,8 +1,8 @@
 const homeView = require('../home-view');
 const balanceSheetView = require('../views/balance-sheet-view');
-const BalanceViewModel = require('../balance-view-model');
-const AssetViewModel = require('../asset-view-model');
-const BondViewModel = require('../bond-view-model');
+const LoanViewModel = require('../views/balance-sheet/loan-view-model');
+const AssetViewModel = require('../views/balance-sheet/cash-or-stock-view-model');
+const BondViewModel = require('../views/balance-sheet/bond-view-model');
 const DataClient = require('../data-client');
 const AccountSettingsController = require('./account-settings-controller');
 const Util = require('../util');
@@ -24,13 +24,13 @@ function HomeController() {
         dataClient = new DataClient(settings);
         new AccountSettingsController().init(settings, balanceSheetView);
         $('#add-new-balance').click(function () {
-            $('#balance-input-group').append(BalanceViewModel.getBalanceView(100, 'new balance', '.035'));
+            $('#balance-input-group').append(new LoanViewModel().getView(100, 'new balance', '.035'));
         });
         $('#add-new-asset').click(function () {
-            $('#asset-input-group').append(new AssetViewModel().getBalanceView(100, 'new asset'));
+            $('#asset-input-group').append(new AssetViewModel().getView(100, 'new asset'));
         });
         $('#add-new-bond').click(function () {
-           $('#bond-input-group').append(BondViewModel.getBondView({ amount: 100, issueDate: new Date().toISOString()}));
+           $('#bond-input-group').append(new BondViewModel().getView());
         });
         if (s3ObjKey) {
             refresh();
