@@ -1,7 +1,7 @@
 const homeView = require('../home-view');
 const balanceSheetView = require('../views/balance-sheet-view');
 const LoanViewModel = require('../views/balance-sheet/loan-view-model');
-const AssetViewModel = require('../views/balance-sheet/cash-or-stock-view-model');
+const CashOrStockViewModel = require('../views/balance-sheet/cash-or-stock-view-model');
 const BondViewModel = require('../views/balance-sheet/bond-view-model');
 const DataClient = require('../data-client');
 const AccountSettingsController = require('./account-settings-controller');
@@ -27,7 +27,7 @@ function HomeController() {
             $('#balance-input-group').append(new LoanViewModel().getView(100, 'new balance', '.035'));
         });
         $('#add-new-asset').click(function () {
-            $('#asset-input-group').append(new AssetViewModel().getView(100, 'new asset'));
+            $('#asset-input-group').append(new CashOrStockViewModel().getView(100, 'new asset'));
         });
         $('#add-new-bond').click(function () {
            $('#bond-input-group').append(new BondViewModel().getView());

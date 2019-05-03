@@ -35,3 +35,15 @@ exports.agreedToLicense = function () {
 exports.format = function(amount) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 };
+exports.settings = function() {
+    let settings = {};
+    let optionalOverride = exports.getParameterByName('data');
+    if (optionalOverride) {
+        settings.s3ObjectKey = optionalOverride;
+    }
+    settings.pub = exports.getParameterByName('pub');
+    settings.priv = exports.getParameterByName('priv');
+    settings.s3Bucket = exports.getParameterByName('s3Bucket');
+    settings.agreedToLicense = exports.getParameterByName('agreedToLicense') === 'true';
+    return settings;
+};

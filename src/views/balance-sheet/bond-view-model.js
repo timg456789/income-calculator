@@ -19,7 +19,8 @@ function BondViewModel() {
         return {
             amount: $(target).find('input.amount').val().trim(),
             issueDate: moment($(target).find('input.issue-date').val().trim(), 'YYYY-MM-DD UTC Z'),
-            daysToMaturation: $(target).find('select.type').val().trim()
+            daysToMaturation: $(target).find('select.type').val().trim(),
+            creditAccount: 'Bonds'
         };
     };
 
@@ -38,6 +39,9 @@ function BondViewModel() {
         }
         if (!model.issueDate) {
             model.issueDate = new Date().toISOString();
+        }
+        if (!model.amount) {
+            model.amount = '0.00';
         }
         let issueDateText = moment(model.issueDate).format('YYYY-MM-DD UTC Z');
         let maturityDateText = moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD');

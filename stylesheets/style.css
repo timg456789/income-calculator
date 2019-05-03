@@ -75,8 +75,14 @@ h4 {
     content: normal;
 }
 
-.allocation,
-.subtotal,
+.allocation {
+    /*font-size: 1.3em;*/
+    font-weight: bold;
+}
+.subtotal {
+    /*font-size: 1.3em;*/
+    font-weight: bold;
+}
 .total {
     font-size: 1.3em;
 }
@@ -216,6 +222,15 @@ h4 {
 .items-container-for-month > .row {
     margin-left: auto;
     margin-right: auto;
+}
+
+/* accounts */
+.capitalize-first:first-letter {
+    text-transform:capitalize;
+}
+
+.account-row {
+    margin-bottom: 10px;
 }
 
 /* transfer */

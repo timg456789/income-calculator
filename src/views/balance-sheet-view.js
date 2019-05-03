@@ -3,6 +3,7 @@ const CashOrStockViewModel = require('./balance-sheet/cash-or-stock-view-model')
 const BondViewModel = require('./balance-sheet/bond-view-model');
 const cal = require('income-calculator/src/calendar');
 const Currency = require('currency.js');
+const Util = require('../util');
 exports.getModel = function () {
     var model = {};
     model.balances = new LoanViewModel().getModels();
@@ -62,7 +63,9 @@ function setBalances(budget) {
         );
         $(balanceTarget).append(balanceView);
     }
-    $('#loan-total-amount').append(new CashOrStockViewModel().getTotal('Loans', total));
+    $('#loan-total-amount').append(
+        $(`<div class="subtotal">Loans<span class="pull-right amount">${Util.format(total.toString())}</span></div>`)
+    );
 }
 
 exports.setView = function (budget) {
@@ -88,14 +91,16 @@ exports.setView = function (budget) {
             $('#bond-input-group').append(new BondViewModel().getView(budget.bonds[i]));
         }
     }
-    let totalAssets = Currency(totalCashAndStocks).add(totalBonds);
-    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Allocation of Cash &amp; Stocks<span class="pull-right">${new CashOrStockViewModel().getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
-    $('#cash-and-stocks-total-amount').append(new CashOrStockViewModel().getTotal('Cash &amp; Stocks', totalCashAndStocks.toString()));
-    $('#bond-allocation').append($(`<div class="allocation">Allocation of Bonds<span class="pull-right">${new CashOrStockViewModel().getAllocation(totalAssets, totalBonds).toString()}</span></div>`));
-    $('#bond-total-amount').append(
-        (`<div class="subtotal">Total Bonds<span class="pull-right">${new CashOrStockViewModel().format(totalBonds.toString())}</span></div>`)
+    let totalAssets = Currency(totalCashAndStocks).add(totalBonds).toString();
+    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Allocation of Cash &amp; Stocks<span class="pull-right amount">${new CashOrStockViewModel().getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
+    $('#cash-and-stocks-total-amount').append(
+        $(`<div class="subtotal">Total Cash &amp; Stocks<span class="pull-right amount">${Util.format(totalCashAndStocks.toString())}</span></div>`)
     );
-    $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right">${new CashOrStockViewModel().format(totalAssets)}</span></div>`));
+    $('#bond-allocation').append($(`<div class="allocation">Allocation of Bonds<span class="pull-right amount">${new CashOrStockViewModel().getAllocation(totalAssets, totalBonds.toString()).toString()}</span></div>`));
+    $('#bond-total-amount').append(
+        (`<div class="subtotal">Total Bonds<span class="pull-right amount">${Util.format(totalBonds.toString())}</span></div>`)
+    );
+    $('#assets-total-amount').append($(`<div class="total">Total Assets<span class="pull-right amount">${Util.format(totalAssets)}</span></div>`));
     setupToggle('#tree-view-loans','#balance-input-group');
     setupToggle('#tree-view-cash-or-stock','#asset-input-group');
     setupToggle('#tree-view-bonds','#bond-input-group');

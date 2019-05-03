@@ -1,14 +1,11 @@
 const AWS = require('aws-sdk');
-
 function DataClient(settings) {
-
     function getS3Params() {
         return {
             Bucket: settings.s3Bucket,
             Key: settings.s3ObjectKey
         };
     }
-
     function dataFactory() {
         AWS.config.update(
             {
@@ -19,12 +16,19 @@ function DataClient(settings) {
         );
         return new AWS.S3();
     }
-
     this.getData = async function () {
         let response = await dataFactory().getObject(getS3Params()).promise();
         return JSON.parse(response.Body.toString('utf-8'));
     };
-
+    this.put = async function (name, data) {
+        let options = {
+            Bucket: settings.s3Bucket,
+            Key: name,
+            Body: JSON.stringify(data, 0, 4)
+        };
+        let response = await dataFactory().upload(options).promise();
+        return response;
+    };
     this.patch = async function (name, data) {
         let original = await this.getData();
         let options = {
@@ -35,7 +39,6 @@ function DataClient(settings) {
         let response = await dataFactory().upload(options).promise();
         return response;
     }
-
 }
 
 module.exports = DataClient;
