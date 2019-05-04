@@ -79,7 +79,7 @@ exports.setView = function (budget) {
         for (var i = 0; i < budget.assets.length; i += 1) {
             let asset = budget.assets[i];
             $('#asset-input-group').append(new CashOrStockViewModel().getView(
-                asset.amount, asset.name, totalCashAndStocks.toString()
+                asset.amount, asset.name, totalCashAndStocks.toString(), budget.pending
             ));
         }
     }

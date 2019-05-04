@@ -5,7 +5,6 @@ exports.log = function (error) {
 };
 exports.getParameterByName = function (name) {
     'use strict';
-
     var url = location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
@@ -46,4 +45,9 @@ exports.settings = function() {
     settings.s3Bucket = exports.getParameterByName('s3Bucket');
     settings.agreedToLicense = exports.getParameterByName('agreedToLicense') === 'true';
     return settings;
+};
+exports.rootUrl = function () {
+    return window.location.origin === 'file://'
+        ? 'file:///C:/Users/peon/Desktop/projects/income-calculator'
+        : 'https://timg456789.github.io/income-calculator';
 };

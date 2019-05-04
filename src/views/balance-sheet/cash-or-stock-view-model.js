@@ -43,19 +43,33 @@ function CashOrStockViewModel() {
               <div class="col-xs-3">Allocation</div>
           </div>`);
     };
-    this.getView = function (amount, name, total) {
+    function getAvailableBalance(amount, name, pending) {
+        let available = Currency(amount);
+        if (!pending) {
+            return available;
+        }
+        let pendingMatches = pending.filter(x => x.debitAccount.toLowerCase() === name.toLowerCase());
+        for (let index = 0; index < pendingMatches.length; index += 1) {
+            available = available.subtract(pendingMatches[index].amount);
+        }
+        return available;
+    }
+    this.getView = function (amount, name, total, pending) {
         'use strict';
         let allocation = Currency(amount, {precision: 4}).divide(total).multiply(100).toString();
         allocation = Currency(allocation, {precision: 2}).toString() + "%";
-        var view = $(`<div class="asset-item row transaction-input-view">
+        let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
+        let view = $(`<div class="asset-item row transaction-input-view">
                     <div class="col-xs-2">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
                             <input class="amount form-control text-right" type="text" value="${amount}" />
                         </div>
                     </div>
-                    <div class="col-xs-2">
-                        $100.10
+                    <div class="col-xs-2 text-right vertical-align amount-description-column">
+                        <a href="${accountUrl}">
+                            ${Util.format(getAvailableBalance(amount, name, pending))}
+                        </a>
                     </div>
                     <div class="col-xs-4"><input class="input-name name form-control" type="text" value="${name}" /></div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${allocation.toString()}</div>

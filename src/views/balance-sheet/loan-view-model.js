@@ -4,10 +4,11 @@ const payoffDateCalculator = new PayoffDateCalculator();
 const Util = require('../../util');
 
 function LoanViewModel() {
+    let self = this;
     this.getModels = function() {
         var balances = [];
         $('.balance-item').each(function () {
-            balances.push(exports.getModel(this));
+            balances.push(self.getModel(this));
         });
         return balances;
     };

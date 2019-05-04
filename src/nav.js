@@ -1,7 +1,6 @@
+const Util = require('./util');
 exports.initNav = function (target) {
-    let root = window.location.origin === 'file://'
-        ? 'file:///C:/Users/peon/Desktop/projects/income-calculator'
-        : 'https://timg456789.github.io/income-calculator';
+    let root = Util.rootUrl();
     target.append(`<div class="container">
           <div class="container-fluid">
               <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/accounts.html'+window.location.search;" href="#" title="accounts">
