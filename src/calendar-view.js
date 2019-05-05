@@ -107,9 +107,9 @@ function addMonth(year, month) {
 exports.build = function (year, month) {
     'use strict';
 
-    var monthContainerId = addMonth(year, month);
-    var dayViewContainer;
-    var transactionsForWeekTarget;
+    let monthContainerId = addMonth(year, month);
+    let dayViewContainer;
+    let transactionsForWeekTarget;
     calCalc.getMonthAdjustedByWeek(
         year,
         month,
@@ -127,8 +127,8 @@ exports.build = function (year, month) {
 
 function loadTransactions(items, areActuals) {
     'use strict';
-    var bi;
-    var budgetItem;
+    let bi;
+    let budgetItem;
     for (bi = 0; bi < items.length; bi += 1) {
         budgetItem = items[bi];
         $('.' + getDayTarget(budgetItem.date)).append(
@@ -145,19 +145,17 @@ function loadTransactions(items, areActuals) {
 
 function getSummary(budgetSettings, actual, startTime, endTime) {
     'use strict';
-    var budget = netIncomeCalculator.getBudget(
+    let budget = netIncomeCalculator.getBudget(
         budgetSettings,
         startTime,
         endTime
     );
-
-    var summary = calendarAggregator.getSummary(
+    let summary = calendarAggregator.getSummary(
         startTime,
         endTime,
         budget,
         actual
     );
-
     return summary;
 }
 
@@ -166,10 +164,10 @@ exports.load = function (budgetSettings, actual, start, end) {
     $('#debug-console').append('<div>Showing from: ' + start.toISOString() + ' UTC</div>');
     $('#debug-console').append('<div>Until: ' + end.toISOString() + ' UTC</div>');
 
-    var summary = getSummary(budgetSettings, actual, start.getTime(), end.getTime());
+    let summary = getSummary(budgetSettings, actual, start.getTime(), end.getTime());
 
     loadTransactions(summary.budgetItems);
-    var netDollars = Currency(summary.net).divide(100).toString();
-    var netDollarsFormatted = Util.format(netDollars);
+    let netDollars = Currency(summary.net).divide(100).toString();
+    let netDollarsFormatted = Util.format(netDollars);
     $('#month-net-header-value').append(netDollarsFormatted);
 };

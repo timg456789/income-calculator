@@ -32,6 +32,9 @@ function BondViewModel() {
         if (!model) {
             model = {};
         }
+        let maturityDateText = model.issueDate
+            ? moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD')
+            : '';
         if (!model.issueDate) {
             model.issueDate = new Date().toISOString();
         }
@@ -39,8 +42,7 @@ function BondViewModel() {
             model.amount = '0.00';
         }
         let issueDateText = moment(model.issueDate).format('YYYY-MM-DD UTC Z');
-        let maturityDateText = moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD');
-        var view = $(`<div class="bond-item transaction-input-view row">
+        let view = $(`<div class="bond-item transaction-input-view row">
                     <div class="col-xs-2">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
@@ -55,8 +57,8 @@ function BondViewModel() {
                         </select>
                     </div>
                     <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
-    `);
-        var removeButton = $(`<div class="col-xs-1 remove-button-container">
+        `);
+        let removeButton = $(`<div class="col-xs-1 remove-button-container">
                             <button class="btn remove add-remove-btn-container add-remove-btn" title="Remove Bond">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>

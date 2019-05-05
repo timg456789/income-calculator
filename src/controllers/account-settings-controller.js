@@ -13,7 +13,7 @@ function AccountSettingsController() {
         let data = view.getModel();
         try {
             let response = await dataClient.patch(s3ObjKey, data);
-            window.location=window.location;
+            window.location.reload();
         } catch (err) {
             Util.log(err);
         }
@@ -26,6 +26,7 @@ function AccountSettingsController() {
         secretAccessKey = settings.priv;
         dataClient = new DataClient(settings);
         $('#save').click(function () {
+            $('#save').attr('disabled', 'disabled');
             if (Util.agreedToLicense()) {
                 save();
             }

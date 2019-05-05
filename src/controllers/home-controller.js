@@ -6,27 +6,14 @@ const Util = require('../util');
 
 function HomeController() {
     'use strict';
-
     let bucket;
     let s3ObjKey;
     let accessKeyId;
     let secretAccessKey;
     let dataClient;
-
-    function guid() {
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
-    }
-
     async function save() {
         if (!s3ObjKey) {
-            s3ObjKey = guid();
+            s3ObjKey = Util.guid();
         }
         let data = homeView.getModel();
         try {
@@ -44,7 +31,6 @@ function HomeController() {
             Util.log(err);
         }
     }
-
     function project() {
         var budgetSettings = homeView.getModel();
         var year = new Date().getUTCFullYear();
@@ -61,7 +47,6 @@ function HomeController() {
             save();
         }
     }
-
     async function refresh() {
         try {
             let data = await dataClient.getData();
@@ -70,13 +55,11 @@ function HomeController() {
             log(err);
         }
     }
-    
     function initGroup(name) {
         $('#add-new-' + name).click(function () {
             $('#' + name + '-input-group').append(homeView.getTransactionView({}, name));
         });
     }
-
     this.init = function (settings) {
         bucket = settings.s3Bucket;
         s3ObjKey = settings.s3ObjectKey;

@@ -56,9 +56,14 @@ function CashOrStockViewModel() {
     }
     this.getView = function (amount, name, total, pending) {
         'use strict';
+        amount = Currency(amount);
         let allocation = Currency(amount, {precision: 4}).divide(total).multiply(100).toString();
-        allocation = Currency(allocation, {precision: 2}).toString() + "%";
+        allocation = Currency(allocation, {precision: 2}).toString() + '%';
         let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
+        let availableBalance = getAvailableBalance(amount, name, pending);
+        let availableBalanceView = availableBalance.toString() === amount.toString()
+            ? amount.toString()
+            : `<a href="${accountUrl}">${Util.format(availableBalance.toString())}</a>`;
         let view = $(`<div class="asset-item row transaction-input-view">
                     <div class="col-xs-2">
                         <div class="input-group">
@@ -67,22 +72,20 @@ function CashOrStockViewModel() {
                         </div>
                     </div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">
-                        <a href="${accountUrl}">
-                            ${Util.format(getAvailableBalance(amount, name, pending))}
-                        </a>
+                        ${availableBalanceView}
                     </div>
                     <div class="col-xs-4"><input class="input-name name form-control" type="text" value="${name}" /></div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${allocation.toString()}</div>
                   </div>
         `);
-        var transferButton = $(`<div class="col-xs-1">
+        let transferButton = $(`<div class="col-xs-1">
                             <button type="button" class="btn btn-success add-remove-btn-container add-remove-btn" title="Transfer Cash or Stock">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                             </button>
                           </div>
         `);
         view.append(transferButton);
-        var removeButton = $(`<div class="col-xs-1 remove-button-container">
+        let removeButton = $(`<div class="col-xs-1 remove-button-container">
                             <button type="button" class="btn remove add-remove-btn-container add-remove-btn" title="Remove Cash or Stock">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
@@ -155,13 +158,14 @@ function CashOrStockViewModel() {
                             data.pending = [];
                         }
                         let transferModel = viewModel.getModel(newView);
+                        transferModel.id = Util.guid();
                         transferModel.transferDate = moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
                         transferModel.debitAccount = sourceAccountName;
                         data.pending.push(transferModel);
                         return dataClient.put(Util.settings().s3ObjectKey, data);
                     })
                     .then(putResult => {
-                        window.location=window.location;
+                        window.location.reload();
                     })
                     .catch(err => {
                         Util.log(err);
