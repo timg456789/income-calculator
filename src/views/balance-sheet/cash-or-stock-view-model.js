@@ -39,7 +39,8 @@ function CashOrStockViewModel() {
         return $(`<div class="row table-header-row">
               <div class="col-xs-2">Current Balance</div>
               <div class="col-xs-2">Available Balance</div>
-              <div class="col-xs-4">Name</div>
+              <div class="col-xs-3">Name</div>
+              <div class="col-xs-1">Chart</div>
               <div class="col-xs-3">Allocation</div>
           </div>`);
     };
@@ -62,7 +63,7 @@ function CashOrStockViewModel() {
         let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
         let availableBalance = getAvailableBalance(amount, name, pending);
         let availableBalanceView = availableBalance.toString() === amount.toString()
-            ? amount.toString()
+            ? Util.format(amount.toString())
             : `<a href="${accountUrl}">${Util.format(availableBalance.toString())}</a>`;
         let view = $(`<div class="asset-item row transaction-input-view">
                     <div class="col-xs-2">
@@ -74,7 +75,12 @@ function CashOrStockViewModel() {
                     <div class="col-xs-2 text-right vertical-align amount-description-column">
                         ${availableBalanceView}
                     </div>
-                    <div class="col-xs-4"><input class="input-name name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-3"><input class="input-name name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-1">
+                        <button type="button" class="view-chart btn btn-success add-remove-btn-container add-remove-btn" title="View chart">
+                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                        </button>
+                    </div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${allocation.toString()}</div>
                   </div>
         `);
@@ -85,6 +91,9 @@ function CashOrStockViewModel() {
                           </div>
         `);
         view.append(transferButton);
+        view.find('.view-chart').click(function () {
+            window.open(`https://finance.yahoo.com/quote/${name}`, '_blank');
+        });
         let removeButton = $(`<div class="col-xs-1 remove-button-container">
                             <button type="button" class="btn remove add-remove-btn-container add-remove-btn" title="Remove Cash or Stock">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
