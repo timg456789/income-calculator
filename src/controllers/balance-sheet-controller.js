@@ -29,9 +29,6 @@ function HomeController() {
         $('#add-new-asset').click(function () {
             $('#asset-input-group').append(new CashOrStockViewModel().getView(100, 'new asset'));
         });
-        $('#add-new-bond').click(function () {
-           $('#bond-input-group').append(new BondViewModel().getView());
-        });
         if (s3ObjKey) {
             refresh();
         }
