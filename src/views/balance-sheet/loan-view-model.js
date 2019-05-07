@@ -68,8 +68,8 @@ function LoanViewModel() {
         }
         html += '</div>';
         let view = $(html);
-        let removeButtonHtml = `<div class="col-xs-1 remove-button-container">
-                                <button class="btn remove add-remove-btn-container add-remove-btn" title="Remove Loan">
+        let removeButtonHtml = `<div class="col-xs-1">
+                                <button class="btn remove add-remove-btn" title="Remove Loan">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>
                             </div>`;

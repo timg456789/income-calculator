@@ -1,4 +1,4 @@
-const balanceSheetView = require('../views/balance-sheet-view');
+const balanceSheetView = require('../views/balance-sheet/balance-sheet-view');
 const DataClient = require('../data-client');
 const AccountSettingsController = require('./account-settings-controller');
 const Util = require('../util');
@@ -71,7 +71,7 @@ function AccountsController() {
                             <div class="col-xs-3 vertical-align amount-description-column text-right">${Util.format(transfer.amount)}</div>
                             <div class="col-xs-1 text-center">
                                 <button type="button" class="complete-transfer btn btn-success add-remove-btn-container add-remove-btn" title="Complete transfer">
-                                    <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 </button>
                             </div>
                             <div class="col-xs-1 remove-button-container text-center">

@@ -77,7 +77,7 @@ function CashOrStockViewModel() {
                     </div>
                     <div class="col-xs-3"><input class="input-name name form-control" type="text" value="${name}" /></div>
                     <div class="col-xs-1">
-                        <button type="button" class="view-chart btn btn-success add-remove-btn-container add-remove-btn" title="View chart">
+                        <button type="button" class="view-chart btn btn-success add-remove-btn" title="View chart">
                             <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
                         </button>
                     </div>
@@ -85,7 +85,7 @@ function CashOrStockViewModel() {
                   </div>
         `);
         let transferButton = $(`<div class="col-xs-1">
-                            <button type="button" class="btn btn-success add-remove-btn-container add-remove-btn" title="Transfer Cash or Stock">
+                            <button type="button" class="btn btn-success add-remove-btn" title="Transfer Cash or Stock">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                             </button>
                           </div>
@@ -95,7 +95,7 @@ function CashOrStockViewModel() {
             window.open(`https://finance.yahoo.com/quote/${name}`, '_blank');
         });
         let removeButton = $(`<div class="col-xs-1 remove-button-container">
-                            <button type="button" class="btn remove add-remove-btn-container add-remove-btn" title="Remove Cash or Stock">
+                            <button type="button" class="btn remove add-remove-btn" title="Remove Cash or Stock">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
                           </div>

@@ -1,5 +1,7 @@
-const moment = require('moment/moment');
-
+const Currency = require('currency.js/dist/currency.js');
+const DataClient = require('../../data-client');
+const Moment = require('moment/moment');
+const Util = require('../../util');
 function BondViewModel() {
     let self = this;
     this.getModels = function() {
@@ -8,14 +10,14 @@ function BondViewModel() {
             models.push(self.getModel(this));
         });
         models.sort((a, b) =>
-            moment(a.issueDate).add(a.daysToMaturation, 'days').valueOf() -
-            moment(b.issueDate).add(b.daysToMaturation, 'days').valueOf());
+            Moment(a.issueDate).add(a.daysToMaturation, 'days').valueOf() -
+            Moment(b.issueDate).add(b.daysToMaturation, 'days').valueOf());
         return models;
     };
     this.getModel = function (target) {
         return {
             amount: $(target).find('input.amount').val().trim(),
-            issueDate: moment($(target).find('input.issue-date').val().trim(), 'YYYY-MM-DD UTC Z'),
+            issueDate: Moment($(target).find('input.issue-date').val().trim(), 'YYYY-MM-DD UTC Z'),
             daysToMaturation: $(target).find('select.type').val().trim(),
             creditAccount: 'Bonds'
         };
@@ -28,12 +30,12 @@ function BondViewModel() {
               <div class="col-xs-2">Maturity Date</div>
           </div>`);
     };
-    this.getView = function (model) {
+    this.getReadOnlyView = function(model) {
         if (!model) {
             model = {};
         }
         let maturityDateText = model.issueDate
-            ? moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD')
+            ? Moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD')
             : '';
         if (!model.issueDate) {
             model.issueDate = new Date().toISOString();
@@ -41,7 +43,60 @@ function BondViewModel() {
         if (!model.amount) {
             model.amount = '0.00';
         }
-        let issueDateText = moment(model.issueDate).format('YYYY-MM-DD UTC Z');
+        let view = $(`<div class="bond-item transaction-input-view row">
+                    <div class="col-xs-2 text-right vertical-align amount-description-column">
+                        ${Util.format(model.amount)}
+                    </div>
+                    <div class="col-xs-4 text-center vertical-align amount-description-column">
+                        ${Moment(model.issueDate).format('YYYY-MM-DD')}
+                    </div>
+                    <div class="col-xs-3 text-center">
+                        ${model.daysToMaturation/7} weeks
+                    </div>
+                    <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
+        `);
+        let liquidateButton = $(`<div class="col-xs-1">
+                            <button type="button" class="btn btn-success add-remove-btn" title="Liquidate bond">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            </button>
+                          </div>`);
+        liquidateButton.click(function () {
+            let settings = Util.settings();
+
+            let dataClient = new DataClient(settings);
+            dataClient.getData()
+                .then(data => {
+                    let cashAccount = data.assets.find(x => x.name.toLowerCase() === 'cash');
+                    if (!cashAccount) {
+                        throw 'C=cash account not found';
+                    }
+                    let currentCash = Currency(cashAccount.amount);
+                    cashAccount.amount = currentCash.add(model.amount).toString();
+                    let patch = {};
+                    patch.assets = data.assets;
+                    patch.bonds = data.bonds.filter(x => x.id !== model.id);
+                    return dataClient.patch(settings.s3ObjectKey, patch);
+                })
+                .then(putResult => { window.location.reload(); })
+                .catch(err => { Util.log(err); });
+        });
+        view.append(liquidateButton);
+        return view;
+    };
+    this.getView = function (model) {
+        if (!model) {
+            model = {};
+        }
+        let maturityDateText = model.issueDate
+            ? Moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD')
+            : '';
+        if (!model.issueDate) {
+            model.issueDate = new Date().toISOString();
+        }
+        if (!model.amount) {
+            model.amount = '0.00';
+        }
+        let issueDateText = Moment(model.issueDate).format('YYYY-MM-DD UTC Z');
         let view = $(`<div class="bond-item transaction-input-view row">
                     <div class="col-xs-2">
                         <div class="input-group">
@@ -49,7 +104,9 @@ function BondViewModel() {
                             <input class="amount form-control text-right" type="text" value="${model.amount}" />
                         </div>
                     </div>
-                    <div class="col-xs-4"><input class="col-xs-3 issue-date form-control" type="text" value="${issueDateText}" /></div>
+                    <div class="col-xs-4">
+                        <input class="col-xs-3 issue-date form-control" type="text" value="${issueDateText}" />
+                    </div>
                     <div class="col-xs-3">
                         <select class="type form-control">
                             <option value="28" ${model.daysToMaturation == 28 ? 'selected="selected"' : ''}>4 Weeks</option>
@@ -58,16 +115,6 @@ function BondViewModel() {
                     </div>
                     <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
         `);
-        let removeButton = $(`<div class="col-xs-1 remove-button-container">
-                            <button class="btn remove add-remove-btn-container add-remove-btn" title="Remove Bond">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                          </div>`);
-
-        removeButton.click(function () {
-            view.remove();
-        });
-        view.append(removeButton);
         return view;
     };
 }

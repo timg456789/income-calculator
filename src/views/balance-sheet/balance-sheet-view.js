@@ -1,9 +1,9 @@
-const LoanViewModel = require('./balance-sheet/loan-view-model');
-const CashOrStockViewModel = require('./balance-sheet/cash-or-stock-view-model');
-const BondViewModel = require('./balance-sheet/bond-view-model');
+const LoanViewModel = require('./loan-view-model');
+const CashOrStockViewModel = require('./cash-or-stock-view-model');
+const BondViewModel = require('./bond-view-model');
 const cal = require('income-calculator/src/calendar');
-const Currency = require('currency.js');
-const Util = require('../util');
+const Currency = require('currency.js/dist/currency.js');
+const Util = require('../../util');
 exports.getModel = function () {
     var model = {};
     model.balances = new LoanViewModel().getModels();
@@ -88,7 +88,7 @@ exports.setView = function (budget) {
         $('#bonds-input-group').empty();
         for (var i = 0; i < budget.bonds.length; i += 1) {
             totalBonds = totalBonds.add(Currency(budget.bonds[i].amount));
-            $('#bond-input-group').append(new BondViewModel().getView(budget.bonds[i]));
+            $('#bond-input-group').append(new BondViewModel().getReadOnlyView(budget.bonds[i]));
         }
     }
     let totalAssets = Currency(totalCashAndStocks).add(totalBonds).toString();
