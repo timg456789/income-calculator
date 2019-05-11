@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const Moment = require('moment');
 function DataClient(settings) {
     function getS3Params() {
         return {
@@ -20,21 +21,21 @@ function DataClient(settings) {
         let response = await dataFactory().getObject(getS3Params()).promise();
         return JSON.parse(response.Body.toString('utf-8'));
     };
-    this.put = async function (name, data) {
-        let options = {
-            Bucket: settings.s3Bucket,
-            Key: name,
-            Body: JSON.stringify(data, 0, 4)
-        };
-        let response = await dataFactory().upload(options).promise();
-        return response;
-    };
     this.patch = async function (name, data) {
         let original = await this.getData();
+        let final = Object.assign(original, data);
+        if (final.bonds) {
+            final.bonds.sort((a, b) =>
+                Moment(a.issueDate).add(a.daysToMaturation, 'days').valueOf() -
+                Moment(b.issueDate).add(b.daysToMaturation, 'days').valueOf());
+        }
+        if (final.assets) {
+            final.assets.sort((a, b) => b.amount - a.amount);
+        }
         let options = {
             Bucket: settings.s3Bucket,
             Key: name,
-            Body: JSON.stringify(Object.assign(original, data), 0, 4)
+            Body: JSON.stringify(final, 0, 4)
         };
         let response = await dataFactory().upload(options).promise();
         return response;

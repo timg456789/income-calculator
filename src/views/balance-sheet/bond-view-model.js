@@ -4,15 +4,8 @@ const Moment = require('moment/moment');
 const Util = require('../../util');
 function BondViewModel() {
     let self = this;
-    this.getModels = function() {
-        let models = [];
-        $('.bond-item').each(function () {
-            models.push(self.getModel(this));
-        });
-        models.sort((a, b) =>
-            Moment(a.issueDate).add(a.daysToMaturation, 'days').valueOf() -
-            Moment(b.issueDate).add(b.daysToMaturation, 'days').valueOf());
-        return models;
+    this.getViewType = function() {
+        return 'bond';
     };
     this.getModel = function (target) {
         return {
@@ -24,10 +17,9 @@ function BondViewModel() {
     };
     this.getHeaderView = function () {
         return $(`<div class="row table-header-row">
-              <div class="col-xs-2">Face Value</div>
+              <div class="col-xs-4">Face Value</div>
               <div class="col-xs-4">Issue Date</div>
-              <div class="col-xs-3">Time to Maturity</div>
-              <div class="col-xs-2">Maturity Date</div>
+              <div class="col-xs-4">Time to Maturity</div>
           </div>`);
     };
     this.getReadOnlyView = function(model) {
@@ -98,7 +90,7 @@ function BondViewModel() {
         }
         let issueDateText = Moment(model.issueDate).format('YYYY-MM-DD UTC Z');
         let view = $(`<div class="bond-item transaction-input-view row">
-                    <div class="col-xs-2">
+                    <div class="col-xs-4">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
                             <input class="amount form-control text-right" type="text" value="${model.amount}" />
@@ -107,7 +99,7 @@ function BondViewModel() {
                     <div class="col-xs-4">
                         <input class="col-xs-3 issue-date form-control" type="text" value="${issueDateText}" />
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <select class="type form-control">
                             <option value="28" ${model.daysToMaturation == 28 ? 'selected="selected"' : ''}>4 Weeks</option>
                             <option value="56" ${model.daysToMaturation == 56 ? 'selected="selected"' : ''}">8 Weeks</option>

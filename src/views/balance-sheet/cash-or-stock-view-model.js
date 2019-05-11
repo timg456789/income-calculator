@@ -4,8 +4,12 @@ const BondViewModel = require('./bond-view-model');
 const moment = require('moment/moment');
 const DataClient = require('../../data-client');
 const Util = require('../../util');
+const AvailableBalanceCalculator = require('../../calculators/available-balance-calculator');
 function CashOrStockViewModel() {
     let self = this;
+    this.getViewType = function() {
+        return 'cash-or-stock';
+    };
     this.getTotal = function (name, amount) {
         'use strict';
         return $(`<div class="subtotal">Total ${name}<span class="pull-right">${Util.format(amount)}</span></div>`);
@@ -16,14 +20,6 @@ function CashOrStockViewModel() {
             total = total.add(assets[i].amount);
         }
         return total.toString();
-    };
-    this.getModels = function() {
-        var models = [];
-        $('.asset-item').each(function () {
-            models.push(self.getModel(this));
-        });
-        models.sort((a, b) => b.amount - a.amount);
-        return models;
     };
     this.getModel = function (target) {
         let model = {};
@@ -44,38 +40,22 @@ function CashOrStockViewModel() {
               <div class="col-xs-3">Allocation</div>
           </div>`);
     };
-    function getAvailableBalance(amount, name, pending) {
-        let available = Currency(amount);
-        if (!pending) {
-            return available;
-        }
-        let pendingMatches = pending.filter(x => x.debitAccount.toLowerCase() === name.toLowerCase());
-        for (let index = 0; index < pendingMatches.length; index += 1) {
-            available = available.subtract(pendingMatches[index].amount);
-        }
-        return available;
-    }
-    this.getView = function (amount, name, total, pending) {
+    this.getReadOnlyView = function (amount, name, total, pending) {
         'use strict';
         amount = Currency(amount);
+        name = name || '';
         let allocation = Currency(amount, {precision: 4}).divide(total).multiply(100).toString();
         allocation = Currency(allocation, {precision: 2}).toString() + '%';
         let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
-        let availableBalance = getAvailableBalance(amount, name, pending);
-        let availableBalanceView = availableBalance.toString() === amount.toString()
+        let availableBalanceCalculator = new AvailableBalanceCalculator();
+        let availableBalance = availableBalanceCalculator.getAvailableBalance(name, amount.toString(), pending);
+        let availableBalanceView = availableBalance === amount.toString()
             ? Util.format(amount.toString())
-            : `<a href="${accountUrl}">${Util.format(availableBalance.toString())}</a>`;
+            : `<a href="${accountUrl}">${Util.format(availableBalance)}</a>`;
         let view = $(`<div class="asset-item row transaction-input-view">
-                    <div class="col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon ">$</div>
-                            <input class="amount form-control text-right" type="text" value="${amount}" />
-                        </div>
-                    </div>
-                    <div class="col-xs-2 text-right vertical-align amount-description-column">
-                        ${availableBalanceView}
-                    </div>
-                    <div class="col-xs-3"><input class="input-name name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-3 text-right vertical-align amount-description-column">${Util.format(amount)}</div>
+                    <div class="col-xs-2 text-right vertical-align amount-description-column">${availableBalanceView}</div>
+                    <div class="col-xs-3 vertical-align amount-description-column">${name}</div>
                     <div class="col-xs-1">
                         <button type="button" class="view-chart btn btn-success add-remove-btn" title="View chart">
                             <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
@@ -94,16 +74,6 @@ function CashOrStockViewModel() {
         view.find('.view-chart').click(function () {
             window.open(`https://finance.yahoo.com/quote/${name}`, '_blank');
         });
-        let removeButton = $(`<div class="col-xs-1 remove-button-container">
-                            <button type="button" class="btn remove add-remove-btn" title="Remove Cash or Stock">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                          </div>
-        `);
-        removeButton.click(function () {
-            view.remove();
-        });
-        view.append(removeButton);
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
         let defaultTransactionDate = moment().add(1, 'days').format('YYYY-MM-DD UTC Z');
@@ -129,9 +99,8 @@ function CashOrStockViewModel() {
                   <div class="col-xs-9">
                       <select class="asset-type-selector form-control">
                           <option>Select an Asset Type</option>
-                          <option value="loan">Loan</option>
-                          <option value="cash-or-stock">Cash or Stock</option>
                           <option value="bond">Bond</option>
+                          <option value="cash-or-stock">Cash or Stock</option>
                       </select>
                   </div>
                 </div>
@@ -143,13 +112,8 @@ function CashOrStockViewModel() {
             let newView;
             viewContainer.find('.asset-type-selector').change(function () {
                 let selectedAssetType = viewContainer.find('.asset-type-selector').val();
-                if (selectedAssetType === 'loan') {
-                    viewModel = new LoanViewModel();
-                } else if (selectedAssetType === 'cash-or-stock') {
-                    viewModel = new CashOrStockViewModel();
-                } else if (selectedAssetType === 'bond') {
-                    viewModel = new BondViewModel();
-                }
+                let viewTypes = [ new CashOrStockViewModel(), new BondViewModel() ];
+                viewModel = viewTypes.find(x => x.getViewType().toLowerCase() === selectedAssetType.toLowerCase());
                 transferView.find('.target-asset-type').empty();
                 newView = viewModel.getView();
                 transferView.find('.target-asset-type').append(viewModel.getHeaderView());
@@ -163,15 +127,30 @@ function CashOrStockViewModel() {
                 let dataClient = new DataClient(Util.settings());
                 dataClient.getData()
                     .then(data => {
+                        let patch = {};
                         if (!data.pending) {
                             data.pending = [];
                         }
+                        if (!data.assets) {
+                            data.assets = [];
+                        }
+                        patch.pending = data.pending;
                         let transferModel = viewModel.getModel(newView);
                         transferModel.id = Util.guid();
                         transferModel.transferDate = moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
                         transferModel.debitAccount = sourceAccountName;
-                        data.pending.push(transferModel);
-                        return dataClient.put(Util.settings().s3ObjectKey, data);
+                        if (viewModel.getViewType().toLowerCase() === 'cash-or-stock') {
+                            let existingAccount = data.assets.find(x => x.name.toLowerCase() === transferModel.name.toLowerCase());
+                            if (!existingAccount) {
+                                existingAccount = {
+                                    name: transferModel.name,
+                                    amount: 0
+                                };
+                            }
+                            transferModel.creditAccount = existingAccount.name;
+                        }
+                        patch.pending.push(transferModel);
+                        return dataClient.patch(Util.settings().s3ObjectKey, patch);
                     })
                     .then(putResult => {
                         window.location.reload();
@@ -185,6 +164,52 @@ function CashOrStockViewModel() {
                 transferView.remove();
             });
         });
+        return viewContainer;
+    };
+    this.getView = function (amount, name, total, pending) {
+        'use strict';
+        amount = Currency(amount);
+        name = name || '';
+        let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
+        let availableBalanceCalculator = new AvailableBalanceCalculator();
+        let availableBalance = availableBalanceCalculator.getAvailableBalance(name, amount.toString(), pending);
+        let availableBalanceView = availableBalance === amount.toString()
+            ? Util.format(amount.toString())
+            : `<a href="${accountUrl}">${Util.format(availableBalance)}</a>`;
+        let view = $(`<div class="asset-item row transaction-input-view">
+                    <div class="col-xs-3">
+                        <div class="input-group">
+                            <div class="input-group-addon ">$</div>
+                            <input class="amount form-control text-right" type="text" value="${amount}" />
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-right vertical-align amount-description-column">
+                        ${availableBalanceView}
+                    </div>
+                    <div class="col-xs-3"><input class="input-name name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-1">
+                        <button type="button" class="view-chart btn btn-success add-remove-btn" title="View chart">
+                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="col-xs-2 text-right vertical-align amount-description-column"></div>
+                  </div>
+        `);
+        view.find('.view-chart').click(function () {
+            window.open(`https://finance.yahoo.com/quote/${name}`, '_blank');
+        });
+        let removeButton = $(`<div class="col-xs-1 remove-button-container">
+                            <button type="button" class="btn remove add-remove-btn" title="Remove Cash or Stock">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                          </div>
+        `);
+        removeButton.click(function () {
+            view.remove();
+        });
+        view.append(removeButton);
+        let viewContainer = $('<div></div>');
+        viewContainer.append(view);
         return viewContainer;
     };
 }

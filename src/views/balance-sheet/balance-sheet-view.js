@@ -7,8 +7,6 @@ const Util = require('../../util');
 exports.getModel = function () {
     var model = {};
     model.balances = new LoanViewModel().getModels();
-    model.assets = new CashOrStockViewModel().getModels();
-    model.bonds = new BondViewModel().getModels();
     return model;
 };
 
@@ -78,7 +76,7 @@ exports.setView = function (budget) {
         totalCashAndStocks = new CashOrStockViewModel().getAssetTotal(budget.assets);
         for (var i = 0; i < budget.assets.length; i += 1) {
             let asset = budget.assets[i];
-            $('#asset-input-group').append(new CashOrStockViewModel().getView(
+            $('#asset-input-group').append(new CashOrStockViewModel().getReadOnlyView(
                 asset.amount, asset.name, totalCashAndStocks.toString(), budget.pending
             ));
         }
