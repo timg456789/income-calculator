@@ -37,10 +37,7 @@ function getMonthContainerId(date) {
 
 function getMonthHeading(date) {
     'use strict';
-    return cal.MONTH_NAMES[date.getUTCMonth()] +
-            ' ' +
-            date.getFullYear() +
-            ': ' + '<span id="month-net-header-value"></span>';
+    return `Net for ${cal.MONTH_NAMES[date.getUTCMonth()]} ${date.getFullYear()} <span id="month-net-header-value"></span>`;
 }
 
 function getDateTarget(date) {

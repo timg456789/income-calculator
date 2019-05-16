@@ -3,16 +3,19 @@ exports.initNav = function (target) {
     let root = Util.rootUrl();
     target.append(`<div class="container">
           <div class="container-fluid">
-              <a class="tab-nav-item" onclick="window.location='${root}'+'/index.html'+window.location.search;" href="#" title="budget">
+              <a class="tab-nav-item" onclick="window.location='${root}'+'/index.html'+window.location.search;" href="#" title="Budget">
                   <span class="ac-gn-link-text">Budget</span>
               </a>
-              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/balance-sheet.html'+window.location.search;" href="#" title="balance sheet">
+              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/budget-calendar.html'+window.location.search;" href="#" title="Budget Calendar">
+                  <span class="ac-gn-link-text">Budget Calendar</span>
+              </a>
+              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/balance-sheet.html'+window.location.search;" href="#" title="Balance Sheet">
                   <span class="ac-gn-link-text">Balance Sheet</span>
               </a>
-              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/accounts.html'+window.location.search;" href="#" title="accounts">
+              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/accounts.html'+window.location.search;" href="#" title="Accounts">
                   <span class="ac-gn-link-text">Accounts</span>
               </a>
-              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/pay-days.html'+window.location.search;" href="#" title="pay days">
+              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/pay-days.html'+window.location.search;" href="#" title="Pay Days">
                   <span class="ac-gn-link-text">Pay Days</span>
               </a>
           </div>

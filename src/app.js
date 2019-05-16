@@ -1,4 +1,5 @@
 const HomeController = require('./controllers/home-controller');
+const BudgetCalendarController = require('./controllers/budget-calendar-controller');
 const BalanceSheetController = require('./controllers/balance-sheet-controller');
 const PayDaysController = require('./controllers/pay-days-controller');
 const AccountsController = require('./controllers/accounts-controller');
@@ -10,14 +11,17 @@ $(document).ready(function () {
     'use strict';
     Nav.initNav($('.tab-nav-bar'));
     let controller;
-    if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('index.html')) {
+    let pageName = window.location.href.split('/').pop().toLocaleLowerCase();
+    if (pageName.startsWith('index.html')) {
         controller = new HomeController();
-    } else if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('balance-sheet.html')) {
+    } else if (pageName.startsWith('balance-sheet.html')) {
         controller = new BalanceSheetController();
-    } else if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('pay-days.html')) {
+    } else if (pageName.startsWith('pay-days.html')) {
         controller = new PayDaysController();
-    } else if (window.location.href.split('/').pop().toLocaleLowerCase().startsWith('accounts.html')) {
+    } else if (pageName.startsWith('accounts.html')) {
         controller = new AccountsController();
+    } else if (pageName.startsWith('budget-calendar.html')) {
+        controller = new BudgetCalendarController();
     }
     $('#command-buttons-container').append(AccountSettingsView.getCommandButtonsContainerView());
     $('#account-settings-container').append(AccountSettingsView.getAccountSettingsView());
