@@ -16,14 +16,15 @@ function CashOrStockViewModel() {
     };
     this.getAssetTotal = function (assets) {
         let total = Currency(0);
-        for (var i = 0; i < assets.length; i += 1) {
-            total = total.add(assets[i].amount);
+        for (let asset of assets) {
+            total = total.add(Util.getAmount(asset));
         }
         return total.toString();
     };
     this.getModel = function (target) {
         let model = {};
-        model.amount = $(target).find('input.amount').val().trim();
+        model.shares = $(target).find('input.shares').val().trim();
+        model.sharePrice = $(target).find('input.share-price').val().trim();
         model.name = $(target).find('input.name').val().trim();
         return model;
     };
@@ -31,21 +32,25 @@ function CashOrStockViewModel() {
         let allocation = Currency(subtotal, {precision: 4}).divide(total).multiply(100).toString();
         return Currency(allocation, {precision: 2}).toString() + "%";
     };
-    this.getHeaderView = function () {
+    this.getReadOnlyHeaderView = function () {
         return $(`<div class="row table-header-row">
-              <div class="col-xs-2">Current Balance</div>
+              <div class="col-xs-1">Shares</div>
+              <div class="col-xs-1">Share Price</div>
+              <div class="col-xs-2">Current Value</div>
               <div class="col-xs-2">Available Balance</div>
-              <div class="col-xs-3">Name</div>
+              <div class="col-xs-2">Name</div>
               <div class="col-xs-1">Chart</div>
-              <div class="col-xs-3">Allocation</div>
+              <div class="col-xs-2">Allocation</div>
+              <div class="col-xs-1">Transfer</div>
           </div>`);
     };
-    this.getReadOnlyView = function (amount, name, total, pending) {
+    this.getReadOnlyView = function (name, total, pending, shares, sharePrice) {
         'use strict';
-        amount = Currency(amount);
+        let amount = Util.getAmount({"sharePrice": sharePrice, "shares": shares});
         name = name || '';
-        let allocation = Currency(amount, {precision: 4}).divide(total).multiply(100).toString();
-        allocation = Currency(allocation, {precision: 2}).toString() + '%';
+        console.log('amount: ' + amount);
+        console.log('total: ' + total);
+        let allocation = this.getAllocation(total, amount);
         let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
         let availableBalanceCalculator = new AvailableBalanceCalculator();
         let availableBalance = availableBalanceCalculator.getAvailableBalance(name, amount.toString(), pending);
@@ -53,9 +58,11 @@ function CashOrStockViewModel() {
             ? Util.format(amount.toString())
             : `<a href="${accountUrl}">${Util.format(availableBalance)}</a>`;
         let view = $(`<div class="asset-item row transaction-input-view">
-                    <div class="col-xs-3 text-right vertical-align amount-description-column">${Util.format(amount)}</div>
+                    <div class="col-xs-1 text-right vertical-align amount-description-column">${shares}</div>
+                    <div class="col-xs-1 text-right vertical-align amount-description-column">${Util.format(sharePrice)}</div>
+                    <div class="col-xs-2 text-right vertical-align amount-description-column">${Util.format(amount)}</div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${availableBalanceView}</div>
-                    <div class="col-xs-3 vertical-align amount-description-column">${name}</div>
+                    <div class="col-xs-2 vertical-align amount-description-column asset-name">${name}</div>
                     <div class="col-xs-1">
                         <button type="button" class="view-chart btn btn-success add-remove-btn" title="View chart">
                             <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
@@ -77,7 +84,6 @@ function CashOrStockViewModel() {
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
         let defaultTransactionDate = moment().add(1, 'days').format('YYYY-MM-DD UTC Z');
-        let sourceAccountName = view.find('.input-name').val();
         transferButton.find('button').click(function () {
             transferButton.find('button').attr("disabled", true);
             let transferView = $(`
@@ -85,7 +91,7 @@ function CashOrStockViewModel() {
                 <div class="form-group row">
                   <label class="col-xs-3 col-form-label col-form-label-lg">Source</label>
                   <div class="col-xs-9">
-                      <input disabled="disabled" class="transfer-source form-control text-right" type="text" value="${sourceAccountName}">
+                      <input disabled="disabled" class="transfer-source form-control text-right" type="text" value="${name}">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -138,7 +144,7 @@ function CashOrStockViewModel() {
                         let transferModel = viewModel.getModel(newView);
                         transferModel.id = Util.guid();
                         transferModel.transferDate = moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
-                        transferModel.debitAccount = sourceAccountName;
+                        transferModel.debitAccount = name;
                         if (viewModel.getViewType().toLowerCase() === 'cash-or-stock') {
                             let existingAccount = data.assets.find(x => x.name.toLowerCase() === transferModel.name.toLowerCase());
                             if (!existingAccount) {
@@ -166,48 +172,29 @@ function CashOrStockViewModel() {
         });
         return viewContainer;
     };
-    this.getView = function (amount, name, total, pending) {
+
+    this.getHeaderView = function () {
+        return $(`<div class="row table-header-row">
+              <div class="col-xs-4">Shares</div>
+              <div class="col-xs-4">Share Price</div>
+              <div class="col-xs-4">Name</div>
+          </div>`);
+    };
+    this.getView = function (name, total, pending, shares, sharePrice) {
         'use strict';
-        amount = Currency(amount);
-        name = name || '';
-        let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
-        let availableBalanceCalculator = new AvailableBalanceCalculator();
-        let availableBalance = availableBalanceCalculator.getAvailableBalance(name, amount.toString(), pending);
-        let availableBalanceView = availableBalance === amount.toString()
-            ? Util.format(amount.toString())
-            : `<a href="${accountUrl}">${Util.format(availableBalance)}</a>`;
         let view = $(`<div class="asset-item row transaction-input-view">
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
+                        <input class="shares form-control text-right" type="text" value="${shares || 0}" />
+                    </div>
+                    <div class="col-xs-4">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
-                            <input class="amount form-control text-right" type="text" value="${amount}" />
+                            <input class="share-price form-control text-right" type="text" value="${sharePrice || '0.00'}" />
                         </div>
                     </div>
-                    <div class="col-xs-2 text-right vertical-align amount-description-column">
-                        ${availableBalanceView}
-                    </div>
-                    <div class="col-xs-3"><input class="input-name name form-control" type="text" value="${name}" /></div>
-                    <div class="col-xs-1">
-                        <button type="button" class="view-chart btn btn-success add-remove-btn" title="View chart">
-                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="col-xs-2 text-right vertical-align amount-description-column"></div>
+                    <div class="col-xs-4"><input class="input-name name form-control" type="text" value="${name || ''}" /></div>
                   </div>
         `);
-        view.find('.view-chart').click(function () {
-            window.open(`https://finance.yahoo.com/quote/${name}`, '_blank');
-        });
-        let removeButton = $(`<div class="col-xs-1 remove-button-container">
-                            <button type="button" class="btn remove add-remove-btn" title="Remove Cash or Stock">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                          </div>
-        `);
-        removeButton.click(function () {
-            view.remove();
-        });
-        view.append(removeButton);
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
         return viewContainer;

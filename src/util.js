@@ -1,3 +1,4 @@
+const Currency = require('currency.js');
 exports.log = function (error) {
     console.log(error);
     console.log(JSON.stringify(error, 0, 4));
@@ -59,4 +60,9 @@ exports.guid = function () {
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
+};
+exports.getAmount = function (transaction) {
+    return transaction.amount
+        ? transaction.amount
+        : Currency(transaction.sharePrice).multiply(transaction.shares).toString();
 };

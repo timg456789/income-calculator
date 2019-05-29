@@ -105,7 +105,6 @@ function BondViewModel() {
                             <option value="56" ${model.daysToMaturation == 56 ? 'selected="selected"' : ''}">8 Weeks</option>
                         </select>
                     </div>
-                    <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
         `);
         return view;
     };

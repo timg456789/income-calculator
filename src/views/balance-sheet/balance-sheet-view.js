@@ -67,6 +67,7 @@ function setBalances(budget) {
 }
 
 exports.setView = function (budget) {
+    $('.assets-header-container').append(new CashOrStockViewModel().getReadOnlyHeaderView());
     if (budget.balances) {
         setBalances(budget);
     }
@@ -77,7 +78,8 @@ exports.setView = function (budget) {
         for (var i = 0; i < budget.assets.length; i += 1) {
             let asset = budget.assets[i];
             $('#asset-input-group').append(new CashOrStockViewModel().getReadOnlyView(
-                asset.amount, asset.name, totalCashAndStocks.toString(), budget.pending
+                asset.name, totalCashAndStocks.toString(), budget.pending,
+                asset.shares, asset.sharePrice
             ));
         }
     }

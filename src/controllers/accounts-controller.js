@@ -28,9 +28,8 @@ function AccountsController() {
                 let transferOriginal = data.pending.find(x => x.id === transferId);
                 patch.pending = data.pending.filter(x => x.id !== transferId);
                 let debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
-                let debitAccountAmount = Currency(debitAccount.amount);
-                debitAccount.amount = debitAccountAmount.subtract(transferOriginal.amount).toString();
                 if (transferOriginal.creditAccount.toLowerCase() === 'bonds') {
+                    debitAccount.amount = Currency(debitAccount.amount).subtract(transferOriginal.amount).toString();
                     patch.bonds = data.bonds;
                     if (!patch.bonds) {
                         patch.bonds = [];
@@ -40,12 +39,19 @@ function AccountsController() {
                     delete transferOriginal.transferDate;
                     patch.bonds.push(transferOriginal);
                 } else {
+                    debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.shares).toString();
                     let creditAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
                     if (!creditAccount) {
-                        data.assets.push({ name: transferOriginal.creditAccount, amount: transferOriginal.amount });
+                        data.assets.push({
+                            name: transferOriginal.creditAccount,
+                            shares: transferOriginal.shares,
+                            sharePrice: transferOriginal.sharePrice });
                     } else {
-                        let creditAccountAmount = Currency(creditAccount.amount);
-                        creditAccount.amount = creditAccountAmount.add(transferOriginal.amount).toString();
+                        creditAccount.shares = Currency(creditAccount.shares).add(Util.getAmount(transferOriginal)).toString();
+                    }
+
+                    if (Currency(debitAccount.shares).cents() === 0) {
+                        data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
                     }
                 }
                 patch.assets = data.assets;
@@ -105,8 +111,8 @@ function AccountsController() {
             accountContainer.append(getJournalEntryView({
                 transferDate: moment(transfer.transferDate).format('YYYY-MM-DD UTC Z'),
                 transferAccount: isCredit ? transfer.debitAccount : transfer.creditAccount,
-                debitAmount: isCredit ? '' : Util.format(transfer.amount),
-                creditAmount: isCredit ? Util.format(transfer.amount) : '',
+                debitAmount: isCredit ? '' : Util.format(Util.getAmount(transfer)),
+                creditAmount: isCredit ? Util.format(Util.getAmount(transfer)) : '',
                 transferId: transfer.id
             }));
         }
@@ -125,18 +131,23 @@ function AccountsController() {
         let accounts = data.pending.map(x => (x.creditAccount || '').toLowerCase())
             .concat(data.pending.map(x => (x.debitAccount || '').toLowerCase()));
         accounts = [...new Set(accounts)];
-        for (let index = 0; index < accounts.length; index += 1) {
+        for (let account of accounts) {
             let startingBalance = Currency(0);
             let settled = [];
-            if (accounts[index].toLowerCase() === 'bonds') {
-                settled = settled.concat(data.bonds || []);
+            if (account.toLowerCase() === 'bonds') {
+                if (data.bonds) {
+                    settled = data.bonds;
+                }
             } else {
-                settled = settled.concat((data.assets || []).filter(x => x.name.toLowerCase() === accounts[index].toLowerCase()));
+                if (data.assets) {
+                    settled = data.assets.filter(x => x.name.toLowerCase() === account.toLowerCase());
+                }
             }
-            for (let settledIndex = 0; settledIndex < settled.length; settledIndex += 1) {
-                startingBalance = startingBalance.add(settled[settledIndex].amount);
+            for (let settledTransaction of settled) {
+                startingBalance = startingBalance.add(Util.getAmount(settledTransaction));
             }
-            $('.accounts-container').append(getAccountView(accounts[index], data.pending, startingBalance.toString()));
+
+            $('.accounts-container').append(getAccountView(account, data.pending, startingBalance.toString()));
         }
     }
     async function refresh() {
