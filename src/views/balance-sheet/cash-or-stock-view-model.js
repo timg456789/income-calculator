@@ -47,9 +47,6 @@ function CashOrStockViewModel() {
     this.getReadOnlyView = function (name, total, pending, shares, sharePrice) {
         'use strict';
         let amount = Util.getAmount({"sharePrice": sharePrice, "shares": shares});
-        if (name === 'BAYRY') {
-            console.log(amount);
-        }
         name = name || '';
         let allocation = this.getAllocation(total, amount);
         let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
