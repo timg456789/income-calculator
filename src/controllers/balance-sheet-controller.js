@@ -14,8 +14,7 @@ function HomeController() {
     async function refresh() {
         try {
             let data = await dataClient.getData();
-            let totalCashAndStocks = Currency(0).toString();
-            totalCashAndStocks = new CashOrStockViewModel().getAssetTotal(data.assets);
+            let totalCashAndStocks = new CashOrStockViewModel().getAssetTotal(data.assets);
             balanceSheetView.setView(data, totalCashAndStocks);
         } catch (err) {
             Util.log(err);

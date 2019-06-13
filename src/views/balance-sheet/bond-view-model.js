@@ -22,28 +22,28 @@ function BondViewModel() {
               <div class="col-xs-4">Time to Maturity</div>
           </div>`);
     };
-    this.getReadOnlyView = function(model) {
-        if (!model) {
-            model = {};
+    this.getReadOnlyView = function(bond) {
+        if (!bond) {
+            bond = {};
         }
-        let maturityDateText = model.issueDate
-            ? Moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD')
+        let maturityDateText = bond.issueDate
+            ? Moment(bond.issueDate).add(bond.daysToMaturation, 'days').format('YYYY-MM-DD')
             : '';
-        if (!model.issueDate) {
-            model.issueDate = new Date().toISOString();
+        if (!bond.issueDate) {
+            bond.issueDate = new Date().toISOString();
         }
-        if (!model.amount) {
-            model.amount = '0.00';
+        if (!bond.amount) {
+            bond.amount = '0.00';
         }
         let view = $(`<div class="bond-item transaction-input-view row">
                     <div class="col-xs-2 text-right vertical-align amount-description-column">
-                        ${Util.format(model.amount)}
+                        ${Util.format(bond.amount)}
                     </div>
                     <div class="col-xs-4 text-center vertical-align amount-description-column">
-                        ${Moment(model.issueDate).format('YYYY-MM-DD')}
+                        ${Moment(bond.issueDate).format('YYYY-MM-DD')}
                     </div>
                     <div class="col-xs-3 text-center">
-                        ${model.daysToMaturation/7} weeks
+                        ${bond.daysToMaturation/7} weeks
                     </div>
                     <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
         `);
@@ -54,7 +54,6 @@ function BondViewModel() {
                           </div>`);
         liquidateButton.click(function () {
             let settings = Util.settings();
-
             let dataClient = new DataClient(settings);
             dataClient.getData()
                 .then(data => {
@@ -63,11 +62,11 @@ function BondViewModel() {
                         throw 'Cash account not found';
                     }
                     cashAccount.shares = Currency(cashAccount.shares)
-                        .add(model.amount)
+                        .add(bond.amount)
                         .toString();
                     let patch = {};
                     patch.assets = data.assets;
-                    patch.bonds = data.bonds.filter(x => x.id !== model.id);
+                    patch.bonds = data.bonds.filter(x => x.id !== bond.id);
                     return dataClient.patch(settings.s3ObjectKey, patch);
                 })
                 .then(putResult => { window.location.reload(); })
