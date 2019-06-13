@@ -33,7 +33,7 @@ exports.agreedToLicense = function () {
     return $('#acceptLicense').is(':checked');
 };
 exports.format = function(amount) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 3 }).format(amount);
 };
 exports.settings = function() {
     let settings = {};
