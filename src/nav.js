@@ -15,6 +15,9 @@ exports.initNav = function (target) {
               <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/accounts.html'+window.location.search;" href="#" title="Accounts">
                   <span class="ac-gn-link-text">Accounts</span>
               </a>
+              <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/deposit.html'+window.location.search;" href="#" title="Deposit">
+                  <span class="ac-gn-link-text">Deposit</span>
+              </a>
               <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/pay-days.html'+window.location.search;" href="#" title="Pay Days">
                   <span class="ac-gn-link-text">Pay Days</span>
               </a>

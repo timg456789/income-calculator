@@ -1,10 +1,10 @@
-const Currency = require('currency.js/dist/currency.js');
-const LoanViewModel = require('./loan-view-model');
-const BondViewModel = require('./bond-view-model');
-const moment = require('moment/moment');
-const DataClient = require('../../data-client');
-const Util = require('../../util');
 const AvailableBalanceCalculator = require('../../calculators/available-balance-calculator');
+const BondViewModel = require('./bond-view-model');
+const Currency = require('currency.js');
+const DataClient = require('../../data-client');
+const LoanViewModel = require('./loan-view-model');
+const moment = require('moment/moment');
+const Util = require('../../util');
 function CashOrStockViewModel() {
     let self = this;
     this.getViewType = function() {
@@ -48,8 +48,6 @@ function CashOrStockViewModel() {
         'use strict';
         let amount = Util.getAmount({"sharePrice": sharePrice, "shares": shares});
         name = name || '';
-        console.log('amount: ' + amount);
-        console.log('total: ' + total);
         let allocation = this.getAllocation(total, amount);
         let accountUrl = `${Util.rootUrl()}/pages/accounts.html${window.location.search}#debit-account-${name.toLowerCase()}`;
         let availableBalanceCalculator = new AvailableBalanceCalculator();

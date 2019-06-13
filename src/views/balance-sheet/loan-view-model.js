@@ -39,6 +39,8 @@ function LoanViewModel() {
                     <div class="col-xs-3"><input class="name form-control" type="text" value="${name}" /></div>
                     <div class="col-xs-2"><input class="rate form-control text-right" type="text" value="${rate}" /></div>
         `;
+        let payOffDateText;
+        let totalInterestText;
         if (weeklyAmount) {
             let payoffDate;
             let totalInterest;
@@ -55,17 +57,21 @@ function LoanViewModel() {
                     rate: rate
                 });
 
-                payoffDate = balanceStatement.date.getUTCFullYear() + '-' +
+                payOffDateText = balanceStatement.date.getUTCFullYear() + '-' +
                     (balanceStatement.date.getUTCMonth() + 1) + '-' +
                     balanceStatement.date.getUTCDate();
-                totalInterest = Math.ceil(balanceStatement.totalInterest);
+                totalInterestText = Util.format(Math.ceil(balanceStatement.totalInterest));
             } catch (err) {
-                payoffDate = err;
-                totalInterest = err;
+                payOffDateText = err;
+                totalInterestText = err;
             }
-            html += `<div class="col-xs-2 text-center vertical-align amount-description-column">${payoffDate}</div>`;
-            html += `<div class="col-xs-2 text-right vertical-align amount-description-column">${Util.format(totalInterest)}</div>`;
+        } else {
+            payOffDateText = 'WARNING: no payment specified';
+            let infinitySymbol = '&#8734;';
+            totalInterestText = infinitySymbol;
         }
+        html += `<div class="col-xs-2 text-center vertical-align amount-description-column">${payOffDateText}</div>`;
+        html += `<div class="col-xs-2 text-right vertical-align amount-description-column">${totalInterestText}</div>`;
         html += '</div>';
         let view = $(html);
         let removeButtonHtml = `<div class="col-xs-1">

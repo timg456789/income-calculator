@@ -2,7 +2,7 @@ const LoanViewModel = require('./loan-view-model');
 const CashOrStockViewModel = require('./cash-or-stock-view-model');
 const BondViewModel = require('./bond-view-model');
 const cal = require('income-calculator/src/calendar');
-const Currency = require('currency.js/dist/currency.js');
+const Currency = require('currency.js');
 const Util = require('../../util');
 exports.getModel = function () {
     var model = {};
@@ -23,60 +23,40 @@ function setupToggle(container, detail) {
     });
 }
 
-function getTransactionByName (txns, name) {
-    for (var i = 0; i < txns.length; i++) {
-        if (txns[i].name === name) {
-            return txns[i];
-        }
-    }
-
-    return null;
-}
-
 function setBalances(budget) {
-    var balanceTarget = '#balance-input-group';
-    $(balanceTarget).empty();
-    var i;
-    var balanceView;
+    $('#balance-input-group').empty();
+    let balanceView;
     let total = 0;
-    for (i = 0; i < budget.balances.length; i += 1) {
-        var weeklyAmount;
-        var monthlyTxn = getTransactionByName(budget.monthlyRecurringExpenses, budget.balances[i].name);
+    for (let loan of budget.balances) {
+        let weeklyAmount;
+        let monthlyTxn = budget.monthlyRecurringExpenses.find(x => x.name === loan.name);
         if (monthlyTxn) {
             weeklyAmount = (monthlyTxn.amount/100) / cal.WEEKS_IN_MONTH;
         } else {
-            var weeklyTxn = getTransactionByName(budget.weeklyRecurringExpenses, budget.balances[i].name);
+            let weeklyTxn = budget.weeklyRecurringExpenses.find(x => x.name === loan.name);
             if (weeklyTxn) {
                 weeklyAmount = weeklyTxn.amount/100;
             } else {
                 weeklyAmount = 0;
             }
         }
-        total += parseInt(budget.balances[i].amount);
-        balanceView = new LoanViewModel().getView(
-            budget.balances[i].amount,
-            budget.balances[i].name,
-            budget.balances[i].rate,
-            weeklyAmount
-        );
-        $(balanceTarget).append(balanceView);
+        total += parseInt(loan.amount);
+        balanceView = new LoanViewModel().getView(loan.amount, loan.name, loan.rate, weeklyAmount);
+        $('#balance-input-group').append(balanceView);
     }
     $('#loan-total-amount').append(
         $(`<div class="subtotal">Loans<span class="pull-right amount">${Util.format(total.toString())}</span></div>`)
     );
 }
 
-exports.setView = function (budget) {
+exports.setView = function (budget, totalCashAndStocks) {
     $('.assets-header-container').append(new CashOrStockViewModel().getReadOnlyHeaderView());
     if (budget.balances) {
         setBalances(budget);
     }
-    let totalCashAndStocks = Currency(0).toString();
     if (budget.assets) {
         $('#asset-input-group').empty();
-        totalCashAndStocks = new CashOrStockViewModel().getAssetTotal(budget.assets);
-        for (var i = 0; i < budget.assets.length; i += 1) {
-            let asset = budget.assets[i];
+        for (let asset of budget.assets) {
             $('#asset-input-group').append(new CashOrStockViewModel().getReadOnlyView(
                 asset.name, totalCashAndStocks.toString(), budget.pending,
                 asset.shares, asset.sharePrice
@@ -86,9 +66,9 @@ exports.setView = function (budget) {
     let totalBonds = Currency(0);
     if (budget.bonds) {
         $('#bonds-input-group').empty();
-        for (var i = 0; i < budget.bonds.length; i += 1) {
-            totalBonds = totalBonds.add(Currency(budget.bonds[i].amount));
-            $('#bond-input-group').append(new BondViewModel().getReadOnlyView(budget.bonds[i]));
+        for (let bond of budget.bonds) {
+            totalBonds = totalBonds.add(Currency(bond.amount));
+            $('#bond-input-group').append(new BondViewModel().getReadOnlyView(bond));
         }
     }
     let totalAssets = Currency(totalCashAndStocks).add(totalBonds).toString();

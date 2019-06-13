@@ -1,10 +1,11 @@
-const homeView = require('../home-view');
-const balanceSheetView = require('../views/balance-sheet/balance-sheet-view');
-const LoanViewModel = require('../views/balance-sheet/loan-view-model');
-const CashOrStockViewModel = require('../views/balance-sheet/cash-or-stock-view-model');
-const BondViewModel = require('../views/balance-sheet/bond-view-model');
-const DataClient = require('../data-client');
 const AccountSettingsController = require('./account-settings-controller');
+const balanceSheetView = require('../views/balance-sheet/balance-sheet-view');
+const BondViewModel = require('../views/balance-sheet/bond-view-model');
+const CashOrStockViewModel = require('../views/balance-sheet/cash-or-stock-view-model');
+const Currency = require('currency.js');
+const DataClient = require('../data-client');
+const homeView = require('../home-view');
+const LoanViewModel = require('../views/balance-sheet/loan-view-model');
 const Util = require('../util');
 function HomeController() {
     'use strict';
@@ -13,7 +14,9 @@ function HomeController() {
     async function refresh() {
         try {
             let data = await dataClient.getData();
-            balanceSheetView.setView(data);
+            let totalCashAndStocks = Currency(0).toString();
+            totalCashAndStocks = new CashOrStockViewModel().getAssetTotal(data.assets);
+            balanceSheetView.setView(data, totalCashAndStocks);
         } catch (err) {
             Util.log(err);
         }
@@ -24,9 +27,6 @@ function HomeController() {
         new AccountSettingsController().init(settings, balanceSheetView);
         $('#add-new-balance').click(function () {
             $('#balance-input-group').append(new LoanViewModel().getView(100, 'new balance', '.035'));
-        });
-        $('#add-new-asset').click(function () {
-            $('#asset-input-group').append(new CashOrStockViewModel().getView(100, 'new asset'));
         });
         if (s3ObjKey) {
             refresh();

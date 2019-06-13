@@ -1,4 +1,4 @@
-const Currency = require('currency.js/dist/currency.js');
+const Currency = require('currency.js');
 const DataClient = require('../../data-client');
 const Moment = require('moment/moment');
 const Util = require('../../util');
@@ -60,10 +60,11 @@ function BondViewModel() {
                 .then(data => {
                     let cashAccount = data.assets.find(x => x.name.toLowerCase() === 'cash');
                     if (!cashAccount) {
-                        throw 'C=cash account not found';
+                        throw 'Cash account not found';
                     }
-                    let currentCash = Currency(cashAccount.amount);
-                    cashAccount.amount = currentCash.add(model.amount).toString();
+                    cashAccount.shares = Currency(cashAccount.shares)
+                        .add(model.amount)
+                        .toString();
                     let patch = {};
                     patch.assets = data.assets;
                     patch.bonds = data.bonds.filter(x => x.id !== model.id);

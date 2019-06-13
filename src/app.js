@@ -3,6 +3,7 @@ const BudgetCalendarController = require('./controllers/budget-calendar-controll
 const BalanceSheetController = require('./controllers/balance-sheet-controller');
 const PayDaysController = require('./controllers/pay-days-controller');
 const AccountsController = require('./controllers/accounts-controller');
+const DepositController = require('./controllers/deposit-controller');
 const Nav = require('./nav');
 const AccountSettingsView = require('./views/account-settings-view');
 const Util = require('./util');
@@ -22,6 +23,8 @@ $(document).ready(function () {
         controller = new AccountsController();
     } else if (pageName.startsWith('budget-calendar.html')) {
         controller = new BudgetCalendarController();
+    } else if (pageName.startsWith('deposit.html')) {
+        controller = new DepositController();
     }
     $('#command-buttons-container').append(AccountSettingsView.getCommandButtonsContainerView());
     $('#account-settings-container').append(AccountSettingsView.getAccountSettingsView());
