@@ -15,7 +15,7 @@ function CashOrStockViewModel() {
         return $(`<div class="subtotal">Total ${name}<span class="pull-right">${Util.format(amount)}</span></div>`);
     };
     this.getAssetTotal = function (assets) {
-        let total = Currency(0);
+        let total = Currency(0, { precision: 3 });
         for (let asset of assets) {
             total = total.add(Util.getAmount(asset));
         }
