@@ -10,7 +10,7 @@ function AccountSettingsController() {
     let dataClient;
     let view;
     async function save() {
-        let data = view.getModel();
+        let data = await view.getModel();
         try {
             let response = await dataClient.patch(s3ObjKey, data);
             window.location.reload();
