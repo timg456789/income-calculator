@@ -56,7 +56,7 @@ function CashOrStockViewModel() {
             ? Util.format(amount.toString())
             : `<a href="${accountUrl}">${Util.format(availableBalance)}</a>`;
         let view = $(`<div class="asset-item row transaction-input-view">
-                    <div class="col-xs-1 text-right vertical-align amount-description-column">${shares}</div>
+                    <div class="col-xs-1 text-right vertical-align amount-description-column">${Util.formatShares(shares)}</div>
                     <div class="col-xs-1 text-right vertical-align amount-description-column">${Util.format(sharePrice)}</div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${Util.format(amount)}</div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${availableBalanceView}</div>

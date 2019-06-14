@@ -32,6 +32,9 @@ exports.updateQueryStringParameter = function (uri, key, value) {
 exports.agreedToLicense = function () {
     return $('#acceptLicense').is(':checked');
 };
+exports.formatShares = function(shares) {
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 3 }).format(shares);
+};
 exports.format = function(amount) {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 3 }).format(amount);
 };
@@ -65,4 +68,7 @@ exports.getAmount = function (transaction) {
     return transaction.amount
         ? transaction.amount
         : Currency(transaction.sharePrice, { precision: 3 }).multiply(transaction.shares).toString();
+};
+exports.add = function (one, two) {
+    return Currency(one, {precision: 3}).add(two).toString();
 };

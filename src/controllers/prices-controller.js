@@ -23,8 +23,8 @@ function PricesController() {
     }
     this.getHeaderView = function () {
         return $(`<div class="row table-header-row">
-              <div class="col-xs-6">Name</div>
-              <div class="col-xs-6">Share Price</div>
+              <div class="col-xs-6">Asset</div>
+              <div class="col-xs-6">Price</div>
           </div>`);
     };
     this.getView = function (name, sharePrice) {
