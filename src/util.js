@@ -65,7 +65,7 @@ exports.guid = function () {
         s4() + '-' + s4() + s4() + s4();
 };
 exports.getAmount = function (transaction) {
-    return transaction.amount
+    return !transaction.sharePrice && !transaction.shares
         ? transaction.amount
         : Currency(transaction.sharePrice, { precision: 3 }).multiply(transaction.shares).toString();
 };
