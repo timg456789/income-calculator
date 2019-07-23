@@ -55,9 +55,9 @@ function AccountsController() {
                     }
                 }
                 patch.assets = data.assets;
-                return dataClient.patch(settings.s3ObjectKey, patch);
+                //return dataClient.patch(settings.s3ObjectKey, patch);
             })
-            .then(putResult => { window.location.reload(); })
+            //.then(putResult => { window.location.reload(); })
             .catch(err => { Util.log(err); });
     }
     function getJournalEntryView(viewModel) {
