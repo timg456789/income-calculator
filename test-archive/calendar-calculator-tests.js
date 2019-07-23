@@ -1,4 +1,4 @@
-const Cal = require('income-calculator/src/calendar');
+const Cal = require('../src/calculators/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
 const test = require('tape');

@@ -1,5 +1,5 @@
-const cal = require('income-calculator/src/calendar');
-const PayoffDateCalculator = require('income-calculator/src/payoff-date-calculator');
+const cal = require('../../calculators/calendar');
+const PayoffDateCalculator = require('../../calculators/payoff-date-calculator');
 const payoffDateCalculator = new PayoffDateCalculator();
 const Util = require('../../util');
 

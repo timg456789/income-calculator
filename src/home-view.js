@@ -1,4 +1,4 @@
-const cal = require('income-calculator/src/calendar');
+const cal = require('./calculators/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
 const Currency = require('currency.js');

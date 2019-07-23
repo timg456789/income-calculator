@@ -1,7 +1,7 @@
 const LoanViewModel = require('./loan-view-model');
 const CashOrStockViewModel = require('./cash-or-stock-view-model');
 const BondViewModel = require('./bond-view-model');
-const cal = require('income-calculator/src/calendar');
+const cal = require('../../calculators/calendar');
 const Currency = require('currency.js');
 const Util = require('../../util');
 exports.getModel = function () {

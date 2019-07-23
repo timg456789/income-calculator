@@ -1,12 +1,12 @@
-const cal = require('income-calculator/src/calendar');
-const CalendarCalculator = require('../src/calendar-calculator');
+const cal = require('./calculators/calendar');
+const CalendarCalculator = require('./calendar-calculator');
 const Util = require('./util');
 const calCalc = new CalendarCalculator();
 const Currency = require('currency.js');
-const NetIncomeCalculator = require('income-calculator/src/net-income-calculator');
+const NetIncomeCalculator = require('./calculators/net-income-calculator');
 const netIncomeCalculator = new NetIncomeCalculator();
 
-const CalendarAggregator = require('income-calculator/src/calendar-aggregator');
+const CalendarAggregator = require('./calculators/calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
 function getTransactionView(name, amount, type, budget, isActual) {
