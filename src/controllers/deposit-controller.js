@@ -1,7 +1,6 @@
 const DataClient = require('../data-client');
 const Moment = require('moment');
 const Util = require('../util');
-const Currency = require('currency.js');
 function DepositController() {
     'use strict';
     let dataClient;
@@ -25,8 +24,6 @@ function DepositController() {
             </div>`);
     }
     async function initAsync() {
-        let defaultTransactionDate = Moment().add(1, 'days').format('YYYY-MM-DD UTC Z');
-        $('.transfer-date').val(defaultTransactionDate);
         $('#submit-transfer').click(function() {
             $('#submit-transfer').prop('disabled', true);
             deposit($('#transfer-amount').val().trim());

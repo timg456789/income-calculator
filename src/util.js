@@ -72,3 +72,6 @@ exports.getAmount = function (transaction) {
 exports.add = function (one, two) {
     return Currency(one, {precision: 3}).add(two).toString();
 };
+exports.subtract = function (one, two) {
+    return Currency(one, {precision: 3}).subtract(two).toString();
+};

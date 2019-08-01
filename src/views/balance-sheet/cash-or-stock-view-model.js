@@ -3,7 +3,7 @@ const BondViewModel = require('./bond-view-model');
 const Currency = require('currency.js');
 const DataClient = require('../../data-client');
 const LoanViewModel = require('./loan-view-model');
-const moment = require('moment/moment');
+const Moment = require('moment/moment');
 const Util = require('../../util');
 function CashOrStockViewModel() {
     let self = this;
@@ -81,7 +81,7 @@ function CashOrStockViewModel() {
         });
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
-        let defaultTransactionDate = moment().add(1, 'days').format('YYYY-MM-DD UTC Z');
+        let defaultTransactionDate = Moment().add(1, 'days').format('YYYY-MM-DD UTC Z');
         transferButton.find('button').click(function () {
             transferButton.find('button').attr("disabled", true);
             let transferView = $(`
@@ -141,7 +141,7 @@ function CashOrStockViewModel() {
                         patch.pending = data.pending;
                         let transferModel = viewModel.getModel(newView);
                         transferModel.id = Util.guid();
-                        transferModel.transferDate = moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
+                        transferModel.transferDate = Moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
                         transferModel.debitAccount = name;
                         if (viewModel.getViewType().toLowerCase() === 'cash-or-stock') {
                             let existingAccount = data.assets.find(x => x.name.toLowerCase() === transferModel.name.toLowerCase());

@@ -57,7 +57,6 @@ function AccountsController() {
                     }
                 }
                 patch.assets = data.assets;
-                console.log(patch.assets);
                 return dataClient.patch(settings.s3ObjectKey, patch);
             })
             .then(putResult => { window.location.reload(); })
