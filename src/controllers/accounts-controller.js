@@ -69,7 +69,10 @@ function AccountsController() {
                             <div class="col-xs-3 vertical-align amount-description-column">${viewModel.transferAccount}</div>
                             <div class="col-xs-2 vertical-align amount-description-column text-right">${viewModel.debitAmount}</div>
                             <div class="col-xs-2 vertical-align amount-description-column text-right">${viewModel.creditAmount}</div>
-                            <div class="col-xs-1 text-center">
+
+                        </div>`);
+        if (viewModel.transferId) {
+            journalEntryView.append(`<div class="col-xs-1 text-center">
                                 <button type="button" class="complete-transfer btn btn-success add-remove-btn-container add-remove-btn" title="Complete transfer">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                 </button>
@@ -78,9 +81,7 @@ function AccountsController() {
                                 <button type="button" class="cancel-transfer btn remove add-remove-btn-container add-remove-btn" title="Cancel transfer">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>
-                            </div>
-                        </div>`);
-        if (viewModel.transferId) {
+                            </div>`);
             journalEntryView.find('.cancel-transfer').click(function () { cancelTransfer(viewModel.transferId) });
             journalEntryView.find('.complete-transfer').click(function () { completeTransfer(viewModel.transferId) });
         }
