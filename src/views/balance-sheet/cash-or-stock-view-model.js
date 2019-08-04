@@ -36,10 +36,9 @@ function CashOrStockViewModel() {
         return $(`<div class="row table-header-row">
               <div class="col-xs-1">Shares</div>
               <div class="col-xs-1">Share Price</div>
-              <div class="col-xs-2">Current Value</div>
+              <div class="col-xs-3">Current Value</div>
               <div class="col-xs-2">Available Balance</div>
               <div class="col-xs-2">Name</div>
-              <div class="col-xs-1">Chart</div>
               <div class="col-xs-2">Allocation</div>
               <div class="col-xs-1">Transfer</div>
           </div>`);
@@ -58,13 +57,10 @@ function CashOrStockViewModel() {
         let view = $(`<div class="asset-item row transaction-input-view">
                     <div class="col-xs-1 text-right vertical-align amount-description-column">${Util.formatShares(shares)}</div>
                     <div class="col-xs-1 text-right vertical-align amount-description-column">${Util.format(sharePrice)}</div>
-                    <div class="col-xs-2 text-right vertical-align amount-description-column">${Util.format(amount)}</div>
+                    <div class="col-xs-3 text-right vertical-align amount-description-column">${Util.format(amount)}</div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${availableBalanceView}</div>
-                    <div class="col-xs-2 vertical-align amount-description-column asset-name">${name}</div>
-                    <div class="col-xs-1">
-                        <button type="button" class="view-chart btn btn-success add-remove-btn" title="View chart">
-                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-                        </button>
+                    <div class="col-xs-2 text-center vertical-align amount-description-column asset-name" >
+                        <a target="_blank" href="https://finance.yahoo.com/quote/${name}" title="View Chart">${name}</a>
                     </div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${allocation.toString()}</div>
                   </div>
@@ -76,9 +72,6 @@ function CashOrStockViewModel() {
                           </div>
         `);
         view.append(transferButton);
-        view.find('.view-chart').click(function () {
-            window.open(`https://finance.yahoo.com/quote/${name}`, '_blank');
-        });
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
         let defaultTransactionDate = Moment().add(1, 'days').format('YYYY-MM-DD UTC Z');
