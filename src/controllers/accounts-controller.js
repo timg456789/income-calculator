@@ -20,47 +20,47 @@ function AccountsController() {
             .then(putResult => { window.location.reload(); })
             .catch(err => { Util.log(err); });
     }
-    function completeTransfer(transferId) {
+    async function completeTransfer(transferId) {
         let dataClient = new DataClient(settings);
-        dataClient.getData()
-            .then(data => {
-                let patch = {};
-                let transferOriginal = data.pending.find(x => x.id === transferId);
-                patch.pending = data.pending.filter(x => x.id !== transferId);
-                let debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
-                console.log(debitAccount);
-                if (transferOriginal.creditAccount.toLowerCase() === 'bonds') {
-                    debitAccount.amount = Currency(debitAccount.amount).subtract(transferOriginal.amount).toString();
-                    patch.bonds = data.bonds;
-                    if (!patch.bonds) {
-                        patch.bonds = [];
-                    }
-                    delete transferOriginal.creditAccount;
-                    delete transferOriginal.debitAccount;
-                    delete transferOriginal.transferDate;
-                    patch.bonds.push(transferOriginal);
-                } else {
-                    let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
-                    debitAccount.shares = Currency(newDebitAmount, { precision: 3 }).divide(debitAccount.sharePrice).toString();
-                    let creditAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
-                    if (!creditAccount) {
-                        creditAccount = {
-                            name: transferOriginal.creditAccount,
-                            shares: transferOriginal.shares,
-                            sharePrice: transferOriginal.sharePrice };
-                        data.assets.push(creditAccount);
-                    } else {
-                        creditAccount.shares = Currency(creditAccount.shares).add(Util.getAmount(transferOriginal)).toString();
-                    }
-                    if (Currency(debitAccount.shares).cents() === 0) {
-                        data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
-                    }
-                }
-                patch.assets = data.assets;
-                return dataClient.patch(settings.s3ObjectKey, patch);
-            })
-            .then(putResult => { window.location.reload(); })
-            .catch(err => { Util.log(err); });
+        let data = await dataClient.getData();
+        let patch = {};
+        let transferOriginal = data.pending.find(x => x.id === transferId);
+        patch.pending = data.pending.filter(x => x.id !== transferId);
+        let debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
+        if (transferOriginal.creditAccount.toLowerCase() === 'bonds') {
+            debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.amount).toString();
+            patch.bonds = data.bonds;
+            if (!patch.bonds) {
+                patch.bonds = [];
+            }
+            delete transferOriginal.creditAccount;
+            delete transferOriginal.debitAccount;
+            delete transferOriginal.transferDate;
+            patch.bonds.push(transferOriginal);
+        } else {
+            let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
+            debitAccount.shares = Currency(newDebitAmount, { precision: 3 }).divide(debitAccount.sharePrice).toString();
+            let creditAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
+            if (!creditAccount) {
+                creditAccount = {
+                    name: transferOriginal.creditAccount,
+                    shares: transferOriginal.shares,
+                    sharePrice: transferOriginal.sharePrice };
+                data.assets.push(creditAccount);
+            } else {
+                creditAccount.shares = Currency(creditAccount.shares).add(Util.getAmount(transferOriginal)).toString();
+            }
+            if (Currency(debitAccount.shares).cents() === 0) {
+                data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
+            }
+        }
+        patch.assets = data.assets;
+        try {
+            await dataClient.patch(settings.s3ObjectKey, patch);
+            window.location.reload();
+        } catch (err) {
+            Util.log(err);
+        }
     }
     function getJournalEntryView(viewModel) {
         let journalEntryView = $(`
