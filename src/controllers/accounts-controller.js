@@ -50,7 +50,7 @@ function AccountsController() {
             } else {
                 creditAccount.shares = Currency(creditAccount.shares).add(Util.getAmount(transferOriginal)).toString();
             }
-            if (Currency(debitAccount.shares).cents() === 0) {
+            if (Currency(debitAccount.shares).intValue < 1) {
                 data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
             }
         }
