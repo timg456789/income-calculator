@@ -6,13 +6,12 @@ function NetIncomeCalculator() {
 
     this.getBudget = function(config, startTime, endTime) {
         var breakdown = [];
-        var mre = config.monthlyRecurringExpenses;
         var wre = config.weeklyRecurringExpenses;
 
         var current = new Date(startTime);
         while (current.getTime() < endTime) {
-            if (mre) {
-                getMonthlyExpenses(mre, current, breakdown);
+            if (config.monthlyRecurringExpenses) {
+                getMonthly(config.monthlyRecurringExpenses, current, breakdown);
             }
             if (wre) {
                 getWeeklyExpenses(wre, current, breakdown);
@@ -27,31 +26,25 @@ function NetIncomeCalculator() {
                     breakdown,
                     config.biWeeklyIncome.date.getTime());
             }
-
             current.setUTCDate(current.getUTCDate() + 1);
         }
-
         return breakdown;
     };
 
-    function getMonthlyExpenses(monthlyExpenses, current, breakdown) {
-        var mre = monthlyExpenses;
-        for (var i = 0; i < mre.length; i++) {
-
-            var shouldAdd =
-                (current.getUTCDate() === cal.SAFE_LAST_DAY_OF_MONTH && !mre[i].date) ||
-                (mre[i].date && mre[i].date.getUTCDate() === current.getUTCDate());
-
+    function getMonthly(monthly, current, breakdown) {
+        for (let txn of monthly) {
+            let shouldAdd =
+                (current.getUTCDate() === cal.SAFE_LAST_DAY_OF_MONTH && !txn.date) ||
+                (txn.date && txn.date.getUTCDate() === current.getUTCDate());
             if (shouldAdd) {
-                var processed = {};
-                processed.name = mre[i].name;
-                processed.amount = mre[i].amount;
-                processed.date = new Date(current.getTime());
-                processed.type = 'expense';
-                breakdown.push(processed);
+                breakdown.push({
+                    'name': txn.name,
+                    'amount': txn.amount,
+                    'date': new Date(current.getTime()),
+                    'type': txn.type || 'expense'
+                });
             }
         }
-
     }
 
     function matchesDefaultWeekly(transactionDate, current) {
@@ -104,22 +97,17 @@ function NetIncomeCalculator() {
     }
 
     function getIncomeAccrual(amount, time, startTime) {
-        var accrual;
-        var diffFromFirstPayDate = utcDay.getDayDiff(
-            startTime,
-            time
-        );
-
+        let accrual;
+        let diffFromFirstPayDate = utcDay.getDayDiff(startTime, time);
         var modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
-
         if (modulusIntervalsFromFirstPayDate === 0) {
-            accrual = {};
-            accrual.name = 'biweekly income';
-            accrual.amount = amount;
-            accrual.date = new Date(time);
-            accrual.type = 'income';
+            accrual = {
+                'name': 'biweekly income',
+                'amount': amount,
+                'date': new Date(time),
+                'type': 'income'
+            };
         }
-
         return accrual;
     }
 

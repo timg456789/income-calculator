@@ -1,134 +1,88 @@
 const cal = require('./calculators/calendar');
 const CalendarCalculator = require('../src/calendar-calculator');
 const calCalc = new CalendarCalculator();
-const Currency = require('currency.js');
-
-function getTxInputHtmlMonthly(date) {
-    var txHtmlInput = '<select class="date form-control inline-group">';
-    var txHtmlDayInput;
-    var currentDayOfWeek;
-    var isDaySelected = '';
-
-    if (date) {
-        date = new Date(date);
-    } else {
-        date = calCalc.createByMonth(new Date().getUTCFullYear(), new Date().getUTCMonth());
+function getTxInputHtmlMonthly() {
+    let txHtmlInput = '<select class="date form-control"><option>Day of Month</option>';
+    for (let day = 1; day <= cal.SAFE_LAST_DAY_OF_MONTH; day++) {
+        txHtmlInput += `<option
+            value=${new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), day)).toISOString()}>${day}</option>`;
     }
-
-    currentDayOfWeek = new Date(date.getTime());
-    currentDayOfWeek.setUTCDate(1);
-
-    for (var day = 1; day <= 28; day++) {
-        txHtmlDayInput = ' value="' + currentDayOfWeek + '" ';
-
-        if (currentDayOfWeek.getUTCDate() === date.getUTCDate()) {
-            isDaySelected = 'selected="selected"';
-        } else {
-            isDaySelected = '';
-        }
-
-        txHtmlInput += '<option' + txHtmlDayInput + isDaySelected + '>' +
-            day +
-            '</option>';
-        currentDayOfWeek.setUTCDate(currentDayOfWeek.getUTCDate() + 1);
-    }
-
     txHtmlInput += '</select>';
     return txHtmlInput;
 }
-
-function getTxInputHtmlWeekly(date) {
-    var txHtmlInput = '<select class="date form-control inline-group">';
-    var txHtmlDayInput;
-    var currentDayOfWeek;
-    var isDaySelected = '';
-
-    if (date) {
-        date = new Date(date);
-    } else {
-        date = new Date();
-        date = calCalc.getFirstDayInWeek(date);
+function getTxInputHtmlWeekly() {
+    let txtHtmlInput = '<select class="date form-control"><option>Day of Week</option>';
+    for (let day = 0; day < 7; day++) {
+        txtHtmlInput += `<option value="${getDateWithDay(day)}">${cal.DAY_NAMES[day]}</option>`;
     }
-
-    currentDayOfWeek = calCalc.getFirstDayInWeek(date);
-
-    for (var day = 0; day < 7; day++) {
-        txHtmlDayInput = ' value="' + currentDayOfWeek + '" ';
-
-        if (currentDayOfWeek.getUTCDay() === date.getUTCDay()) {
-            isDaySelected = 'selected="selected"';
-        } else {
-            isDaySelected = '';
-        }
-
-        txHtmlInput += '<option' + txHtmlDayInput + isDaySelected + '>' +
-            cal.DAY_NAMES[day] +
-            '</option>';
-        currentDayOfWeek.setUTCDate(currentDayOfWeek.getUTCDate() + 1);
-    }
-
-    txHtmlInput += '</select>';
-    return txHtmlInput;
+    txtHtmlInput += '</select>';
+    return txtHtmlInput;
 }
-
+function getDateWithDay(day) {
+    let date = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate()));
+    let distance = day - date.getUTCDay();
+    date.setDate(date.getDate() + distance);
+    return date.toISOString();
+}
+exports.getEditableTransactionView = function (iteration) {
+    return `<h4>New Monthly Transaction</h4>
+                <form class="transferring container-fluid ${iteration}-expense-item new-transaction-view">
+                <div class="form-group row">
+                    <div class="col-xs-6"><input placeholder="Amount" class="amount form-control text-right" type="text" /></div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-xs-12">
+                        ${iteration === 'weekly' ? getTxInputHtmlWeekly() : getTxInputHtmlMonthly()}
+                    </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-xs-12"><input placeholder="Name" class="name form-control" type="text" /></div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-xs-12">
+                  <select class="transaction-type form-control">
+                    <option>Transaction Type</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                  </select>
+                  </div>
+                </div>
+            </form>`;
+};
+function getTransactionModel(target) {
+    console.log($(target));
+    return {
+        amount: parseFloat($(target).find('.amount').val().trim()) * 100,
+        date: $(target).find('.date').val().trim() || $(target).find('.date').data().date,
+        name: $(target).find('.name').val().trim() || $(target).find('.name').text().trim(),
+        type: $(target).find('.transaction-type').val() || $(target).find('.transaction-type').data.txnType
+    };
+}
 exports.getTransactionView = function (transaction, iteration) {
-    let amount = '';
-    if (transaction.amount) {
-        amount = transaction.amount / 100;
-    }
-    let date = '';
-    if (transaction.date) {
-        date = transaction.date;
-    }
-    let name = '';
-    if (transaction.name) {
-        name = transaction.name;
-    }
-    let txHtmlInput = iteration === 'weekly'
-        ? getTxInputHtmlWeekly(date)
-        : getTxInputHtmlMonthly(date);
-    let html = `
-        <div class="row transaction-input-view ${iteration}-expense-item">
+    let date = transaction.date || '';
+    transaction.type = transaction.type || 'expense';
+    let view = $(`
+        <div class="row transaction-input-view ${iteration}-${transaction.type}-item" data-txnType="${transaction.type}">
             <div class="col-xs-4">
                 <div class="input-group">
                     <div class="input-group-addon ">$</div>
-                    <input class="amount form-control" type="text" value="${amount}" />
+                    <input class="amount form-control" type="text" value="${transaction.amount ? transaction.amount / 100 : ''}" />
                     <div class="input-group-addon">.00</div>
                 </div>
             </div>
-            <div class="col-xs-3">${txHtmlInput}</div>
-            <div class="col-xs-4"><input class="name form-control" type="text" value="${name}" /></div>
-        </div>`;
-    let view = $(html);
-    let removeButtonHtml = `
-        <div class="col-xs-1 add-remove-btn-container">
-            <button class="btn remove add-remove-btn-container add-remove-btn">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
-        </div>`;
-    let removeButton = $(removeButtonHtml);
-    removeButton.click(function () {
-        view.remove();
-    });
-    view.append(removeButton);
+            <div class="col-xs-3"><span class="date" data-date="${date}">${iteration === 'weekly'
+                ? cal.DAY_NAMES[new Date(date).getUTCDay()]
+                : new Date(date).getUTCDate()}</span></div>
+            <div class="col-xs-4 name">${transaction.name || ''}</div>
+            <div class="col-xs-1 add-remove-btn-container">
+                <button class="btn remove row-remove-button add-remove-btn-container add-remove-btn">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>`);
+    view.find('.row-remove-button').click(function () { view.remove(); });
     return view;
 };
-
-function getTransactionModel(target) {
-    'use strict';
-    var transaction = {};
-    var amountInput = $(target).find('input.amount');
-    var dateInput = $(target).find('.date.form-control');
-    var nameInput = $(target).find('input.name');
-    transaction.amount = parseFloat(amountInput.val().trim()) * 100;
-    var rawDate = dateInput.val();
-    var rawTrimmedDate = rawDate.trim();
-    transaction.date = new Date(rawTrimmedDate);
-    transaction.name = nameInput.val().trim();
-    transaction.type = 'expense';
-    return transaction;
-}
-
 function insertTransactionViews(transactions, target, iteration) {
     'use strict';
     $(target).empty();
@@ -137,22 +91,20 @@ function insertTransactionViews(transactions, target, iteration) {
         $(target).append(exports.getTransactionView(transactions[i], iteration));
     }
 }
-
 exports.setView = function (budget) {
     'use strict';
     $('#biweekly-input').val(budget.biWeeklyIncome.amount / 100);
     insertTransactionViews(budget.weeklyRecurringExpenses, '#weekly-input-group', 'weekly');
     insertTransactionViews(budget.monthlyRecurringExpenses, '#monthly-input-group', 'monthly');
 };
-
 exports.getModel = function () {
     'use strict';
-    var budgetSettings = {};
+    let budgetSettings = {};
     budgetSettings.biWeeklyIncome = {};
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
     budgetSettings.biWeeklyIncome.date = new Date(Date.UTC(2015, 11, 25));
     budgetSettings.monthlyRecurringExpenses = [];
-    $('.monthly-expense-item').each(function () {
+    $('.monthly-expense-item, .new-transaction-view').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
     budgetSettings.monthlyRecurringExpenses.sort(function(a,b) {

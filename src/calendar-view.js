@@ -9,23 +9,12 @@ const netIncomeCalculator = new NetIncomeCalculator();
 const CalendarAggregator = require('./calculators/calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
-function getTransactionView(name, amount, type, budget, isActual) {
+function getTransactionView(name, amount, type) {
     'use strict';
-
-    var budgetedCss = '';
-
-    if (budget && budget.length > 0) {
-        budgetedCss = 'budgeted';
-    } else if (isActual) {
-        budgetedCss = 'unbudgeted';
-    }
-
-    return '<div class="transaction-view ' +
-            type + ' ' +
-            budgetedCss + '">' +
-            '<div class="name">' + name + '</div>' +
-            '<div class="amount">$' + amount / 100 + '</div>' +
-            '</div>';
+    return `<div class="transaction-view unbudgeted ${type}"> 
+                <div class="name">${name}</div>
+                <div class="amount">$${amount/100}</div>
+            </div>`;
 }
 
 function getMonthContainerId(date) {
@@ -33,11 +22,6 @@ function getMonthContainerId(date) {
     return 'items-container-for-month-' +
             date.getFullYear() + '-' +
             date.getMonth();
-}
-
-function getMonthHeading(date) {
-    'use strict';
-    return `Net for ${cal.MONTH_NAMES[date.getUTCMonth()]} ${date.getFullYear()} <span id="month-net-header-value"></span>`;
 }
 
 function getDateTarget(date) {
@@ -66,18 +50,12 @@ function getDayView(date, inMonth) {
     return dayViewHtml;
 }
 
-function getWeekTarget(date) {
-    'use strict';
-    return 'week-of-' + getDateTarget(date);
-}
-
 function addMonthContainer(monthContainerId, date) {
     $('#months-container').append(
-        '<div class="month-heading">' + getMonthHeading(date) + '</div>' +
-        '<div class="items-container-for-month" id="' +
-        monthContainerId +
-        '"></div>'
-    );
+        `<div class="month-heading">
+            Net for ${cal.MONTH_NAMES[date.getUTCMonth()]} ${date.getFullYear()} <span id="month-net-header-value"></span>
+        </div>
+        <div class="items-container-for-month" id="${monthContainerId}"></div>`);
 }
 
 function addWeekAbbreviationHeaders(monthTarget) {
@@ -111,14 +89,13 @@ exports.build = function (year, month) {
         year,
         month,
         function (currentDate) {
-            var dayView = getDayView(currentDate, new Date().getUTCMonth() === currentDate.getUTCMonth());
+            let dayView = getDayView(currentDate, month.toString() === currentDate.getUTCMonth().toString());
             $('.' + transactionsForWeekTarget).append(dayView);
         },
         function (currentDate) {
-            transactionsForWeekTarget = getWeekTarget(currentDate);
-            dayViewContainer = ('<div class="transactions-for-week row ' + transactionsForWeekTarget + ' "></div>');
-            var monthTarget = '#' + monthContainerId;
-            $(monthTarget).append(dayViewContainer);
+            transactionsForWeekTarget = 'week-of-' + getDateTarget(currentDate);
+            dayViewContainer = (`<div class="transactions-for-week row ${transactionsForWeekTarget}"></div>`);
+            $('#' + monthContainerId).append(dayViewContainer);
         });
 };
 
@@ -140,7 +117,7 @@ function loadTransactions(items, areActuals) {
     }
 }
 
-function getSummary(budgetSettings, actual, startTime, endTime) {
+function getSummary(budgetSettings, startTime, endTime) {
     'use strict';
     let budget = netIncomeCalculator.getBudget(
         budgetSettings,
@@ -150,21 +127,19 @@ function getSummary(budgetSettings, actual, startTime, endTime) {
     let summary = calendarAggregator.getSummary(
         startTime,
         endTime,
-        budget,
-        actual
+        budget
     );
     return summary;
 }
 
-exports.load = function (budgetSettings, actual, start, end) {
+exports.load = function (budgetSettings, start, end) {
     'use strict';
-    $('#debug-console').append('<div>Showing from: ' + start.toISOString() + ' UTC</div>');
-    $('#debug-console').append('<div>Until: ' + end.toISOString() + ' UTC</div>');
+    $('#debug-console').html('<div>Showing from: ' + start.toISOString() + ' UTC</div>'+
+        '<div>Until: ' + end.toISOString() + ' UTC</div>');
 
-    let summary = getSummary(budgetSettings, actual, start.getTime(), end.getTime());
-
+    let summary = getSummary(budgetSettings, start.getTime(), end.getTime());
     loadTransactions(summary.budgetItems);
-    let netDollars = Currency(summary.net).divide(100).toString();
+    let netDollars = Currency(summary.net).toString();
     let netDollarsFormatted = Util.format(netDollars);
     $('#month-net-header-value').append(netDollarsFormatted);
 };

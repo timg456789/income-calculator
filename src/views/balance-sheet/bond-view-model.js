@@ -79,21 +79,12 @@ function BondViewModel() {
         if (!model) {
             model = {};
         }
-        let maturityDateText = model.issueDate
-            ? Moment(model.issueDate).add(model.daysToMaturation, 'days').format('YYYY-MM-DD')
-            : '';
-        if (!model.issueDate) {
-            model.issueDate = new Date().toISOString();
-        }
-        if (!model.amount) {
-            model.amount = '0.00';
-        }
-        let issueDateText = Moment(model.issueDate).format('YYYY-MM-DD UTC Z');
-        let view = $(`<div class="bond-item transaction-input-view row">
+        let issueDateText = Moment(model.issueDate || new Date().toISOString()).format('YYYY-MM-DD UTC Z');
+        return $(`<div class="bond-item transaction-input-view row">
                     <div class="col-xs-4">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
-                            <input class="amount form-control text-right" type="text" value="${model.amount}" />
+                            <input class="amount form-control text-right" type="text" value="${model.amount || '0.00'}" />
                         </div>
                     </div>
                     <div class="col-xs-4">
@@ -101,12 +92,13 @@ function BondViewModel() {
                     </div>
                     <div class="col-xs-4">
                         <select class="type form-control">
-                            <option value="28" ${model.daysToMaturation == 28 ? 'selected="selected"' : ''}>4 Weeks</option>
-                            <option value="56" ${model.daysToMaturation == 56 ? 'selected="selected"' : ''}">8 Weeks</option>
+                            <option value="${7*4}" ${model.daysToMaturation == 7*4 ? 'selected="selected"' : ''}>4 Weeks</option>
+                            <option value="${7*8}" ${model.daysToMaturation == 7*8 ? 'selected="selected"' : ''}">8 Weeks</option>
+                            <option value="${7*13}" ${model.daysToMaturation == 7*13 ? 'selected="selected"' : ''}">13 Weeks</option>
+                            <option value="${7*26}" ${model.daysToMaturation == 7*26 ? 'selected="selected"' : ''}">26 Weeks</option>
+                            <option value="${7*56}" ${model.daysToMaturation == 7*52 ? 'selected="selected"' : ''}">52 Weeks</option>
                         </select>
-                    </div>
-        `);
-        return view;
+                    </div>`);
     };
 }
 

@@ -142,10 +142,6 @@ h4 {
     width: 100%;
 }
 
-.transaction-input-view .name {
-    width: 100%;
-}
-
 /* with a budget */
 .transaction-input-view.actual-expense-item .amount {
     width: 100%;
@@ -323,4 +319,18 @@ h4 {
 
 .font-italic {
     font-style: italic;
+}
+
+.transactions-for-week {
+    display: flex;
+}
+
+.transaction-input-view.monthly-expense-item input.amount,
+.transaction-input-view.weekly-expense-item input.amount{
+    background-color: #f2dede;
+}
+
+.transaction-input-view.monthly-income-item input.amount,
+.transaction-input-view.weekly-income-item input.amount {
+    background-color: #ccffb6
 }

@@ -32,9 +32,7 @@ function CalendarCalculator() {
     };
 
     this.createByMonth = function (year, month) {
-        var startUtcMs = Date.UTC(year, month);
-        var dt = new Date(startUtcMs);
-        return dt;
+        return new Date(Date.UTC(year, month));
     };
 
     this.getFirstDayInWeek = function (date) {
