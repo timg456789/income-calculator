@@ -24,6 +24,14 @@ function getDateWithDay(day) {
     date.setDate(date.getDate() + distance);
     return date.toISOString();
 }
+function getTransactionModel(target) {
+    return {
+        amount: parseFloat($(target).find('.amount').val().trim()) * 100,
+        date: $(target).find('.date').val().trim() || $(target).find('.date').data().date,
+        name: $(target).find('.name').val().trim() || $(target).find('.name').text().trim(),
+        type: $(target).find('.transaction-type').val() || $(target).data().txntype
+    };
+}
 exports.getEditableTransactionView = function (iteration) {
     return `<h4>New Monthly Transaction</h4>
                 <form class="transferring container-fluid ${iteration}-expense-item new-transaction-view">
@@ -49,20 +57,11 @@ exports.getEditableTransactionView = function (iteration) {
                 </div>
             </form>`;
 };
-function getTransactionModel(target) {
-    console.log($(target));
-    return {
-        amount: parseFloat($(target).find('.amount').val().trim()) * 100,
-        date: $(target).find('.date').val().trim() || $(target).find('.date').data().date,
-        name: $(target).find('.name').val().trim() || $(target).find('.name').text().trim(),
-        type: $(target).find('.transaction-type').val() || $(target).find('.transaction-type').data.txnType
-    };
-}
 exports.getTransactionView = function (transaction, iteration) {
     let date = transaction.date || '';
     transaction.type = transaction.type || 'expense';
     let view = $(`
-        <div class="row transaction-input-view ${iteration}-${transaction.type}-item" data-txnType="${transaction.type}">
+        <div class="row transaction-input-view ${iteration}-${transaction.type}-item" data-txntype="${transaction.type}">
             <div class="col-xs-4">
                 <div class="input-group">
                     <div class="input-group-addon ">$</div>
@@ -104,7 +103,7 @@ exports.getModel = function () {
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
     budgetSettings.biWeeklyIncome.date = new Date(Date.UTC(2015, 11, 25));
     budgetSettings.monthlyRecurringExpenses = [];
-    $('.monthly-expense-item, .new-transaction-view').each(function () {
+    $('.monthly-expense-item, .new-transaction-view, .monthly-income-item').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
     budgetSettings.monthlyRecurringExpenses.sort(function(a,b) {
