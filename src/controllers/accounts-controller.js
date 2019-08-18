@@ -48,7 +48,7 @@ function AccountsController() {
                     sharePrice: transferOriginal.sharePrice };
                 data.assets.push(creditAccount);
             } else {
-                creditAccount.shares = Currency(creditAccount.shares).add(Util.getAmount(transferOriginal)).toString();
+                creditAccount.shares = Currency(creditAccount.shares).add(transferOriginal.shares).toString();
             }
             if (Currency(debitAccount.shares).intValue < 1) {
                 data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
