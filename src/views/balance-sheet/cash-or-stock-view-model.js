@@ -3,6 +3,7 @@ const BondViewModel = require('./bond-view-model');
 const Currency = require('currency.js');
 const DataClient = require('../../data-client');
 const LoanViewModel = require('./loan-view-model');
+const ExpenseViewModel = require('./expense-view-model');
 const Moment = require('moment/moment');
 const Util = require('../../util');
 function CashOrStockViewModel() {
@@ -98,18 +99,18 @@ function CashOrStockViewModel() {
                           <option>Select an Asset Type</option>
                           <option value="bond">Bond</option>
                           <option value="cash-or-stock">Cash or Stock</option>
+                          <option value="expense">Expense</option>
                       </select>
                   </div>
                 </div>
-                <div class="target-asset-type">
-                </div>
+                <div class="target-asset-type"></div>
             </form>`);
             viewContainer.append(transferView);
             let viewModel;
             let newView;
             viewContainer.find('.asset-type-selector').change(function () {
                 let selectedAssetType = viewContainer.find('.asset-type-selector').val();
-                let viewTypes = [ new CashOrStockViewModel(), new BondViewModel() ];
+                let viewTypes = [ new CashOrStockViewModel(), new BondViewModel(), new ExpenseViewModel() ];
                 viewModel = viewTypes.find(x => x.getViewType().toLowerCase() === selectedAssetType.toLowerCase());
                 transferView.find('.target-asset-type').empty();
                 newView = viewModel.getView();
@@ -128,23 +129,15 @@ function CashOrStockViewModel() {
                         if (!data.pending) {
                             data.pending = [];
                         }
-                        if (!data.assets) {
-                            data.assets = [];
-                        }
                         patch.pending = data.pending;
                         let transferModel = viewModel.getModel(newView);
                         transferModel.id = Util.guid();
                         transferModel.transferDate = Moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
                         transferModel.debitAccount = name;
-                        if (viewModel.getViewType().toLowerCase() === 'cash-or-stock') {
-                            let existingAccount = data.assets.find(x => x.name.toLowerCase() === transferModel.name.toLowerCase());
-                            if (!existingAccount) {
-                                existingAccount = {
-                                    name: transferModel.name,
-                                    amount: 0
-                                };
-                            }
-                            transferModel.creditAccount = existingAccount.name;
+                        transferModel.type = viewModel.getViewType();
+                        if (viewModel.getViewType().toLowerCase() === 'cash-or-stock' ||
+                            viewModel.getViewType().toLowerCase() === 'expense') {
+                            transferModel.creditAccount = transferModel.name;
                         }
                         patch.pending.push(transferModel);
                         return dataClient.patch(Util.settings().s3ObjectKey, patch);

@@ -27,7 +27,13 @@ function AccountsController() {
         let transferOriginal = data.pending.find(x => x.id === transferId);
         patch.pending = data.pending.filter(x => x.id !== transferId);
         let debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
-        if (transferOriginal.creditAccount.toLowerCase() === 'bonds') {
+        if (transferOriginal.type.toLowerCase() === 'expense') {
+            let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
+            debitAccount.shares = Currency(newDebitAmount, { precision: 3 }).divide(debitAccount.sharePrice).toString();
+            if (Currency(debitAccount.shares).intValue < 1) {
+                data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
+            }
+        } else if (transferOriginal.creditAccount.toLowerCase() === 'bonds') {
             debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.amount).toString();
             patch.bonds = data.bonds;
             if (!patch.bonds) {
