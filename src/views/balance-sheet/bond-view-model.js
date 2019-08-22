@@ -84,7 +84,7 @@ function BondViewModel() {
                     <div class="col-xs-4">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
-                            <input class="amount form-control text-right" type="text" value="${model.amount || '0.00'}" />
+                            <input class="amount form-control text-right" type="text" value="${model.amount || ''}" placeholder="0.00" />
                         </div>
                     </div>
                     <div class="col-xs-4">

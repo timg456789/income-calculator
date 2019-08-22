@@ -34,7 +34,8 @@ function PricesController() {
                     <div class="col-xs-6">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
-                            <input class="share-price form-control text-right" type="text" value="${sharePrice || '0.00'}" />
+                            <input class="share-price form-control text-right" type="text" value="${sharePrice || ''}"
+								placeholder="0.00" />
                         </div>
                     </div>
                   </div>

@@ -16,7 +16,7 @@ function WithdrawController() {
             cashAsset.shares = Util.subtract(cashAsset.shares, amount);
             await dataClient.patch(settings.s3ObjectKey, {assets: data.assets});
             $('#submit-transfer').prop('disabled', false);
-            $('#transfer-amount').val('0.00');
+            $('#transfer-amount').val('');
             $('#message-container').html(`<div class="alert alert-success" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
