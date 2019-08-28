@@ -5,6 +5,7 @@ const Util = require('../util');
 const moment = require('moment');
 const Currency = require('currency.js');
 const AvailableBalanceCalculator = require('../calculators/available-balance-calculator');
+const AccountsView = require('../views/accounts-view');
 function AccountsController() {
     'use strict';
     let dataClient;
@@ -68,77 +69,13 @@ function AccountsController() {
             Util.log(err);
         }
     }
-    function getJournalEntryView(viewModel) {
-        let journalEntryView = $(`
-                        <div class="row account-row">
-                            <div class="col-xs-3 vertical-align amount-description-column">${viewModel.transferDate}</div>
-                            <div class="col-xs-3 vertical-align amount-description-column">${viewModel.transferAccount}</div>
-                            <div class="col-xs-2 vertical-align amount-description-column text-right">${viewModel.debitAmount}</div>
-                            <div class="col-xs-2 vertical-align amount-description-column text-right">${viewModel.creditAmount}</div>
-
-                        </div>`);
-        if (viewModel.transferId) {
-            journalEntryView.append(`<div class="col-xs-1 text-center">
-                                <button type="button" class="complete-transfer btn btn-success add-remove-btn-container add-remove-btn" title="Complete transfer">
-                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                            <div class="col-xs-1 remove-button-container text-center">
-                                <button type="button" class="cancel-transfer btn remove add-remove-btn-container add-remove-btn" title="Cancel transfer">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                </button>
-                            </div>`);
-            journalEntryView.find('.cancel-transfer').click(function () { cancelTransfer(viewModel.transferId) });
-            journalEntryView.find('.complete-transfer').click(function () { completeTransfer(viewModel.transferId) });
-        }
-        return journalEntryView;
-    }
-    function getAccountView(account, allPendingTransfers, startingBalance) {
-        let pendingTransfers = allPendingTransfers.filter(x =>
-            x.creditAccount.toLowerCase() === account.toLowerCase() ||
-            x.debitAccount.toLowerCase() === account.toLowerCase());
-        let accountContainer = $(`
-                <div>
-                    <h4 id="$account-${account}" class="capitalize-first">${account}</h3>
-                    <div class="row table-header-row">
-                        <div class="col-xs-3">Transfer Date</div>
-                        <div class="col-xs-3">Account</div>
-                        <div class="col-xs-2">Debit Amount</div>
-                        <div class="col-xs-2">Credit Amount</div>
-                        <div class="col-xs-1">Complete</div>
-                        <div class="col-xs-1">Cancel</div>
-                    </div>   
-                </div>`);
-        accountContainer.append(getJournalEntryView({
-            transferDate: '',
-            transferAccount: 'STARTING BALANCE',
-            debitAmount: '',
-            creditAmount: Util.format(startingBalance)
-        }));
-        for (let transfer of pendingTransfers) {
-            let isCredit = transfer.creditAccount.toLowerCase() === account.toLowerCase();
-            accountContainer.append(getJournalEntryView({
-                transferDate: moment(transfer.transferDate).format('YYYY-MM-DD UTC Z'),
-                transferAccount: isCredit ? transfer.debitAccount : transfer.creditAccount,
-                debitAmount: isCredit ? '' : Util.format(Util.getAmount(transfer)),
-                creditAmount: isCredit ? Util.format(Util.getAmount(transfer)) : '',
-                transferId: transfer.id
-            }));
-        }
-        let availableBalanceCalculator = new AvailableBalanceCalculator();
-        let total = availableBalanceCalculator.getAvailableBalance(account, startingBalance, allPendingTransfers)
-        accountContainer.append(`
-                    <div class="row">
-                        <div class="col-xs-10 subtotal">Total Future Balance<span class="pull-right">${Util.format(total.toString())}</span></div>
-                    </div>`);
-        return accountContainer;
-    }
     function setView(data) {
         if (!data.pending) {
             return;
         }
-        let accounts = data.pending.map(x => (x.creditAccount || '').toLowerCase())
-            .concat(data.pending.map(x => (x.debitAccount || '').toLowerCase()));
+        let assetTransfers = data.pending.filter(x => (x.type || '').toLowerCase() !== 'expense');
+        let accounts = assetTransfers.map(x => (x.creditAccount || '').toLowerCase())
+            .concat(assetTransfers.map(x => (x.debitAccount || '').toLowerCase()));
         accounts = [...new Set(accounts)];
         for (let account of accounts) {
             let startingBalance = Currency(0);
@@ -156,7 +93,7 @@ function AccountsController() {
                 startingBalance = startingBalance.add(Util.getAmount(settledTransaction));
             }
 
-            $('.accounts-container').append(getAccountView(account, data.pending, startingBalance.toString()));
+            $('.accounts-container').append(AccountsView.getAccountView(account, data.pending, startingBalance.toString()));
         }
     }
     async function refresh() {

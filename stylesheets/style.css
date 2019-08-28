@@ -76,39 +76,32 @@ h4 {
 }
 
 .allocation {
-    /*font-size: 1.3em;*/
     font-weight: bold;
 }
-.subtotal {
-    /*font-size: 1.3em;*/
+.subtotal,
+.subtotal-amount {
     font-weight: bold;
-}
-.total {
-    font-size: 1.3em;
-}
-
-.allocation {
-    border-bottom: 1px solid black;
-}
-
-.subtotal {
     border-bottom: 1px solid black;
     margin-bottom: 20px;
 }
-
-.total {
+.subtotal-amount,
+.total-amount{
+    text-align: right;
+}
+.total,
+.total-amount {
     border-bottom: 6px double;
 }
-
+.allocation {
+    border-bottom: 1px solid black;
+}
 .tree-view {
     cursor: pointer;
 }
-
 #header .alert-warning {
     margin-top: 10px;
     margin-bottom: 0px;
 }
-
 .toggle-account-settings,
 .budget-download-styles {
     display: inline-block;
