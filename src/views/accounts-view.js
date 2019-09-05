@@ -1,8 +1,11 @@
-const Util = require('../util');
-const moment = require('moment');
-const Currency = require('currency.js');
 const AvailableBalanceCalculator = require('../calculators/available-balance-calculator');
-exports.getAccountView = function (account, allPendingTransfers, startingBalance) {
+const Currency = require('currency.js');
+const DataClient = require('../data-client');
+const Moment = require('moment');
+const Util = require('../util');
+exports.getAccountView = function (account, allPendingTransfers, startingBalance,
+                                   cancelTransfer,
+                                   completeTransfer) {
     let pendingTransfers = allPendingTransfers.filter(x =>
         x.creditAccount.toLowerCase() === account.toLowerCase() ||
         x.debitAccount.toLowerCase() === account.toLowerCase());
@@ -26,13 +29,16 @@ exports.getAccountView = function (account, allPendingTransfers, startingBalance
     }));
     for (let transfer of pendingTransfers) {
         let isCredit = transfer.creditAccount.toLowerCase() === account.toLowerCase();
-        accountContainer.append(getJournalEntryView({
-            transferDate: moment(transfer.transferDate).format('YYYY-MM-DD UTC Z'),
+        let journalEntryView = getJournalEntryView({
+            transferDate: Moment(transfer.transferDate).format('YYYY-MM-DD UTC Z'),
             transferAccount: isCredit ? transfer.debitAccount : transfer.creditAccount,
             debitAmount: isCredit ? '' : Util.format(Util.getAmount(transfer)),
             creditAmount: isCredit ? Util.format(Util.getAmount(transfer)) : '',
             transferId: transfer.id
-        }));
+        });
+        accountContainer.append(journalEntryView);
+        journalEntryView.find('.cancel-transfer').click(function () { cancelTransfer(transfer.id) });
+        journalEntryView.find('.complete-transfer').click(function () { completeTransfer(transfer.id) });
     }
     let availableBalanceCalculator = new AvailableBalanceCalculator();
     let availableBalance = availableBalanceCalculator.getAvailableBalance(account, startingBalance, allPendingTransfers);
@@ -71,8 +77,6 @@ function getJournalEntryView(viewModel) {
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>
                             </div>`);
-        journalEntryView.find('.cancel-transfer').click(function () { cancelTransfer(viewModel.transferId) });
-        journalEntryView.find('.complete-transfer').click(function () { completeTransfer(viewModel.transferId) });
     }
     return journalEntryView;
 }

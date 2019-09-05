@@ -1,11 +1,10 @@
-const balanceSheetView = require('../views/balance-sheet/balance-sheet-view');
-const DataClient = require('../data-client');
 const AccountSettingsController = require('./account-settings-controller');
-const Util = require('../util');
-const moment = require('moment');
-const Currency = require('currency.js');
-const AvailableBalanceCalculator = require('../calculators/available-balance-calculator');
 const AccountsView = require('../views/accounts-view');
+const AvailableBalanceCalculator = require('../calculators/available-balance-calculator');
+const balanceSheetView = require('../views/balance-sheet/balance-sheet-view');
+const Currency = require('currency.js');
+const DataClient = require('../data-client');
+const Util = require('../util');
 function AccountsController() {
     'use strict';
     let dataClient;
@@ -76,7 +75,9 @@ function AccountsController() {
         let assetTransfers = data.pending.filter(x => (x.type || '').toLowerCase() !== 'expense');
         let accounts = assetTransfers.map(x => (x.creditAccount || '').toLowerCase())
             .concat(assetTransfers.map(x => (x.debitAccount || '').toLowerCase()));
-        accounts = [...new Set(accounts)];
+        let uniqueAccounts = new Set(accounts);
+        uniqueAccounts.add('cash');
+        accounts = [...uniqueAccounts];
         for (let account of accounts) {
             let startingBalance = Currency(0);
             let settled = [];
@@ -92,8 +93,10 @@ function AccountsController() {
             for (let settledTransaction of settled) {
                 startingBalance = startingBalance.add(Util.getAmount(settledTransaction));
             }
-
-            $('.accounts-container').append(AccountsView.getAccountView(account, data.pending, startingBalance.toString()));
+            $('.accounts-container').append(AccountsView.getAccountView(account, data.pending, startingBalance.toString(),
+                cancelTransfer,
+                completeTransfer
+            ));
         }
     }
     async function refresh() {
