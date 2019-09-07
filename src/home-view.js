@@ -103,7 +103,7 @@ exports.getModel = function () {
     budgetSettings.biWeeklyIncome.amount = parseInt($('#biweekly-input').val().trim()) * 100;
     budgetSettings.biWeeklyIncome.date = new Date(Date.UTC(2015, 11, 25));
     budgetSettings.monthlyRecurringExpenses = [];
-    $('.monthly-expense-item, .new-transaction-view, .monthly-income-item').each(function () {
+    $('.monthly-expense-item, .monthly-income-item').each(function () {
         budgetSettings.monthlyRecurringExpenses.push(getTransactionModel(this));
     });
     budgetSettings.monthlyRecurringExpenses.sort(function(a,b) {
