@@ -13,7 +13,7 @@ exports.getAccountView = function (account, allPendingTransfers, startingBalance
                 <div>
                     <h4 id="$account-${account}" class="capitalize-first">${account}</h3>
                     <div class="row table-header-row">
-                        <div class="col-xs-3">Transfer Date</div>
+                        <div class="col-xs-3"></div>
                         <div class="col-xs-3">Account</div>
                         <div class="col-xs-2">Debit Amount</div>
                         <div class="col-xs-2">Credit Amount</div>
@@ -30,7 +30,7 @@ exports.getAccountView = function (account, allPendingTransfers, startingBalance
     for (let transfer of pendingTransfers) {
         let isCredit = transfer.creditAccount.toLowerCase() === account.toLowerCase();
         let journalEntryView = getJournalEntryView({
-            transferDate: Moment(transfer.transferDate).format('YYYY-MM-DD UTC Z'),
+            transferDate: Moment(transfer.issueDate || transfer.transferDate).format('LL'),
             transferAccount: isCredit ? transfer.debitAccount : transfer.creditAccount,
             debitAmount: isCredit ? '' : Util.format(Util.getAmount(transfer)),
             creditAmount: isCredit ? Util.format(Util.getAmount(transfer)) : '',
