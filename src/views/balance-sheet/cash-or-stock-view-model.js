@@ -168,7 +168,7 @@ function CashOrStockViewModel() {
         'use strict';
         let view = $(`<div class="asset-item row transaction-input-view">
                     <div class="col-xs-4">
-                        <input class="shares form-control text-right" type="text" value="${shares || 0}" />
+                        <input class="shares form-control text-right" type="text" value="${shares || ''}" placeholder="0.00" />
                     </div>
                     <div class="col-xs-4">
                         <div class="input-group">
