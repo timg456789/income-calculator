@@ -72,11 +72,11 @@ function AccountsController() {
         if (!data.pending) {
             return;
         }
-        let assetTransfers = data.pending.filter(x => (x.type || '').toLowerCase() !== 'expense');
-        let accounts = assetTransfers.map(x => (x.creditAccount || '').toLowerCase())
-            .concat(assetTransfers.map(x => (x.debitAccount || '').toLowerCase()));
+        let accounts = data.pending
+            .filter(x => (x.type || '').toLowerCase() !== 'expense')
+            .map(x => (x.creditAccount || '').toLowerCase())
+            .concat(data.pending.map(x => (x.debitAccount || '').toLowerCase()));
         let uniqueAccounts = new Set(accounts);
-        uniqueAccounts.add('cash');
         accounts = [...uniqueAccounts];
         for (let account of accounts) {
             let startingBalance = Currency(0);
