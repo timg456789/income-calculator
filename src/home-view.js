@@ -33,7 +33,7 @@ function getTransactionModel(target) {
     };
 }
 exports.getEditableTransactionView = function (iteration) {
-    return `<h4>New Monthly Transaction</h4>
+    return `<h4>New ${iteration.charAt(0).toUpperCase()}${iteration.slice(1)} Transaction</h4>
                 <form class="transferring container-fluid ${iteration}-expense-item new-transaction-view">
                 <div class="form-group row">
                     <div class="col-xs-6"><input placeholder="Amount" class="amount form-control text-right" type="text" /></div>
