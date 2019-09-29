@@ -85,7 +85,6 @@ function HomeView() {
                 <div class="input-group">
                     <div class="input-group-addon ">$</div>
                     <input class="amount form-control" type="text" value="${transaction.amount ? transaction.amount / 100 : ''}" />
-                    <div class="input-group-addon">.00</div>
                 </div>
             </div>
             <div class="col-xs-3"><span class="date" data-date="${date}">${iteration === 'weekly'
