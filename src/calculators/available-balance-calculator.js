@@ -10,7 +10,7 @@ function AvailableBalanceCalculator() {
                         ? sumTransfer.amount.add(Util.getAmount(transfer))
                         : sumTransfer.amount.subtract(Util.getAmount(transfer));
                     return sumTransfer;
-        }, {amount: Currency(startingBalance, { precision: 3 })}).amount.toString();
+        }, {amount: Currency(startingBalance, Util.getCurrencyDefaults())}).amount.toString();
     };
 }
 module.exports = AvailableBalanceCalculator;

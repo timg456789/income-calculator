@@ -29,7 +29,7 @@ function AccountsController() {
         let debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
         if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'expense') {
             let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
-            debitAccount.shares = Currency(newDebitAmount, { precision: 3 }).divide(debitAccount.sharePrice).toString();
+            debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
             if (Currency(debitAccount.shares).intValue < 1) {
                 data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
             }
@@ -45,7 +45,7 @@ function AccountsController() {
             patch.bonds.push(transferOriginal);
         } else {
             let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
-            debitAccount.shares = Currency(newDebitAmount, { precision: 3 }).divide(debitAccount.sharePrice).toString();
+            debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
             let creditAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
             if (!creditAccount) {
                 creditAccount = {
@@ -79,7 +79,7 @@ function AccountsController() {
         let uniqueAccounts = new Set(accounts);
         accounts = [...uniqueAccounts];
         for (let account of accounts) {
-            let startingBalance = Currency(0);
+            let startingBalance = Currency(0, Util.getCurrencyDefaults());
             let settled = [];
             if (account.toLowerCase() === 'bonds') {
                 if (data.bonds) {

@@ -67,11 +67,12 @@ exports.guid = function () {
 exports.getAmount = function (transaction) {
     return !transaction.sharePrice && !transaction.shares
         ? transaction.amount
-        : Currency(transaction.sharePrice, { precision: 3 }).multiply(transaction.shares).toString();
+        : Currency(transaction.sharePrice, exports.getCurrencyDefaults()).multiply(transaction.shares).toString();
 };
+exports.getCurrencyDefaults = function() { return {precision: 3} };
 exports.add = function (one, two) {
-    return Currency(one, {precision: 3}).add(two).toString();
+    return Currency(one, exports.getCurrencyDefaults()).add(two).toString();
 };
 exports.subtract = function (one, two) {
-    return Currency(one, {precision: 3}).subtract(two).toString();
+    return Currency(one, exports.getCurrencyDefaults()).subtract(two).toString();
 };

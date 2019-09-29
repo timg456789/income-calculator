@@ -42,7 +42,7 @@ exports.getAccountView = function (account, allPendingTransfers, startingBalance
     }
     let availableBalanceCalculator = new AvailableBalanceCalculator();
     let availableBalance = availableBalanceCalculator.getAvailableBalance(account, startingBalance, allPendingTransfers);
-    let totalDebits = Currency(startingBalance, { precision: 3 }).subtract(availableBalance);
+    let totalDebits = Currency(startingBalance, Util.getCurrencyDefaults()).subtract(availableBalance);
     accountContainer.append(`
                     <div class="row">
                         <div class="col-xs-6 subtotal">Totals</div>
