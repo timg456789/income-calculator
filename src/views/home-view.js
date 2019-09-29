@@ -33,7 +33,7 @@ function HomeView() {
             date: $(target).find('.date').val().trim() || $(target).find('.date').data().date,
             name: $(target).find('.name').val().trim() || $(target).find('.name').text().trim(),
             type: $(target).find('.transaction-type').val() || $(target).data().txntype,
-            paymentSource: $(target).find('.transaction-payment-source').val()
+            paymentSource: $(target).find('.transaction-payment-source').val() || $(target).find('.transaction-payment-source').text()
         };
     }
     this.getEditableTransactionView = function (iteration) {
@@ -77,7 +77,7 @@ function HomeView() {
         let date = transaction.date || '';
         transaction.type = transaction.type || 'expense';
         let paidByHtml = transaction.paymentSource ?
-            `&nbsp;<span class="payment-source-appended-to-name">paid by ${transaction.paymentSource}</span>`
+            ` <span class="payment-source-appended-to-name">paid by <span class="transaction-payment-source">${transaction.paymentSource}</span></span>`
             : '';
         let view = $(`
         <div class="row transaction-input-view ${iteration}-${transaction.type}-item" data-txntype="${transaction.type}">
@@ -91,7 +91,7 @@ function HomeView() {
             <div class="col-xs-3"><span class="date" data-date="${date}">${iteration === 'weekly'
             ? cal.DAY_NAMES[new Date(date).getUTCDay()]
             : new Date(date).getUTCDate()}</span></div>
-            <div class="col-xs-4 name">${transaction.name || ''}${paidByHtml}</div>
+            <div class="col-xs-4"><span class="name">${transaction.name || ''}</span>${paidByHtml}</div>
             <div class="col-xs-1 add-remove-btn-container">
                 <button class="btn remove row-remove-button add-remove-btn-container add-remove-btn">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
