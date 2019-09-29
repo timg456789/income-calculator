@@ -3,7 +3,6 @@ const DataClient = require('../../data-client');
 const Moment = require('moment/moment');
 const Util = require('../../util');
 function BondViewModel() {
-    let self = this;
     this.getViewType = function() {
         return 'bond';
     };

@@ -1,10 +1,7 @@
 const AccountSettingsController = require('./account-settings-controller');
 const balanceSheetView = require('../views/balance-sheet/balance-sheet-view');
-const BondViewModel = require('../views/balance-sheet/bond-view-model');
 const CashOrStockViewModel = require('../views/balance-sheet/cash-or-stock-view-model');
-const Currency = require('currency.js');
 const DataClient = require('../data-client');
-const homeView = require('../home-view');
 const LoanViewModel = require('../views/balance-sheet/loan-view-model');
 const Util = require('../util');
 function HomeController() {

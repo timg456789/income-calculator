@@ -7,7 +7,6 @@ const ExpenseViewModel = require('./expense-view-model');
 const Moment = require('moment/moment');
 const Util = require('../../util');
 function CashOrStockViewModel() {
-    let self = this;
     this.getViewType = function() {
         return 'cash-or-stock';
     };
