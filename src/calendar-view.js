@@ -5,12 +5,10 @@ const calCalc = new CalendarCalculator();
 const Currency = require('currency.js');
 const NetIncomeCalculator = require('./calculators/net-income-calculator');
 const netIncomeCalculator = new NetIncomeCalculator();
-
 const CalendarAggregator = require('./calculators/calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
 function getTransactionView(name, amount, type) {
-    'use strict';
     return `<div class="transaction-view unbudgeted ${type}"> 
                 <div class="name">${name}</div>
                 <div class="amount">$${amount/100}</div>
@@ -18,61 +16,66 @@ function getTransactionView(name, amount, type) {
 }
 
 function getMonthContainerId(date) {
-    'use strict';
-    return 'items-container-for-month-' +
-            date.getFullYear() + '-' +
-            date.getMonth();
+    return `items-container-for-month-${date.getFullYear()}-${date.getMonth()}`;
 }
 
 function getDateTarget(date) {
-    'use strict';
-    return date.getUTCFullYear() + '-' +
-            date.getUTCMonth() + '-' +
-            date.getUTCDate();
+    return `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`;
 }
 
 function getDayTarget(date) {
-    'use strict';
-    return 'day-of-' + getDateTarget(date);
+    return `day-of-${getDateTarget(date)}`;
 }
 
 function getDayView(date, inMonth) {
-    'use strict';
-    var css = !inMonth
-        ? 'out-of-month'
-        : '';
-    css += ' day-view'
+    let css = !inMonth ? 'out-of-month' : '';
+    css += ' day-view';
     css = css.trim();
-    var dayViewHtml = '<div class="' + css + ' day-col col-xs-1 ' +
-            getDayTarget(date) + '">' +
-            '<span class="calendar-day-number">' +
-            date.getUTCDate() + '</div>';
+    let dayViewHtml = `<div class="${css} day-col col-xs-1 ${getDayTarget(date)}">
+            <span class="calendar-day-number">
+            ${date.getUTCDate()}</div>`;
     return dayViewHtml;
 }
 
 function addMonthContainer(monthContainerId, date) {
-    $('#months-container').append(
-        `<div class="month-heading">
-            Net for ${cal.MONTH_NAMES[date.getUTCMonth()]} ${date.getFullYear()} <span id="month-net-header-value"></span>
+    $('#months-container').append(`
+        <div class="month-heading-totals-container">
+            <div class="month-heading container">${cal.MONTH_NAMES[date.getUTCMonth()]} ${date.getFullYear()}</div>
+            <div class="month-heading-totals-headers row">
+                <div class="col-xs-3 text-center"><span class="month-heading-total-description">&nbsp;</span></div>
+                <div class="col-xs-2 text-center">Income</div>
+                <div class="col-xs-2 text-center">Expenses</div>
+                <div class="col-xs-5"><button type="button" class="btn btn-info show-breakdown-by-source">Show Account Totals</button></div>
+            </div>
+            <div class="month-heading-totals-values row">
+                <div class="col-xs-3 subtotal-line">Subtotal</div>
+                <div class="col-xs-2 subtotal-line month-heading-total text-right"><span id="month-credits-header-value"></span></div>
+                <div class="col-xs-2 subtotal-line month-heading-total text-right"><span id="month-debits-header-value"></span></div>
+                <div class="col-xs-5">&nbsp;</div>
+            </div>
+            <div class="row">
+                <div class="col-xs-3 total">Total</div>
+                <div class="col-xs-2 total text-right">&nbsp;</div>
+                <div class="col-xs-2 total month-heading-total text-right"><span id="month-net-header-value"></span></div>
+                <div class="col-xs-5">&nbsp;</div>
+            </div>
         </div>
         <div class="items-container-for-month" id="${monthContainerId}"></div>`);
 }
 
 function addWeekAbbreviationHeaders(monthTarget) {
-    var d;
-    for (d = 0; d < 7; d += 1) {
-        $(monthTarget + '>' + '.weeks').append(
-            '<div class="day-col col-xs-1 week-name">' + cal.DAY_NAME_ABBRS[d] + '</div>');
+    for (let day of cal.DAY_NAME_ABBRS) {
+        $(monthTarget + '>' + '.weeks').append(`<div class="day-col col-xs-1 week-name">${day}</div>`);
     }
 }
 
 function addMonth(year, month) {
-    var date = calCalc.createByMonth(year, month);
+    let date = calCalc.createByMonth(year, month);
     $('#months-container').empty();
-    var monthContainerId = getMonthContainerId(date);
+    let monthContainerId = getMonthContainerId(date);
     addMonthContainer(monthContainerId, date);
 
-    var monthTarget = '#' + monthContainerId;
+    let monthTarget = '#' + monthContainerId;
     $(monthTarget).append('<div class="weeks row"></div>');
     addWeekAbbreviationHeaders(monthTarget);
 
@@ -81,7 +84,6 @@ function addMonth(year, month) {
 
 exports.build = function (year, month) {
     'use strict';
-
     let monthContainerId = addMonth(year, month);
     let dayViewContainer;
     let transactionsForWeekTarget;
@@ -99,47 +101,50 @@ exports.build = function (year, month) {
         });
 };
 
-function loadTransactions(items, areActuals) {
-    'use strict';
-    let bi;
-    let budgetItem;
-    for (bi = 0; bi < items.length; bi += 1) {
-        budgetItem = items[bi];
-        $('.' + getDayTarget(budgetItem.date)).append(
-            getTransactionView(
-                budgetItem.name,
-                budgetItem.amount,
-                budgetItem.type,
-                budgetItem.budget,
-                areActuals
-            )
-        );
+function loadTransactions(items) {
+    for (let budgetItem of items) {
+        let view = getTransactionView(budgetItem.name, budgetItem.amount, budgetItem.type);
+        $('.' + getDayTarget(budgetItem.date)).append(view);
     }
 }
 
 function getSummary(budgetSettings, startTime, endTime) {
-    'use strict';
-    let budget = netIncomeCalculator.getBudget(
-        budgetSettings,
-        startTime,
-        endTime
-    );
-    let summary = calendarAggregator.getSummary(
-        startTime,
-        endTime,
-        budget
-    );
-    return summary;
+    let budget = netIncomeCalculator.getBudget(budgetSettings, startTime, endTime);
+    return calendarAggregator.getSummary(startTime, endTime, budget);
 }
 
 exports.load = function (budgetSettings, start, end) {
     'use strict';
-    $('#debug-console').html('<div>Showing from: ' + start.toISOString() + ' UTC</div>'+
-        '<div>Until: ' + end.toISOString() + ' UTC</div>');
-
+    $('#debug-console').html(
+        `<div>Showing from: ${start.toISOString()} UTC</div>
+        <div>Until: ${end.toISOString()} UTC</div>`);
     let summary = getSummary(budgetSettings, start.getTime(), end.getTime());
     loadTransactions(summary.budgetItems);
-    let netDollars = Currency(summary.net).toString();
-    let netDollarsFormatted = Util.format(netDollars);
-    $('#month-net-header-value').append(netDollarsFormatted);
+    $('#month-credits-header-value').append(Util.format(summary.credits));
+    $('#month-debits-header-value').append(Util.format(summary.debits));
+    $('#month-net-header-value').append(Util.format(summary.net));
+    $('.show-breakdown-by-source').click(function () {
+        $('.month-heading-total-description').text('Account');
+        for (let debitSummary of summary.debitsByPaymentSource) {
+            $('.month-heading-totals-values').before(`
+            <div class="month-summary-by-payment-source row">
+                <div class="col-xs-3 dotted-underline">${debitSummary.paymentSource}</div>
+                <div class="col-xs-2 dotted-underline text-right">${Util.format(debitSummary.amount)}</div>
+                <div class="col-xs-2">&nbsp;</div>
+                <div class="col-xs-2">&nbsp;</div>
+                <div class="col-xs-3 text-center">&nbsp;</div>
+            </div>`);
+        }
+        for (let creditSummary of summary.creditsByPaymentSource) {
+            $('.month-heading-totals-values').before(`
+            <div class="row">
+                <div class="col-xs-3 dotted-underline">${creditSummary.paymentSource}</div>
+                <div class="col-xs-2 dotted-underline">&nbsp;</div>
+                <div class="col-xs-2 dotted-underline text-right">${Util.format(creditSummary.amount)}</div>
+                <div class="col-xs-2">&nbsp;</div>
+                <div class="col-xs-3 text-center">&nbsp;</div>
+            </div>`);
+        }
+        $(this).prop('disabled', true);
+    });
 };

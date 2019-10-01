@@ -7,7 +7,7 @@ exports.initNav = function (target) {
                   <span class="ac-gn-link-text">Budget</span>
               </a>
               <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/budget-calendar.html'+window.location.search;" href="#" title="Budget Calendar">
-                  <span class="ac-gn-link-text">Budget Calendar</span>
+                  <span class="ac-gn-link-text">Calendar</span>
               </a>
               <a class="tab-nav-item" onclick="window.location='${root}'+'/pages/balance-sheet.html'+window.location.search;" href="#" title="Balance Sheet">
                   <span class="ac-gn-link-text">Balance Sheet</span>

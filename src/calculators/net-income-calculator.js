@@ -1,23 +1,17 @@
+const cal = require('./calendar');
+const UtcDay = require('./utc-day');
 function NetIncomeCalculator() {
-
-    const cal = require('./calendar');
-    const UtcDay = require('./utc-day');
     const utcDay = new UtcDay();
-
     this.getBudget = function(config, startTime, endTime) {
-        var breakdown = [];
-        var wre = config.weeklyRecurringExpenses;
-
-        var current = new Date(startTime);
+        let breakdown = [];
+        let wre = config.weeklyRecurringExpenses;
+        let current = new Date(startTime);
         while (current.getTime() < endTime) {
             if (config.monthlyRecurringExpenses) {
                 getMonthly(config.monthlyRecurringExpenses, current, breakdown);
             }
             if (wre) {
                 getWeeklyExpenses(wre, current, breakdown);
-            }
-            if (config.oneTime) {
-                getOne(config.oneTime, current, breakdown);
             }
             if (config.biWeeklyIncome) {
                 getIncome(
@@ -41,7 +35,8 @@ function NetIncomeCalculator() {
                     'name': txn.name,
                     'amount': txn.amount,
                     'date': new Date(current.getTime()),
-                    'type': txn.type || 'expense'
+                    'type': txn.type || 'expense',
+                    'paymentSource': txn.paymentSource
                 });
             }
         }
@@ -58,39 +53,27 @@ function NetIncomeCalculator() {
     }
 
     function getWeeklyExpenses(wre, current, breakdown) {
-        var currentDay = current.getUTCDay();
-        for (var i = 0; i < wre.length; i++) {
-            var dt = typeof wre[i].date === "object" ? wre[i].date : new Date(wre[i].date);
+        let currentDay = current.getUTCDay();
+        for (let txn of wre) {
+            let dt = typeof txn.date === "object" ? txn.date : new Date(txn.date);
             if (matchesDefaultWeekly(dt, current) ||
                 matchesSpecifiedWeekly(dt, currentDay)) {
-                var processed = {};
-                processed.name = wre[i].name;
-                processed.amount = wre[i].amount;
-                processed.date = new Date(current.getTime());
-                processed.endDate = new Date(current.getTime());
-                processed.endDate.setUTCDate(processed.endDate.getUTCDate() + 7);
-                processed.type = 'expense';
-                breakdown.push(processed);
-            }
-        }
-    }
-
-    function getOne(expenses, current, breakdown) {
-        for (var i=0; i < expenses.length; i++) {
-            var potentialOneTimeExpense = expenses[i];
-            if (current.getTime() == potentialOneTimeExpense.date.getTime()) {
-                var expense = {};
-                expense.name = potentialOneTimeExpense.name;
-                expense.amount = potentialOneTimeExpense.amount;
-                expense.date = new Date(current.getTime());
-                expense.type = potentialOneTimeExpense.type;
-                breakdown.push(expense);
+                let endDate = new Date(current.getTime());
+                endDate.setUTCDate(endDate.getUTCDate() + 7);
+                breakdown.push({
+                    'name': txn.name,
+                    'amount': txn.amount,
+                    'date': new Date(current.getTime()),
+                    'endDate': endDate,
+                    'type': txn.type,
+                    'paymentSource': txn.paymentSource
+                });
             }
         }
     }
 
     function getIncome(amount, time, breakdown, startTime) {
-        var incomeAccrual = getIncomeAccrual(amount, time, startTime);
+        let incomeAccrual = getIncomeAccrual(amount, time, startTime);
         if (incomeAccrual) {
             breakdown.push(incomeAccrual);
         }
@@ -99,13 +82,14 @@ function NetIncomeCalculator() {
     function getIncomeAccrual(amount, time, startTime) {
         let accrual;
         let diffFromFirstPayDate = utcDay.getDayDiff(startTime, time);
-        var modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
+        let modulusIntervalsFromFirstPayDate = diffFromFirstPayDate % cal.BIWEEKLY_INTERVAL;
         if (modulusIntervalsFromFirstPayDate === 0) {
             accrual = {
                 'name': 'biweekly income',
                 'amount': amount,
                 'date': new Date(time),
-                'type': 'income'
+                'type': 'income',
+                'paymentSource': 'salary'
             };
         }
         return accrual;
