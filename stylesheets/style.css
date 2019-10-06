@@ -343,3 +343,12 @@ h4 {
 .transaction-input-view.weekly-income-item input.amount {
     background-color: #ccffb6
 }
+
+/* vertical align*/
+.display-flex {
+    display: flex;
+}
+
+.display-flex-valign-bottom {
+    align-self: flex-end;
+}

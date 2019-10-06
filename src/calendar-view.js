@@ -108,17 +108,12 @@ function loadTransactions(items) {
     }
 }
 
-function getSummary(budgetSettings, startTime, endTime) {
-    let budget = netIncomeCalculator.getBudget(budgetSettings, startTime, endTime);
-    return calendarAggregator.getSummary(startTime, endTime, budget);
-}
-
 exports.load = function (budgetSettings, start, end) {
-    'use strict';
     $('#debug-console').html(
         `<div>Showing from: ${start.toISOString()} UTC</div>
         <div>Until: ${end.toISOString()} UTC</div>`);
-    let summary = getSummary(budgetSettings, start.getTime(), end.getTime());
+    let budget = netIncomeCalculator.getBudget(budgetSettings, start.getTime(), end.getTime());
+    let summary = calendarAggregator.getSummary(start.getTime(), end.getTime(), budget);
     loadTransactions(summary.budgetItems);
     $('#month-credits-header-value').append(Util.format(summary.credits));
     $('#month-debits-header-value').append(Util.format(summary.debits));
@@ -127,9 +122,9 @@ exports.load = function (budgetSettings, start, end) {
         $('.month-heading-total-description').text('Account');
         for (let debitSummary of summary.debitsByPaymentSource) {
             $('.month-heading-totals-values').before(`
-            <div class="month-summary-by-payment-source row">
-                <div class="col-xs-3 dotted-underline">${debitSummary.paymentSource}</div>
-                <div class="col-xs-2 dotted-underline text-right">${Util.format(debitSummary.amount)}</div>
+            <div class="display-flex row">
+                <div class="col-xs-3 display-flex-valign-bottom dotted-underline">${debitSummary.paymentSource}</div>
+                <div class="col-xs-2 display-flex-valign-bottom dotted-underline text-right">${Util.format(debitSummary.amount)}</div>
                 <div class="col-xs-2">&nbsp;</div>
                 <div class="col-xs-2">&nbsp;</div>
                 <div class="col-xs-3 text-center">&nbsp;</div>
@@ -137,10 +132,10 @@ exports.load = function (budgetSettings, start, end) {
         }
         for (let creditSummary of summary.creditsByPaymentSource) {
             $('.month-heading-totals-values').before(`
-            <div class="row">
-                <div class="col-xs-3 dotted-underline">${creditSummary.paymentSource}</div>
+            <div class="display-flex row">
+                <div class="col-xs-3 display-flex-valign-bottom dotted-underline">${creditSummary.paymentSource}</div>
                 <div class="col-xs-2 dotted-underline">&nbsp;</div>
-                <div class="col-xs-2 dotted-underline text-right">${Util.format(creditSummary.amount)}</div>
+                <div class="col-xs-2 display-flex-valign-bottom dotted-underline text-right">${Util.format(creditSummary.amount)}</div>
                 <div class="col-xs-2">&nbsp;</div>
                 <div class="col-xs-3 text-center">&nbsp;</div>
             </div>`);
