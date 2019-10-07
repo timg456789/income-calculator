@@ -5,6 +5,7 @@ const DataClient = require('../../data-client');
 const LoanViewModel = require('./loan-view-model');
 const ExpenseViewModel = require('./expense-view-model');
 const Moment = require('moment/moment');
+const PropertyPlantAndEquipmentViewModel = require('./property-plant-and-equipment-view-model');
 const Util = require('../../util');
 function CashOrStockViewModel() {
     this.getViewType = function() {
@@ -99,6 +100,7 @@ function CashOrStockViewModel() {
                           <option value="bond">Bond</option>
                           <option value="cash-or-stock">Cash or Stock</option>
                           <option value="expense">Expense</option>
+                          <option value="property-plant-and-equipment">Property plant and equipment</option>
                       </select>
                   </div>
                 </div>
@@ -109,7 +111,8 @@ function CashOrStockViewModel() {
             let newView;
             viewContainer.find('.asset-type-selector').change(function () {
                 let selectedAssetType = viewContainer.find('.asset-type-selector').val();
-                let viewTypes = [ new CashOrStockViewModel(), new BondViewModel(), new ExpenseViewModel() ];
+                let viewTypes = [ new CashOrStockViewModel(), new BondViewModel(), new ExpenseViewModel(),
+                    new PropertyPlantAndEquipmentViewModel()];
                 viewModel = viewTypes.find(x => x.getViewType().toLowerCase() === selectedAssetType.toLowerCase());
                 transferView.find('.target-asset-type').empty();
                 newView = viewModel.getView();
@@ -135,7 +138,8 @@ function CashOrStockViewModel() {
                         transferModel.debitAccount = name;
                         transferModel.type = viewModel.getViewType();
                         if (viewModel.getViewType().toLowerCase() === 'cash-or-stock' ||
-                            viewModel.getViewType().toLowerCase() === 'expense') {
+                            viewModel.getViewType().toLowerCase() === 'expense' ||
+                            viewModel.getViewType().toLowerCase() === 'property-plant-and-equipment') { // Fix this crap so the value is set in the views.
                             transferModel.creditAccount = transferModel.name;
                         }
                         patch.pending.push(transferModel);

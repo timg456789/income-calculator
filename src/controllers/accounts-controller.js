@@ -33,7 +33,7 @@ function AccountsController() {
             if (Currency(debitAccount.shares).intValue < 1) {
                 data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
             }
-        } else if (transferOriginal.creditAccount.toLowerCase() === 'bonds') {
+        } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'bond') {
             debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.amount).toString();
             patch.bonds = data.bonds;
             if (!patch.bonds) {
@@ -43,6 +43,13 @@ function AccountsController() {
             delete transferOriginal.debitAccount;
             delete transferOriginal.transferDate;
             patch.bonds.push(transferOriginal);
+        } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'property-plant-and-equipment') {
+            debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
+            patch.propertyPlantAndEquipment = data.propertyPlantAndEquipment || [];
+            patch.propertyPlantAndEquipment.push({
+                amount: transferOriginal.amount,
+                name: transferOriginal.name
+            });
         } else {
             let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
             debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
