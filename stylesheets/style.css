@@ -352,3 +352,13 @@ h4 {
 .display-flex-valign-bottom {
     align-self: flex-end;
 }
+
+/* balance sheet */
+
+.property-plant-and-equipment-row > div:first-child {
+    padding-right: 0px;
+}
+
+.property-plant-and-equipment-row > div:last-child {
+    padding-left: 0px;
+}
