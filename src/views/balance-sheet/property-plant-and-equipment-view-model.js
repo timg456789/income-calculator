@@ -4,10 +4,10 @@ function PropertyPlantAndEquipmentViewModel() {
         return 'property-plant-and-equipment';
     };
     this.getModel = function (target) {
-        let model = {};
-        model.amount = $(target).find('input.amount').val().trim();
-        model.name = $(target).find('input.name').val().trim();
-        return model;
+        return {
+            amount: $(target).find('input.amount').val().trim(),
+            name: $(target).find('input.name').val().trim()
+        };
     };
     this.getHeaderView = function () {
         return $(`<div class="row table-header-row">
@@ -16,7 +16,6 @@ function PropertyPlantAndEquipmentViewModel() {
           </div>`);
     };
     this.getReadOnlyView = function (amount, name) {
-        'use strict';
         let view = $(`
             <div class="property-plant-and-equipment-row row transaction-input-view">
                     <div class="col-xs-9 vertical-align amount-description-column">

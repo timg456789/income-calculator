@@ -1,5 +1,6 @@
 const AvailableBalanceCalculator = require('../../calculators/available-balance-calculator');
 const BondViewModel = require('./bond-view-model');
+const CashViewModel = require('./cash-view-model');
 const Currency = require('currency.js');
 const DataClient = require('../../data-client');
 const LoanViewModel = require('./loan-view-model');
@@ -23,11 +24,11 @@ function CashOrStockViewModel() {
         return total.toString();
     };
     this.getModel = function (target) {
-        let model = {};
-        model.shares = $(target).find('input.shares').val().trim();
-        model.sharePrice = $(target).find('input.share-price').val().trim();
-        model.name = $(target).find('input.name').val().trim();
-        return model;
+        return {
+            shares: $(target).find('input.shares').val().trim(),
+            sharePrice: $(target).find('input.share-price').val().trim(),
+            name: $(target).find('input.name').val().trim()
+        };
     };
     this.getAllocation = function (total, subtotal) {
         let allocation = Currency(subtotal, {precision: 4}).divide(total).multiply(100).toString();
@@ -97,8 +98,9 @@ function CashOrStockViewModel() {
                   <div class="col-xs-9">
                       <select class="asset-type-selector form-control">
                           <option>Select an Asset Type</option>
+                          <option value="cash">Cash</option>
                           <option value="bond">Bond</option>
-                          <option value="cash-or-stock">Cash or Stock</option>
+                          <option value="cash-or-stock">Stock</option>
                           <option value="expense">Expense</option>
                           <option value="property-plant-and-equipment">Property plant and equipment</option>
                       </select>
@@ -111,7 +113,11 @@ function CashOrStockViewModel() {
             let newView;
             viewContainer.find('.asset-type-selector').change(function () {
                 let selectedAssetType = viewContainer.find('.asset-type-selector').val();
-                let viewTypes = [ new CashOrStockViewModel(), new BondViewModel(), new ExpenseViewModel(),
+                let viewTypes = [
+                    new CashOrStockViewModel(),
+                    new CashViewModel(),
+                    new BondViewModel(),
+                    new ExpenseViewModel(),
                     new PropertyPlantAndEquipmentViewModel()];
                 viewModel = viewTypes.find(x => x.getViewType().toLowerCase() === selectedAssetType.toLowerCase());
                 transferView.find('.target-asset-type').empty();
@@ -137,9 +143,7 @@ function CashOrStockViewModel() {
                         transferModel.transferDate = Moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
                         transferModel.debitAccount = name;
                         transferModel.type = viewModel.getViewType();
-                        if (viewModel.getViewType().toLowerCase() === 'cash-or-stock' ||
-                            viewModel.getViewType().toLowerCase() === 'expense' ||
-                            viewModel.getViewType().toLowerCase() === 'property-plant-and-equipment') { // Fix this crap so the value is set in the views.
+                        if (!transferModel.creditAccount) {
                             transferModel.creditAccount = transferModel.name;
                         }
                         patch.pending.push(transferModel);

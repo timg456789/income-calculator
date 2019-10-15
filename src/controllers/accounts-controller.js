@@ -43,6 +43,13 @@ function AccountsController() {
             delete transferOriginal.debitAccount;
             delete transferOriginal.transferDate;
             patch.bonds.push(transferOriginal);
+        } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'cash') {
+            debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
+            patch.cash = data.cash || [];
+            patch.cash.push({
+                amount: transferOriginal.amount,
+                name: transferOriginal.name
+            });
         } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'property-plant-and-equipment') {
             debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
             patch.propertyPlantAndEquipment = data.propertyPlantAndEquipment || [];
@@ -63,9 +70,9 @@ function AccountsController() {
             } else {
                 creditAccount.shares = Currency(creditAccount.shares).add(transferOriginal.shares).toString();
             }
-            if (Currency(debitAccount.shares).intValue < 1) {
-                data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
-            }
+        }
+        if (Currency(debitAccount.shares).intValue < 1) {
+            data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
         }
         patch.assets = data.assets;
         try {
