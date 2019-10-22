@@ -1,5 +1,8 @@
 const Util = require('../../util');
 function PropertyPlantAndEquipmentViewModel() {
+    this.getViewDescription = function() {
+        return 'Property plant and equipment';
+    };
     this.getViewType = function() {
         return 'property-plant-and-equipment';
     };

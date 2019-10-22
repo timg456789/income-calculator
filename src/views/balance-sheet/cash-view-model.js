@@ -1,5 +1,8 @@
 const Util = require('../../util');
 function CashViewModel() {
+    this.getViewDescription = function() {
+        return 'Cash';
+    };
     this.getViewType = function() {
         return 'cash';
     };

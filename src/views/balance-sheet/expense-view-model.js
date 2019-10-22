@@ -3,6 +3,9 @@ const DataClient = require('../../data-client');
 const Moment = require('moment/moment');
 const Util = require('../../util');
 function ExpenseViewModel() {
+    this.getViewDescription = function() {
+        return 'Expense';
+    };
     this.getViewType = function() {
         return 'expense';
     };

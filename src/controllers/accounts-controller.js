@@ -35,10 +35,7 @@ function AccountsController() {
             }
         } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'bond') {
             debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.amount).toString();
-            patch.bonds = data.bonds;
-            if (!patch.bonds) {
-                patch.bonds = [];
-            }
+            patch.bonds = data.bonds || [];
             delete transferOriginal.creditAccount;
             delete transferOriginal.debitAccount;
             delete transferOriginal.transferDate;
@@ -46,10 +43,15 @@ function AccountsController() {
         } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'cash') {
             debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
             patch.cash = data.cash || [];
-            patch.cash.push({
-                amount: transferOriginal.amount,
-                name: transferOriginal.name
-            });
+            let creditAccount = patch.cash.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
+            if (!creditAccount) {
+                patch.cash.push({
+                    amount: transferOriginal.amount,
+                    name: transferOriginal.name
+                });
+            } else {
+                creditAccount.amount = Currency(creditAccount.amount, Util.getCurrencyDefaults()).add(transferOriginal.amount).toString();
+            }
         } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'property-plant-and-equipment') {
             debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
             patch.propertyPlantAndEquipment = data.propertyPlantAndEquipment || [];
@@ -58,7 +60,7 @@ function AccountsController() {
                 name: transferOriginal.name
             });
         } else {
-            let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
+            let newDebitAmount = Currency(Util.getAmount(debitAccount), Util.getCurrencyDefaults()).subtract(Util.getAmount(transferOriginal)).toString();
             debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
             let creditAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
             if (!creditAccount) {
@@ -68,7 +70,7 @@ function AccountsController() {
                     sharePrice: transferOriginal.sharePrice };
                 data.assets.push(creditAccount);
             } else {
-                creditAccount.shares = Currency(creditAccount.shares).add(transferOriginal.shares).toString();
+                creditAccount.shares = Currency(creditAccount.shares, Util.getCurrencyDefaults()).add(transferOriginal.shares).toString();
             }
         }
         if (Currency(debitAccount.shares).intValue < 1) {

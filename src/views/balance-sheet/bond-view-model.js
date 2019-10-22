@@ -2,7 +2,12 @@ const Currency = require('currency.js');
 const DataClient = require('../../data-client');
 const Moment = require('moment/moment');
 const Util = require('../../util');
+const CashViewModel = require('./cash-view-model');
+const TransferController = require('../../controllers/balance-sheet/transfer-controller');
 function BondViewModel() {
+    this.getViewDescription = function() {
+        return 'Bond';
+    };
     this.getViewType = function() {
         return 'bond';
     };
@@ -22,18 +27,13 @@ function BondViewModel() {
           </div>`);
     };
     this.getReadOnlyView = function(bond) {
-        if (!bond) {
-            bond = {};
-        }
+        bond = bond || {};
         let maturityDateText = bond.issueDate
             ? Moment(bond.issueDate).add(bond.daysToMaturation, 'days').format('YYYY-MM-DD')
             : '';
-        if (!bond.issueDate) {
-            bond.issueDate = new Date().toISOString();
-        }
-        if (!bond.amount) {
-            bond.amount = '0.00';
-        }
+        bond.issueDate = bond.issueDate || new Date().toISOString();
+        bond.amount = bond.amount || '0.00';
+        let viewContainer = $('<div></div>');
         let view = $(`<div class="bond-item transaction-input-view row">
                     <div class="col-xs-2 text-right vertical-align amount-description-column">
                         ${Util.format(bond.amount)}
@@ -46,38 +46,25 @@ function BondViewModel() {
                     </div>
                     <div class="col-xs-2 text-center vertical-align amount-description-column">${maturityDateText}</div>
         `);
+        viewContainer.append(view);
         let liquidateButton = $(`<div class="col-xs-1">
                             <button type="button" class="btn btn-success add-remove-btn" title="Liquidate bond">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                             </button>
                           </div>`);
-        liquidateButton.click(function () {
-            let settings = Util.settings();
-            let dataClient = new DataClient(settings);
-            dataClient.getData()
-                .then(data => {
-                    let cashAccount = data.assets.find(x => x.name.toLowerCase() === 'cash');
-                    if (!cashAccount) {
-                        throw 'Cash account not found';
-                    }
-                    cashAccount.shares = Currency(cashAccount.shares)
-                        .add(bond.amount)
-                        .toString();
-                    let patch = {};
-                    patch.assets = data.assets;
-                    patch.bonds = data.bonds.filter(x => x.id !== bond.id);
-                    return dataClient.patch(settings.s3ObjectKey, patch);
-                })
-                .then(putResult => { window.location.reload(); })
-                .catch(err => { Util.log(err); });
-        });
         view.append(liquidateButton);
-        return view;
+        new TransferController().init(
+            liquidateButton,
+            viewContainer,
+            'Bonds',
+            [
+                new CashViewModel(),
+                new BondViewModel(),
+            ]);
+        return viewContainer;
     };
     this.getView = function (model) {
-        if (!model) {
-            model = {};
-        }
+        model = model || {};
         let issueDateText = Moment(model.issueDate || new Date().toISOString()).format('YYYY-MM-DD UTC Z');
         return $(`<div class="bond-item transaction-input-view row">
                     <div class="col-xs-4">
