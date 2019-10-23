@@ -240,10 +240,6 @@ h4 {
     color: #885c13;
 }
 
-.dotted-underline {
-    border-bottom: 1px dotted black;
-}
-
 .month-heading-total {
     font-weight: bold;
 }
@@ -355,10 +351,14 @@ h4 {
 
 /* balance sheet */
 
-.property-plant-and-equipment-row > div:first-child {
+.dotted-underline {
+    border-bottom: 1px dotted black;
+}
+
+.dotted-underline-row > div:first-child {
     padding-right: 0px;
 }
 
-.property-plant-and-equipment-row > div:last-child {
+.dotted-underline-row > div:nth-child(2) {
     padding-left: 0px;
 }

@@ -1,5 +1,4 @@
 const AvailableBalanceCalculator = require('../../calculators/available-balance-calculator');
-const CashViewModel = require('./cash-view-model');
 const Currency = require('currency.js');
 const Util = require('../../util');
 const TransferController = require('../../controllers/balance-sheet/transfer-controller');
@@ -40,7 +39,7 @@ function CashOrStockViewModel() {
               <div class="col-xs-2">Available Balance</div>
               <div class="col-xs-2">Name</div>
               <div class="col-xs-2">Allocation</div>
-              <div class="col-xs-1">Transfer</div>
+              <div class="col-xs-1">Liquidate</div>
           </div>`);
     };
     this.getReadOnlyView = function (name, total, pending, shares, sharePrice) {
@@ -66,13 +65,14 @@ function CashOrStockViewModel() {
                   </div>
         `);
         let transferButton = $(`<div class="col-xs-1">
-                            <button type="button" class="btn btn-success add-remove-btn" title="Transfer Cash or Stock">
+                            <button type="button" class="btn btn-success add-remove-btn" title="Liquidate or Stock">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                             </button>
                           </div>`);
         view.append(transferButton);
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
+        const CashViewModel = require('./cash-view-model');
         new TransferController().init(
             transferButton,
             viewContainer,

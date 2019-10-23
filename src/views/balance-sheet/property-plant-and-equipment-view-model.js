@@ -20,7 +20,7 @@ function PropertyPlantAndEquipmentViewModel() {
     };
     this.getReadOnlyView = function (amount, name) {
         let view = $(`
-            <div class="property-plant-and-equipment-row row transaction-input-view">
+            <div class="dotted-underline-row row transaction-input-view">
                     <div class="col-xs-9 vertical-align amount-description-column">
                         <div class="dotted-underline">${name}</div></div>
                     <div class="col-xs-3 text-right vertical-align amount-description-column">

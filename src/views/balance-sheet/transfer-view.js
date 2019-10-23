@@ -25,10 +25,6 @@ function TransferView() {
                       <select class="asset-type-selector form-control">
                           <option>Select an Asset Type</option>
                           ${options}
-                          
-                          
-                          
-                          
                       </select>
                   </div>
                 </div>

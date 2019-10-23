@@ -1,4 +1,9 @@
 const Util = require('../../util');
+const ExpenseViewModel = require('./expense-view-model');
+const PropertyPlantAndEquipmentViewModel = require('./property-plant-and-equipment-view-model');
+const BondViewModel = require('./bond-view-model');
+const TransferController = require('../../controllers/balance-sheet/transfer-controller');
+const CashOrStockViewModel = require('./cash-or-stock-view-model');
 function CashViewModel() {
     this.getViewDescription = function() {
         return 'Cash';
@@ -15,22 +20,47 @@ function CashViewModel() {
     this.getHeaderView = function () {
         return $(`<div class="row table-header-row">
               <div class="col-xs-9">Name</div>
-              <div class="col-xs-3">Value</div>
+              <div class="col-xs-3">Amount</div>
+          </div>`);
+    };
+    this.getReadOnlyHeaderView = function () {
+        return $(`<div class="row table-header-row">
+              <div class="col-xs-8">Name</div>
+              <div class="col-xs-3">Amount</div>
+              <div class="col-xs-1">Transfer</div>
           </div>`);
     };
     this.getReadOnlyView = function (amount, name) {
         'use strict';
         let view = $(`
-            <div class="property-plant-and-equipment-row row transaction-input-view">
-                    <div class="col-xs-9 vertical-align amount-description-column">
+            <div class="dotted-underline-row row transaction-input-view">
+                    <div class="col-xs-8 vertical-align amount-description-column">
                         <div class="dotted-underline">${name}</div></div>
                     <div class="col-xs-3 text-right vertical-align amount-description-column">
                         <div class="dotted-underline">${Util.format(amount)}</div>
                     </div>
             </div>
         `);
+        let transferButton = $(`<div class="col-xs-1">
+                            <button type="button" class="btn btn-success add-remove-btn" title="Liquidate or Stock">
+                                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+                            </button>
+                          </div>`);
+        view.append(transferButton);
         let viewContainer = $('<div></div>');
         viewContainer.append(view);
+        new TransferController().init(
+            transferButton,
+            viewContainer,
+            name,
+            [
+                new CashViewModel(),
+                new CashOrStockViewModel(),
+                new ExpenseViewModel(),
+                new PropertyPlantAndEquipmentViewModel(),
+                new BondViewModel()
+            ]
+        );
         return viewContainer;
     };
     this.getView = function () {

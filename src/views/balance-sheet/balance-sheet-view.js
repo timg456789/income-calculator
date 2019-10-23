@@ -44,6 +44,7 @@ function setBalances(budget) {
 }
 
 exports.setView = function (budget, totalCashAndStocks) {
+    $('.cash-header-container').append(new CashViewModel().getReadOnlyHeaderView())
     $('.assets-header-container').append(new CashOrStockViewModel().getReadOnlyHeaderView());
     $('.property-plant-and-equipment-header-container').append(new PpeVm().getHeaderView());
     let totalLoans = setBalances(budget);

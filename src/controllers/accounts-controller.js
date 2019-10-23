@@ -26,13 +26,14 @@ function AccountsController() {
         let patch = {};
         let transferOriginal = data.pending.find(x => x.id === transferId);
         patch.pending = data.pending.filter(x => x.id !== transferId);
-        let debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
+        var debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
         if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'expense') {
-            let newDebitAmount = Currency(Util.getAmount(debitAccount)).subtract(Util.getAmount(transferOriginal)).toString();
-            debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
-            if (Currency(debitAccount.shares).intValue < 1) {
-                data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
+            debitAccount = data.cash.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
+            debitAccount.amount = Currency(debitAccount.amount, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
+            if (Currency(debitAccount.amount).intValue < 1) {
+                data.cash = data.cash.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
             }
+            patch.cash = data.cash;
         } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'bond') {
             debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.amount).toString();
             patch.bonds = data.bonds || [];
@@ -72,11 +73,11 @@ function AccountsController() {
             } else {
                 creditAccount.shares = Currency(creditAccount.shares, Util.getCurrencyDefaults()).add(transferOriginal.shares).toString();
             }
+            if (Currency(debitAccount.shares).intValue < 1) {
+                data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
+            }
+            patch.assets = data.assets;
         }
-        if (Currency(debitAccount.shares).intValue < 1) {
-            data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
-        }
-        patch.assets = data.assets;
         try {
             await dataClient.patch(settings.s3ObjectKey, patch);
             window.location.reload();
@@ -98,13 +99,10 @@ function AccountsController() {
             let startingBalance = Currency(0, Util.getCurrencyDefaults());
             let settled = [];
             if (account.toLowerCase() === 'bonds') {
-                if (data.bonds) {
-                    settled = data.bonds;
-                }
+                settled = data.bonds || [];
             } else {
-                if (data.assets) {
-                    settled = data.assets.filter(x => x.name.toLowerCase() === account.toLowerCase());
-                }
+                settled = (data.assets || []).filter(x => x.name.toLowerCase() === account.toLowerCase())
+                    .concat((data.cash || []).filter(x => x.name.toLowerCase() == account.toLowerCase()));
             }
             for (let settledTransaction of settled) {
                 startingBalance = startingBalance.add(Util.getAmount(settledTransaction));

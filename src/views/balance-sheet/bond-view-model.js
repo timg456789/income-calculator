@@ -2,7 +2,6 @@ const Currency = require('currency.js');
 const DataClient = require('../../data-client');
 const Moment = require('moment/moment');
 const Util = require('../../util');
-const CashViewModel = require('./cash-view-model');
 const TransferController = require('../../controllers/balance-sheet/transfer-controller');
 function BondViewModel() {
     this.getViewDescription = function() {
@@ -49,10 +48,11 @@ function BondViewModel() {
         viewContainer.append(view);
         let liquidateButton = $(`<div class="col-xs-1">
                             <button type="button" class="btn btn-success add-remove-btn" title="Liquidate bond">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                             </button>
                           </div>`);
         view.append(liquidateButton);
+        const CashViewModel = require('./cash-view-model');
         new TransferController().init(
             liquidateButton,
             viewContainer,
