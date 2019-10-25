@@ -24,13 +24,14 @@ function DataClient(settings) {
     this.patch = async function (name, data) {
         let original = await this.getData();
         let final = Object.assign(original, data);
-        if (final.bonds) {
-            final.bonds.sort((a, b) =>
-                Moment(a.issueDate).add(a.daysToMaturation, 'days').valueOf() -
-                Moment(b.issueDate).add(b.daysToMaturation, 'days').valueOf());
-        }
         if (final.assets) {
-            final.assets.sort((a, b) => b.amount - a.amount);
+            final.assets.sort(function(a, b) {
+                if (a.daysToMaturation && b.daysToMaturation) {
+                    return Moment(a.issueDate).add(a.daysToMaturation, 'days').valueOf() -
+                    Moment(b.issueDate).add(b.daysToMaturation, 'days').valueOf()
+                }
+                return b.amount - a.amount
+            });
         }
         let options = {
             Bucket: settings.s3Bucket,

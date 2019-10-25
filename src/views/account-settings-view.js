@@ -1,6 +1,6 @@
 exports.getCommandButtonsContainerView = function () {
     return `
-      <span id="view-raw-data-button" class="toggle-account-settings" title="settings">
+      <span id="view-raw-data-button" class="toggle-account-settings" title="view raw json data">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
       </span>
       <span id="account-settings-button" class="toggle-account-settings" title="settings">

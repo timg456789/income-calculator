@@ -60,7 +60,8 @@ function BondViewModel() {
             [
                 new CashViewModel(),
                 new BondViewModel(),
-            ]);
+            ],
+            bond.id);
         return viewContainer;
     };
     this.getView = function (model) {

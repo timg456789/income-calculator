@@ -23,32 +23,37 @@ function AccountsController() {
     async function completeTransfer(transferId) {
         let dataClient = new DataClient(settings);
         let data = await dataClient.getData();
-        let patch = {};
+        let patch = {
+            assets: data.assets || []
+        };
         let transferOriginal = data.pending.find(x => x.id === transferId);
         patch.pending = data.pending.filter(x => x.id !== transferId);
-        var debitAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
-        if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'expense') {
-            debitAccount = data.cash.find(x => x.name.toLowerCase() === transferOriginal.debitAccount.toLowerCase());
+        let debitAccount = patch.assets.find(x => x.id === transferOriginal.creditId ||
+                                                (x.name || '').toLowerCase() === transferOriginal.debitAccount.toLowerCase());
+
+        if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'bond' ||
+            transferOriginal.type && transferOriginal.type.toLowerCase() === 'expense') {
+
             debitAccount.amount = Currency(debitAccount.amount, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
-            if (Currency(debitAccount.amount).intValue < 1) {
-                data.cash = data.cash.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
+
+            if (transferOriginal.type.toLowerCase() !== 'expense') {
+                delete transferOriginal.creditAccount;
+                delete transferOriginal.debitAccount;
+                delete transferOriginal.transferDate;
+                patch.assets.push(transferOriginal);
             }
-            patch.cash = data.cash;
-        } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'bond') {
-            debitAccount.shares = Currency(debitAccount.shares).subtract(transferOriginal.amount).toString();
-            patch.bonds = data.bonds || [];
-            delete transferOriginal.creditAccount;
-            delete transferOriginal.debitAccount;
-            delete transferOriginal.transferDate;
-            patch.bonds.push(transferOriginal);
+
         } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'cash') {
-            debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
-            patch.cash = data.cash || [];
-            let creditAccount = patch.cash.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
+            let creditAmount = Util.getAmount(transferOriginal);
+            debitAccount.amount = Currency(debitAccount.amount, Util.getCurrencyDefaults()).subtract(creditAmount).toString();
+            let creditAccount = patch.assets.find(x =>
+                (x.type || '').toLowerCase() === 'cash' &&
+                x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
             if (!creditAccount) {
-                patch.cash.push({
+                patch.assets.push({
                     amount: transferOriginal.amount,
-                    name: transferOriginal.name
+                    name: transferOriginal.name,
+                    type: transferOriginal.type
                 });
             } else {
                 creditAccount.amount = Currency(creditAccount.amount, Util.getCurrencyDefaults()).add(transferOriginal.amount).toString();
@@ -63,21 +68,22 @@ function AccountsController() {
         } else {
             let newDebitAmount = Currency(Util.getAmount(debitAccount), Util.getCurrencyDefaults()).subtract(Util.getAmount(transferOriginal)).toString();
             debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
-            let creditAccount = data.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
+            let creditAccount = patch.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
             if (!creditAccount) {
                 creditAccount = {
                     name: transferOriginal.creditAccount,
                     shares: transferOriginal.shares,
-                    sharePrice: transferOriginal.sharePrice };
-                data.assets.push(creditAccount);
+                    sharePrice: transferOriginal.sharePrice
+                };
+                patch.assets.push(creditAccount);
             } else {
                 creditAccount.shares = Currency(creditAccount.shares, Util.getCurrencyDefaults()).add(transferOriginal.shares).toString();
             }
             if (Currency(debitAccount.shares).intValue < 1) {
-                data.assets = data.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
+                patch.assets = patch.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
             }
-            patch.assets = data.assets;
         }
+        patch.assets = patch.assets.filter(x => Currency(Util.getAmount(x)).intValue > 0);
         try {
             await dataClient.patch(settings.s3ObjectKey, patch);
             window.location.reload();
@@ -99,10 +105,9 @@ function AccountsController() {
             let startingBalance = Currency(0, Util.getCurrencyDefaults());
             let settled = [];
             if (account.toLowerCase() === 'bonds') {
-                settled = data.bonds || [];
+                settled = (data.assets || []).filter(x => (x.type || '').toLowerCase() == 'bond');
             } else {
-                settled = (data.assets || []).filter(x => x.name.toLowerCase() === account.toLowerCase())
-                    .concat((data.cash || []).filter(x => x.name.toLowerCase() == account.toLowerCase()));
+                settled = (data.assets || []).filter(x => (x.name || '').toLowerCase() === account.toLowerCase());
             }
             for (let settledTransaction of settled) {
                 startingBalance = startingBalance.add(Util.getAmount(settledTransaction));

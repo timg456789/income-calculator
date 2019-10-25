@@ -7,7 +7,8 @@ function TransferController() {
         transferButton,
         viewContainer,
         debitAccountName,
-        allowableTransferViewModels) {
+        allowableTransferViewModels,
+        creditId) {
         transferButton.find('button').click(function () {
             transferButton.find('button').attr('disabled', true);
             let transferView = $(new TransferView().getView(debitAccountName, allowableTransferViewModels));
@@ -43,6 +44,7 @@ function TransferController() {
                         if (!transferModel.creditAccount) {
                             transferModel.creditAccount = transferModel.name;
                         }
+                        transferModel.creditId = creditId;
                         patch.pending.push(transferModel);
                         return dataClient.patch(Util.settings().s3ObjectKey, patch);
                     })

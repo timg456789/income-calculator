@@ -49,7 +49,7 @@ exports.setView = function (budget, totalCashAndStocks) {
     $('.property-plant-and-equipment-header-container').append(new PpeVm().getHeaderView());
     let totalLoans = setBalances(budget);
     let totalCash = Currency(0, Util.getCurrencyDefaults());
-    for (let cash of budget.cash || []) {
+    for (let cash of (budget.assets || []).filter(x => (x.type || '').toLowerCase() === 'cash')) {
         totalCash = totalCash.add(cash.amount);
         $('#cash-input-group').append(new CashViewModel().getReadOnlyView(cash.amount, cash.name));
     }
@@ -60,14 +60,16 @@ exports.setView = function (budget, totalCashAndStocks) {
     }
     let ppeTotalView = $(`<div class="subtotal">Total Property, Plant and Equipment<span class="pull-right amount">${Util.format(totalPropertyPlantAndEquipment.toString())}</span></div>`);
     $('#property-plant-and-equipment-total-amount').append(ppeTotalView);
-    for (let asset of budget.assets || []) {
+    for (let asset of (budget.assets || [])
+            .filter(x => (x.type || '').toLowerCase() !== 'bond' &&
+                         (x.type || '').toLowerCase() !== 'cash')) {
         $('#asset-input-group').append(new CashOrStockViewModel().getReadOnlyView(
             asset.name, totalCashAndStocks.toString(), budget.pending,
             asset.shares, asset.sharePrice
         ));
     }
     let totalBonds = Currency(0, Util.getCurrencyDefaults());
-    for (let bond of budget.bonds || []) {
+    for (let bond of (budget.assets || []).filter(x => (x.type || '').toLowerCase() === 'bond')) {
         totalBonds = totalBonds.add(Currency(bond.amount));
         $('#bond-input-group').append(new BondViewModel().getReadOnlyView(bond));
     }
