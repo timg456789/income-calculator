@@ -105,16 +105,12 @@ h4 {
     margin-top: 10px;
     margin-bottom: 0px;
 }
-.toggle-account-settings,
-.budget-download-styles {
+
+#command-buttons-container > span {
     display: inline-block;
     float: right;
     cursor: pointer;
-    margin-right: 3px;
-}
-
-.budget-download-styles {
-    margin-right: 20px;
+    margin-right: 15px;
 }
 
 .toggle-account-settings > span {
@@ -270,10 +266,6 @@ h4 {
     background-color: #fbfbba;
 }
 
-.transaction-view.expense.unbudgeted {
-    border-bottom: 1px solid rgb(255, 69, 0);
-}
-
 .transaction-view.income,
 .transaction-view.net.positive {
     background-color: #ccffb6;
@@ -361,4 +353,13 @@ h4 {
 
 .dotted-underline-row > div:nth-child(2) {
     padding-left: 0px;
+}
+
+/* Printing */
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
 }

@@ -31,6 +31,9 @@ $(document).ready(function () {
         controller = new PricesController();
     }
     $('#command-buttons-container').append(AccountSettingsView.getCommandButtonsContainerView());
-    $('#account-settings-container').append(AccountSettingsView.getAccountSettingsView());
+    $('body').append('<div id="page-footer"></div>');
+    $('#page-footer').append(`<div id="debug-console" class="no-print"></div>`);
+    $('#page-footer').append(`<div id="account-settings-container"></div>`).append(AccountSettingsView.getAccountSettingsView());
+    $('#page-footer').append(`<div id="raw-data-container"></div>`).append(AccountSettingsView.getRawDataView());
     controller.init(Util.settings());
 });

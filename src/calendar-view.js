@@ -9,7 +9,7 @@ const CalendarAggregator = require('./calculators/calendar-aggregator');
 const calendarAggregator = new CalendarAggregator();
 
 function getTransactionView(name, amount, type) {
-    return `<div class="transaction-view unbudgeted ${type}"> 
+    return `<div class="transaction-view ${type}"> 
                 <div class="name">${name}</div>
                 <div class="amount">$${amount/100}</div>
             </div>`;
@@ -45,7 +45,7 @@ function addMonthContainer(monthContainerId, date) {
                 <div class="col-xs-3 text-center"><span class="month-heading-total-description">&nbsp;</span></div>
                 <div class="col-xs-2 text-center">Income</div>
                 <div class="col-xs-2 text-center">Expenses</div>
-                <div class="col-xs-5"><button type="button" class="btn btn-info show-breakdown-by-source">Show Account Totals</button></div>
+                <div class="col-xs-5"><button type="button" class="btn btn-info show-breakdown-by-source no-print">Show Account Totals</button></div>
             </div>
             <div class="month-heading-totals-values row">
                 <div class="col-xs-3 subtotal-line">Subtotal</div>

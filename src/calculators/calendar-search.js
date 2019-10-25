@@ -1,15 +1,12 @@
 function CalendarSearch() {
 
     this.find = function (startTime, endTime, transactions) {
-        var matches = [];
-
-        for (i = 0; i < transactions.length; i++) {
-            var transaction = transactions[i];
+        let matches = [];
+        for (let transaction of transactions) {
             if (this.within(startTime, endTime, transaction.date.getTime())) {
                 matches.push(transaction);
             }
         }
-
         return matches;
     };
 

@@ -1,5 +1,9 @@
 exports.getCommandButtonsContainerView = function () {
-    return `      <span id="account-settings-button" class="toggle-account-settings" title="settings">
+    return `
+      <span id="view-raw-data-button" class="toggle-account-settings" title="settings">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      </span>
+      <span id="account-settings-button" class="toggle-account-settings" title="settings">
           <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
       </span>
       <span id="budget-download" class="budget-download-styles" title="download">
@@ -42,4 +46,22 @@ exports.getAccountSettingsView = function () {
           </div>
       </div>
   </div>`;
+};
+
+exports.getRawDataView = function () {
+    return `<div class="modal fade" id="raw-data-view" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h2 class="modal-title">Raw Data</h2>
+              </div>
+              <div class="modal-body">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>`
 };

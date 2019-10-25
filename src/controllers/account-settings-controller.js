@@ -31,39 +31,54 @@ function AccountSettingsController() {
                 save();
             }
         });
-        $('#account-settings-button').click(function () {
-            $('#account-settings-view').modal({
-                backdrop: 'static'
-            });
+        $('#account-settings-button').click(() => {
+            $('#account-settings-view').modal({backdrop: 'static'});
         });
-        $('#budget-download').click(function () {
-            dataClient.getData()
-                .then(data => {
-                    let downloadLink = document.createElement('a');
-                    downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, 0, 4)));
-                    downloadLink.setAttribute('download', Util.getParameterByName('data'));
-                    if (document.createEvent) {
-                        var event = document.createEvent('MouseEvents');
-                        event.initEvent('click', true, true);
-                        downloadLink.dispatchEvent(event);
-                    }
-                    else {
-                        downloadLink.click();
-                    }
-                })
-                .catch(err => { Util.log(err); });
+        $('#view-raw-data-button').click(async () => {
+            let data;
+            try {
+                data = await dataClient.getData();
+            } catch (err) {
+                Util.log(err);
+                return;
+            }
+            $('#raw-data-view .modal-body').empty();
+            $('#raw-data-view .modal-body').append(`<pre>${JSON.stringify(data, 0, 4)}</pre>`);
+            $('#raw-data-view').modal({backdrop: 'static' });
         });
-        $('#account-settings-save-close-button').click(function () {
+        $('#budget-download').click(async function () {
+            let data;
+            try {
+                data = await dataClient.getData();
+            } catch (err) {
+                Util.log(err);
+                return;
+            }
+            let downloadLink = document.createElement('a');
+            downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, 0, 4)));
+            downloadLink.setAttribute('download', Util.getParameterByName('data'));
+            if (document.createEvent) {
+                let event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                downloadLink.dispatchEvent(event);
+            }
+            else {
+                downloadLink.click();
+            }
+        });
+        $('#account-settings-save-close-button').click(async function () {
             let newFileName = $('#budgetName').val().trim();
-            dataClient.patch(newFileName, view.getModel())
-                .then(data => {
-                    let url = Util.updateQueryStringParameter(location.href, 'data', newFileName);
-                    url = Util.updateQueryStringParameter(url, 'pub', $('#awsAccessKeyId').val().trim());
-                    url = Util.updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
-                    url = Util.updateQueryStringParameter(url, 'agreedToLicense', Util.agreedToLicense());
-                    window.location.href = url;
-                })
-                .catch(err => { Util.log(err); });
+            try {
+                let result = await dataClient.patch(newFileName, view.getModel())
+            } catch (err) {
+                Util.log(err);
+                return;
+            }
+            let url = Util.updateQueryStringParameter(location.href, 'data', newFileName);
+            url = Util.updateQueryStringParameter(url, 'pub', $('#awsAccessKeyId').val().trim());
+            url = Util.updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
+            url = Util.updateQueryStringParameter(url, 'agreedToLicense', Util.agreedToLicense());
+            window.location.href = url;
         });
         $('#awsBucket').val(bucket);
         $('#budgetName').val(s3ObjKey);

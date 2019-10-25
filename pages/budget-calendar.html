@@ -4,23 +4,23 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=.5, user-scalable=0">
-    <link rel="stylesheet" type="text/css" href="../stylesheets/bootstrap.min.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/bootstrap.min.css" media="all">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/style.css" media="all">
     <title>Net Income Calculator</title>
     <script type="text/javascript" src="../javascript/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="../javascript/bootstrap.min.js"></script>
     <script type="text/javascript" src="../app.bundle.js"></script>
 </head>
 <body>
-<h1>Income Calculator<span id="command-buttons-container"></span></h1>
-<div class="tab-nav-bar"></div>
-<div id="header" class="container">
+<h1 class="no-print">Income Calculator<span id="command-buttons-container"></span></h1>
+<div class="no-print tab-nav-bar"></div>
+<div id="header" class="container no-print">
     <div id="output"></div>
 </div>
 <div class="container budget-calendar">
     <form id="input-form" class="container-fluid form">
-        <h2>Budget Calendar</h2>
-        <select id="calendar-date-select">
+        <h2 class="no-print">Budget Calendar</h2>
+        <select id="calendar-date-select" class="no-print">
             <option value="0">January</option>
             <option value="1">February</option>
             <option value="2">March</option>
@@ -37,6 +37,5 @@
         <div id="months-container" class="container-fluid"></div>
     </form>
 </div>
-<div id="debug-console"></div>
 </body>
 </html>
