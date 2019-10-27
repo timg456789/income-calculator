@@ -8,7 +8,7 @@ function TransferController() {
         viewContainer,
         debitAccountName,
         allowableTransferViewModels,
-        creditId) {
+        debitId) {
         transferButton.find('button').click(function () {
             transferButton.find('button').attr('disabled', true);
             let transferView = $(new TransferView().getView(debitAccountName, allowableTransferViewModels));
@@ -38,13 +38,16 @@ function TransferController() {
                         patch.pending = data.pending;
                         let transferModel = viewModel.getModel(newView);
                         transferModel.id = Util.guid();
+                        if (transferModel.amount) {
+                            transferModel.amount = Util.cleanseNumericString(transferModel.amount);
+                        }
                         transferModel.transferDate = Moment(transferView.find('.transfer-date').val().trim(), 'YYYY-MM-DD UTC Z');
                         transferModel.debitAccount = debitAccountName;
                         transferModel.type = viewModel.getViewType();
                         if (!transferModel.creditAccount) {
                             transferModel.creditAccount = transferModel.name;
                         }
-                        transferModel.creditId = creditId;
+                        transferModel.debitId = debitId;
                         patch.pending.push(transferModel);
                         return dataClient.patch(Util.settings().s3ObjectKey, patch);
                     })

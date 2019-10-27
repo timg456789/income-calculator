@@ -49,9 +49,9 @@ exports.setView = function (budget, totalCashAndStocks) {
     $('.property-plant-and-equipment-header-container').append(new PpeVm().getHeaderView());
     let totalLoans = setBalances(budget);
     let totalCash = Currency(0, Util.getCurrencyDefaults());
-    for (let cash of (budget.assets || []).filter(x => (x.type || '').toLowerCase() === 'cash')) {
-        totalCash = totalCash.add(cash.amount);
-        $('#cash-input-group').append(new CashViewModel().getReadOnlyView(cash.amount, cash.name));
+    for (let cashAccount of (budget.assets || []).filter(x => (x.type || '').toLowerCase() === 'cash')) {
+        totalCash = totalCash.add(cashAccount.amount);
+        $('#cash-input-group').append(new CashViewModel().getReadOnlyView(cashAccount.amount, cashAccount.name, cashAccount.id));
     }
     let totalPropertyPlantAndEquipment = Currency(0, Util.getCurrencyDefaults());
     for (let tangibleAsset of budget.propertyPlantAndEquipment || []) {

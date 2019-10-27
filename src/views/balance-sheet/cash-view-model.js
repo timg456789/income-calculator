@@ -30,7 +30,7 @@ function CashViewModel() {
               <div class="col-xs-1">Transfer</div>
           </div>`);
     };
-    this.getReadOnlyView = function (amount, name) {
+    this.getReadOnlyView = function (amount, name, id) {
         'use strict';
         let view = $(`
             <div class="dotted-underline-row row transaction-input-view">
@@ -59,7 +59,8 @@ function CashViewModel() {
                 new ExpenseViewModel(),
                 new PropertyPlantAndEquipmentViewModel(),
                 new BondViewModel()
-            ]
+            ],
+            id
         );
         return viewContainer;
     };

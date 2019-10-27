@@ -76,3 +76,6 @@ exports.add = function (one, two) {
 exports.subtract = function (one, two) {
     return Currency(one, exports.getCurrencyDefaults()).subtract(two).toString();
 };
+exports.cleanseNumericString = function (numericString) {
+    return numericString.replace(/[^-0-9.]/g, '');
+};

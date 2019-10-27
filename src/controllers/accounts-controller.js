@@ -23,61 +23,51 @@ function AccountsController() {
     async function completeTransfer(transferId) {
         let dataClient = new DataClient(settings);
         let data = await dataClient.getData();
-        let patch = {
-            assets: data.assets || []
-        };
-        let transferOriginal = data.pending.find(x => x.id === transferId);
+        let patch = { assets: data.assets || [] };
+        let credit = data.pending.find(x => x.id === transferId);
         patch.pending = data.pending.filter(x => x.id !== transferId);
-        let debitAccount = patch.assets.find(x => x.id === transferOriginal.creditId ||
-                                                (x.name || '').toLowerCase() === transferOriginal.debitAccount.toLowerCase());
-
-        if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'bond' ||
-            transferOriginal.type && transferOriginal.type.toLowerCase() === 'expense') {
-
-            debitAccount.amount = Currency(debitAccount.amount, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
-
-            if (transferOriginal.type.toLowerCase() !== 'expense') {
-                delete transferOriginal.creditAccount;
-                delete transferOriginal.debitAccount;
-                delete transferOriginal.transferDate;
-                patch.assets.push(transferOriginal);
-            }
-
-        } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'cash') {
-            let creditAmount = Util.getAmount(transferOriginal);
+        let debitAccount = patch.assets.find(
+            x => (x.id && x.id === credit.debitId)
+                     /* || (x.name || '').toLowerCase() === credit.debitAccount.toLowerCase()*/); // Fail for now until I get the transfers working.
+        if (credit.type && credit.type.toLowerCase() === 'bond' ||
+            credit.type && credit.type.toLowerCase() === 'expense' ||
+            credit.type && credit.type.toLowerCase() === 'cash') {
+            let creditAmount = Util.getAmount(credit);
+            // Not going to work for equity -> cash, but I'm not there yet.
             debitAccount.amount = Currency(debitAccount.amount, Util.getCurrencyDefaults()).subtract(creditAmount).toString();
-            let creditAccount = patch.assets.find(x =>
-                (x.type || '').toLowerCase() === 'cash' &&
-                x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
-            if (!creditAccount) {
-                patch.assets.push({
-                    amount: transferOriginal.amount,
-                    name: transferOriginal.name,
-                    type: transferOriginal.type
-                });
-            } else {
-                creditAccount.amount = Currency(creditAccount.amount, Util.getCurrencyDefaults()).add(transferOriginal.amount).toString();
+            if (credit.type.toLowerCase() !== 'expense') {
+                let creditAccount = patch.assets.find(asset =>
+                    (asset.type || '').toLowerCase() == (credit.type || '').toLowerCase() &&
+                    (asset.name || '').toLowerCase() === credit.creditAccount.toLowerCase());
+                if (!creditAccount) {
+                    delete credit.creditAccount;
+                    delete credit.debitAccount;
+                    delete credit.transferDate;
+                    patch.assets.push(credit);
+                } else {
+                    creditAccount.amount = Currency(creditAccount.amount, Util.getCurrencyDefaults()).add(credit.amount).toString();
+                }
             }
-        } else if (transferOriginal.type && transferOriginal.type.toLowerCase() === 'property-plant-and-equipment') {
-            debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(transferOriginal.amount).toString();
+        } else if (credit.type && credit.type.toLowerCase() === 'property-plant-and-equipment') {
+            debitAccount.shares = Currency(debitAccount.shares, Util.getCurrencyDefaults()).subtract(credit.amount).toString();
             patch.propertyPlantAndEquipment = data.propertyPlantAndEquipment || [];
             patch.propertyPlantAndEquipment.push({
-                amount: transferOriginal.amount,
-                name: transferOriginal.name
+                amount: credit.amount,
+                name: credit.name
             });
         } else {
-            let newDebitAmount = Currency(Util.getAmount(debitAccount), Util.getCurrencyDefaults()).subtract(Util.getAmount(transferOriginal)).toString();
+            let newDebitAmount = Currency(Util.getAmount(debitAccount), Util.getCurrencyDefaults()).subtract(Util.getAmount(credit)).toString();
             debitAccount.shares = Currency(newDebitAmount, Util.getCurrencyDefaults()).divide(debitAccount.sharePrice).toString();
-            let creditAccount = patch.assets.find(x => x.name.toLowerCase() === transferOriginal.creditAccount.toLowerCase());
+            let creditAccount = patch.assets.find(x => x.name.toLowerCase() === credit.creditAccount.toLowerCase());
             if (!creditAccount) {
                 creditAccount = {
-                    name: transferOriginal.creditAccount,
-                    shares: transferOriginal.shares,
-                    sharePrice: transferOriginal.sharePrice
+                    name: credit.creditAccount,
+                    shares: credit.shares,
+                    sharePrice: credit.sharePrice
                 };
                 patch.assets.push(creditAccount);
             } else {
-                creditAccount.shares = Currency(creditAccount.shares, Util.getCurrencyDefaults()).add(transferOriginal.shares).toString();
+                creditAccount.shares = Currency(creditAccount.shares, Util.getCurrencyDefaults()).add(credit.shares).toString();
             }
             if (Currency(debitAccount.shares).intValue < 1) {
                 patch.assets = patch.assets.filter(x => x.name.toLowerCase() !== debitAccount.name.toLowerCase());
