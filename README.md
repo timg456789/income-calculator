@@ -1,17 +1,22 @@
 # Income Calculator
 
-**Upcoming**
-I'm currently working on a section to manage savings. The ultimate goal of everything I've done so far is to build up a savings. Once you know what you have in savings you can look at investing. To start I'm probably going to write something to manage treasury bills. Perhaps a ladder, because it's silly to think that I would keep money in an FDIC bank account and get 1% (if I'm lucky), when I can put the money into a government bond and get the same full faith and credit of the United States government, but only lose some liquidity. Why is where the ladder comes into play. Finally anything that is needed immediately will have to be in an emergency fund available in less than a week. I still have yet to document such an emergency fund so I need to do that before I look at non-cash savings and attempt to properly describe their lack of perfect liquidity like cash.
-
-
 ## About
 
-- If you want to see what your pay is, look at your pay stub
-- If you want to see what your expenses are, look at your bills
-- If you want to see what bills have been paid, look at your bank account
-- If you want to see the payoff date and total interest for a loan, look at the loan amortization break-down provided by your bank
+### What This Application Is Not
 
-*This tools helps you know where to look and when so you can prioritize your time between setting up a budget, sticking to a budget, saving, investing or enjoying your hard work.*
+- **Accounting or Tax software:** This software doesn't attempt to create a history of transactions and can't predict tax payments
+- **Authoritative pay history or projection:** If you want to see what your pay is, look at your pay stub or employer agreement
+- **Authoritative bill history:** If you want to see what your expenses are, ask your vendor for an invoice
+- **Authoritative bill payment history:** If you want to know if a bill has been paid ask your vendor or bank
+- **Authoritative loan amortization:** If you want to see the payoff date and total interest for a loan, look at the loan amortization break-down provided by your bank
+
+### What This Application Is
+
+This tool is meant to give you the current state of your income and expenses and help you plan to manage your future income and expenses.
+
+This tool helps you know where to focus and when so you can prioritize your time between setting up a budget,
+sticking to a budget, saving, investing or enjoying your deferred wealth. This tool does provide non-authoritative projections
+to guide you to look at what your potential future income and expenses are; however, **any future projections are only estimates**.
 
 ## Budget
 
