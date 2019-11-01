@@ -1,5 +1,4 @@
 const DataClient = require('../data-client');
-const Moment = require('moment');
 const Util = require('../util');
 function DepositController() {
     'use strict';

@@ -1,5 +1,6 @@
 const DataClient = require('../data-client');
 const Util = require('../util');
+const AuthenticationController = require('./authentication-controller');
 
 function AccountSettingsController() {
     'use strict';
@@ -33,6 +34,9 @@ function AccountSettingsController() {
         });
         $('#account-settings-button').click(() => {
             $('#account-settings-view').modal({backdrop: 'static'});
+        });
+        $('#sign-in-sign-out-button').click(async () => {
+            $('#sign-in-sign-out-view').modal({backdrop: 'static'});
         });
         $('#view-raw-data-button').click(async () => {
             let data;
@@ -79,6 +83,10 @@ function AccountSettingsController() {
             url = Util.updateQueryStringParameter(url, 'priv', $('#awsSecretAccessKey').val().trim());
             url = Util.updateQueryStringParameter(url, 'agreedToLicense', Util.agreedToLicense());
             window.location.href = url;
+        });
+        $('#sign-in-button').click(async function () {
+            let authController = new AuthenticationController();
+            authController.login($('#login-username').val().trim(), $('#login-password').val().trim());
         });
         $('#awsBucket').val(bucket);
         $('#budgetName').val(s3ObjKey);

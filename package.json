@@ -18,10 +18,13 @@
   },
   "homepage": "https://github.com/timg456789/income-calculator/tree/gh-pages#readme",
   "dependencies": {
+    "amazon-cognito-identity-js": "^3.2.0",
     "aws-sdk": "^2.438.0",
     "currency.js": "1.2.1",
     "jquery": "3.1.0",
-    "moment": "2.24.0"
+    "moment": "2.24.0",
+    "otpauth": "^5.0.3",
+    "qrcode": "^1.4.2"
   },
   "devDependencies": {
     "tape": "4.5.1"
