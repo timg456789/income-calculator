@@ -5,15 +5,12 @@ const QRCode = require('qrcode');
 const Util = require('../util');
 function AuthenticationController() {
     this.login = async function login(username, password) {
-
-
-
         const response = await fetch('https://9hls6nao82.execute-api.us-east-1.amazonaws.com/production', {
             method: 'POST',
             mode: 'cors', // no-cors, *cors, same-origins
             //credentials: 'include', // include, *same-origin, omit
             headers: {
-                'Access-Control-Allow-Origin': '*',
+                //'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
