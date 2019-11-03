@@ -13,13 +13,6 @@ function CashOrStockViewModel() {
         'use strict';
         return $(`<div class="subtotal">Total ${name}<span class="pull-right">${Util.format(amount)}</span></div>`);
     };
-    this.getAssetTotal = function (assets) {
-        let total = Currency(0, Util.getCurrencyDefaults());
-        for (let asset of assets) {
-            total = total.add(Util.getAmount(asset));
-        }
-        return total.toString();
-    };
     this.getModel = function (target) {
         return {
             shares: $(target).find('input.shares').val().trim(),

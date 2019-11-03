@@ -43,12 +43,26 @@ function setBalances(budget) {
     return total.toString();
 }
 
-exports.setView = function (budget, totalCashAndStocks) {
-    $('.cash-header-container').append(new CashViewModel().getReadOnlyHeaderView())
+exports.setView = function (budget, bankData) {
+    $('.cash-header-container').append(new CashViewModel().getReadOnlyHeaderView());
     $('.assets-header-container').append(new CashOrStockViewModel().getReadOnlyHeaderView());
     $('.property-plant-and-equipment-header-container').append(new PpeVm().getHeaderView());
     let totalLoans = setBalances(budget);
     let totalCash = Currency(0, Util.getCurrencyDefaults());
+    let authoritativeCashTotal = Currency(0, Util.getCurrencyDefaults());
+    let totalNonTangibleAssets = Currency(0, Util.getCurrencyDefaults());
+    for (let asset of budget.assets) {
+        totalNonTangibleAssets = totalNonTangibleAssets.add(Util.getAmount(asset));
+    }
+    for (let cashAccount of (bankData.accounts || []).filter(x => (x.type || '').toLowerCase() === 'depository')) {
+        authoritativeCashTotal = authoritativeCashTotal.add(cashAccount.balances.available);
+        $('#cash-input-group').append(new CashViewModel().getReadOnlyView(
+            cashAccount.balances.available,
+            `Checking - ${cashAccount.mask}`,
+            cashAccount.account_id));
+    }
+    totalCash = totalCash.add(authoritativeCashTotal);
+    totalNonTangibleAssets = totalNonTangibleAssets.add(authoritativeCashTotal);
     for (let cashAccount of (budget.assets || []).filter(x => (x.type || '').toLowerCase() === 'cash')) {
         totalCash = totalCash.add(cashAccount.amount);
         $('#cash-input-group').append(new CashViewModel().getReadOnlyView(cashAccount.amount, cashAccount.name, cashAccount.id));
@@ -60,46 +74,52 @@ exports.setView = function (budget, totalCashAndStocks) {
     }
     let ppeTotalView = $(`<div class="subtotal">Total Property, Plant and Equipment<span class="pull-right amount">${Util.format(totalPropertyPlantAndEquipment.toString())}</span></div>`);
     $('#property-plant-and-equipment-total-amount').append(ppeTotalView);
-    for (let asset of (budget.assets || [])
+    let totalEquities = Currency(0, Util.getCurrencyDefaults());
+    let equityViewModel = new CashOrStockViewModel();
+    for (let equity of (budget.assets || [])
             .filter(x => (x.type || '').toLowerCase() !== 'bond' &&
                          (x.type || '').toLowerCase() !== 'cash')) {
-        $('#asset-input-group').append(new CashOrStockViewModel().getReadOnlyView(
-            asset.name, totalCashAndStocks.toString(), budget.pending,
-            asset.shares, asset.sharePrice
-        ));
+        totalEquities = totalEquities.add(Util.getAmount(equity));
+        let view = equityViewModel.getReadOnlyView(
+            equity.name,
+            totalNonTangibleAssets.toString(),
+            budget.pending,
+            equity.shares,
+            equity.sharePrice
+        );
+        $('#asset-input-group').append(view);
     }
     let totalBonds = Currency(0, Util.getCurrencyDefaults());
     for (let bond of (budget.assets || []).filter(x => (x.type || '').toLowerCase() === 'bond')) {
         totalBonds = totalBonds.add(Currency(bond.amount));
         $('#bond-input-group').append(new BondViewModel().getReadOnlyView(bond));
     }
-    let totalAssets = Currency(totalCashAndStocks, Util.getCurrencyDefaults())
-        .add(totalBonds)
-        .add(totalCash)
-        .toString();
-    $('#cash-allocation').append($(`<div class="allocation">Non-Tangible Allocation of Cash<span class="pull-right amount">
-            ${new CashOrStockViewModel().getAllocation(totalAssets, totalCash).toString()}</span></div>`));
+    $('#cash-allocation').append($(`<div class="allocation">Percent of Non-Tangible Assets in Cash<span class="pull-right amount">
+            ${new CashOrStockViewModel().getAllocation(totalNonTangibleAssets, totalCash).toString()}</span></div>`));
     $('#cash-total-amount').append(
         $(`<div class="subtotal">Total Cash<span class="pull-right amount">${Util.format(totalCash.toString())}</span></div>`)
     );
-    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Non-Tangible Allocation of Equities<span class="pull-right amount">
-            ${new CashOrStockViewModel().getAllocation(totalAssets, totalCashAndStocks).toString()}</span></div>`));
+    $('#cash-and-stocks-allocation').append($(`<div class="allocation">Percent of Non-Tangible Assets in Equities<span class="pull-right amount">
+            ${new CashOrStockViewModel().getAllocation(totalNonTangibleAssets, totalEquities).toString()}</span></div>`));
     $('#cash-and-stocks-total-amount').append(
-        $(`<div class="subtotal">Total Equities<span class="pull-right amount">${Util.format(totalCashAndStocks.toString())}</span></div>`)
+        $(`<div class="subtotal">Total Equities<span class="pull-right amount">${Util.format(totalEquities.toString())}</span></div>`)
     );
-    $('#bond-allocation').append($(`<div class="allocation">Non-Tangible Allocation of Bonds<span class="pull-right amount">${new CashOrStockViewModel().getAllocation(totalAssets, totalBonds.toString()).toString()}</span></div>`));
+    $('#bond-allocation').append($(`<div class="allocation">Percent of Non-Tangible Assets in Bonds<span class="pull-right amount">${new CashOrStockViewModel().getAllocation(totalNonTangibleAssets, totalBonds.toString()).toString()}</span></div>`));
     $('#bond-total-amount').append(
         (`<div class="subtotal">Total Bonds<span class="pull-right amount">${Util.format(totalBonds.toString())}</span></div>`)
     );
-    $('#assets-total-amount').append($(`<div class="subtotal">Total Non-Tangible Assets<span class="pull-right amount">${Util.format(totalAssets)}</span></div>`));
+    $('#total-tangible-assets').text(Util.format(totalPropertyPlantAndEquipment));
+    $('#total-non-tangible-assets').text(Util.format(totalNonTangibleAssets));
+    $('#total-debt').text(`(${Util.format(totalLoans)})`);
     let net = Currency(0, Util.getCurrencyDefaults())
         .subtract(totalLoans)
         .add(totalPropertyPlantAndEquipment)
-        .add(totalAssets);
+        .add(totalNonTangibleAssets);
     $('#net-total').text(Util.format(net.toString()));
     setupToggle('#tree-view-loans','#loans-container');
     setupToggle('#tree-view-cash', '#cash-container');
     setupToggle('#tree-view-property-pant-and-equipment', '#property-plant-and-equipment-container');
     setupToggle('#tree-view-cash-or-stock','#assets-container');
     setupToggle('#tree-view-bonds','#bond-container');
+    setupToggle('#tree-view-totals-row','#totals-row');
 };

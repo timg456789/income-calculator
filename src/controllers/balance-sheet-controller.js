@@ -10,12 +10,37 @@ function HomeController() {
     let dataClient;
     async function refresh() {
         try {
-            let data = await dataClient.getData();
-            let totalCashAndStocks = new CashOrStockViewModel().getAssetTotal(data.assets);
-            balanceSheetView.setView(data, totalCashAndStocks);
+            let data = dataClient.getData();
+            let bankData = sendRequest();
+            data = await data;
+            bankData = await bankData;
+            balanceSheetView.setView(data, bankData);
         } catch (err) {
             Util.log(err);
         }
+    }
+    async function sendRequest() {
+        let requestParams = {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Authorization': Util.getCookie('idToken'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({}) // body data type must match "Content-Type" header
+        };
+        let responseData;
+        try {
+            let response = await fetch('https://9hls6nao82.execute-api.us-east-1.amazonaws.com/production', requestParams);
+            console.log(response);
+            responseData = await response.json(); // parses JSON response into native JavaScript objects
+        } catch (error) {
+            console.log(error);
+            console.log('token is likely invalid causing cors to fail');
+            alert('you need to login to fix the issue until the token refresh process is implemented');
+            return;
+        }
+        return responseData;
     }
     this.init = function (settings) {
         s3ObjKey = settings.s3ObjectKey;

@@ -53,7 +53,7 @@ exports.settings = function() {
 exports.rootUrl = function () {
     return window.location.origin === 'file://'
         ? 'file:///C:/Users/peon/Desktop/projects/income-calculator'
-        : 'https://timg456789.github.io/income-calculator';
+        : `${document.location.origin}/income-calculator`;
 };
 exports.guid = function () {
     function s4() {
@@ -78,4 +78,19 @@ exports.subtract = function (one, two) {
 };
 exports.cleanseNumericString = function (numericString) {
     return numericString.replace(/[^-0-9.]/g, '');
+};
+exports.getCookie = function (cookieNmae) {
+    let name = cookieNmae + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return '';
 };
