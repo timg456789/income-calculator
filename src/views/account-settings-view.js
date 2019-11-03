@@ -34,7 +34,7 @@ exports.getSignInView = function () {
                       </div>
                       <div class="form-group sign-in-mfa-code-container hide">
                           <label for="budgetName">MFA Code</label>
-                          <input type="text" class="form-control" id="budgetName">
+                          <input type="text" class="form-control" id="mfaCode">
                       </div>
                       <div id="qr-code-container"></div>
                   </form>

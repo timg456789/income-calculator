@@ -5,6 +5,28 @@ const QRCode = require('qrcode');
 const Util = require('../util');
 function AuthenticationController() {
     this.login = async function login(username, password) {
+
+
+
+        const response = await fetch('https://9hls6nao82.execute-api.us-east-1.amazonaws.com/production', {
+            method: 'POST',
+            mode: 'cors', // no-cors, *cors, same-origins
+            //credentials: 'include', // include, *same-origin, omit
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify({}) // body data type must match "Content-Type" header
+        });
+        let responseData = await response.json(); // parses JSON response into native JavaScript objects
+
+        console.log(responseData);
+
+
+
+
+        return;
         let poolData = {
             UserPoolId : 'us-east-1_CJmKMk0Fw',
             ClientId : '1alsnsg84noq81e7f2v5vru7m7'
@@ -21,10 +43,16 @@ function AuthenticationController() {
         let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
         let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess: function (result) {
+            onSuccess: async function (result) {
                 let idToken = result.getIdToken();
                 console.log('jwt id token');
                 console.log(idToken.getJwtToken());
+
+                document.cookie = `idToken=${idToken.getJwtToken()}Secure;HttpOnly;domain=9hls6nao82.execute-api.us-east-1.amazonaws.com;`;
+
+
+
+
                 let accessToken = result.getAccessToken();
                 console.log('access token');
                 console.log(accessToken);
