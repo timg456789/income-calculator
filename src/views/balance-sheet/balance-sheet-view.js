@@ -23,31 +23,31 @@ function setupToggle(container, detail) {
         }
     });
 }
-function setBalances(budget) {
-    if (!budget.balances) {
-        return '0';
-    }
-    $('#balance-input-group').empty();
-    let total = Currency(0, Util.getCurrencyDefaults());
-    for (let loan of budget.balances) {
-        let monthlyTxn = budget.monthlyRecurringExpenses.find(x => x.name === loan.name);
-        let weeklyTxn = budget.weeklyRecurringExpenses.find(x => x.name === loan.name);
-        let weeklyAmount = monthlyTxn ? (monthlyTxn.amount/100) / cal.WEEKS_IN_MONTH
-            : weeklyTxn ? weeklyTxn.amount/100 : 0;
-        total = total.add(loan.amount);
-        $('#balance-input-group').append(new LoanViewModel().getView(loan.amount, loan.name, loan.rate, weeklyAmount));
-    }
-    $('#loan-total-amount').append(
-        $(`<div class="subtotal">Loans<span class="pull-right amount">${Util.format(total.toString())}</span></div>`)
-    );
-    return total.toString();
+function getWeeklyAmount(budget, debtName) {
+    let monthlyTxn = budget.monthlyRecurringExpenses.find(x => x.name === debtName);
+    let weeklyTxn = budget.weeklyRecurringExpenses.find(x => x.name === debtName);
+    return monthlyTxn ? (monthlyTxn.amount/100) / cal.WEEKS_IN_MONTH
+        : weeklyTxn ? weeklyTxn.amount/100 : 0;
 }
-
-exports.setView = function (budget, bankData) {
+exports.setView = function (budget, bankData, viewModel) {
+    $('#balance-input-group').empty();
     $('.cash-header-container').append(new CashViewModel().getReadOnlyHeaderView());
     $('.assets-header-container').append(new CashOrStockViewModel().getReadOnlyHeaderView());
     $('.property-plant-and-equipment-header-container').append(new PpeVm().getHeaderView());
-    let totalLoans = setBalances(budget);
+    for (let loan of budget.balances) {
+        let loanView = new LoanViewModel().getView(loan.amount, loan.name, loan.rate, getWeeklyAmount(budget, loan.name));
+        $('#balance-input-group').append(loanView);
+    }
+    for (let creditCard of (bankData.accounts || []).filter(x => (x.type || '').toLowerCase() === 'credit')) {
+        let loanView = new LoanViewModel().getView(
+            creditCard.balances.current,
+            `Credit Card - ${creditCard.mask}`,
+            .18,
+            getWeeklyAmount(budget, `Credit Card - ${creditCard.mask}`),
+            true);
+        $('#balance-input-group').append(loanView);
+    }
+    $('#loan-total-amount-value').text(`(${Util.format(viewModel.debtsTotal.toString())})`);
     let totalCash = Currency(0, Util.getCurrencyDefaults());
     let authoritativeCashTotal = Currency(0, Util.getCurrencyDefaults());
     let totalNonTangibleAssets = Currency(0, Util.getCurrencyDefaults());
@@ -110,9 +110,9 @@ exports.setView = function (budget, bankData) {
     );
     $('#total-tangible-assets').text(Util.format(totalPropertyPlantAndEquipment));
     $('#total-non-tangible-assets').text(Util.format(totalNonTangibleAssets));
-    $('#total-debt').text(`(${Util.format(totalLoans)})`);
+    $('#total-debt').text(`(${Util.format(viewModel.debtsTotal)})`);
     let net = Currency(0, Util.getCurrencyDefaults())
-        .subtract(totalLoans)
+        .subtract(viewModel.debtsTotal)
         .add(totalPropertyPlantAndEquipment)
         .add(totalNonTangibleAssets);
     $('#net-total').text(Util.format(net.toString()));

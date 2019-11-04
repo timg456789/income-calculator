@@ -4,6 +4,7 @@ const CashOrStockViewModel = require('../views/balance-sheet/cash-or-stock-view-
 const DataClient = require('../data-client');
 const LoanViewModel = require('../views/balance-sheet/loan-view-model');
 const Util = require('../util');
+const Currency = require('currency.js');
 function HomeController() {
     'use strict';
     let s3ObjKey;
@@ -14,10 +15,21 @@ function HomeController() {
             let bankData = sendRequest();
             data = await data;
             bankData = await bankData;
-            balanceSheetView.setView(data, bankData);
+            balanceSheetView.setView(data, bankData, getViewModel(data, bankData));
         } catch (err) {
             Util.log(err);
         }
+    }
+    function getViewModel(budget, bankData) {
+        let balanceSheetViewModel = {};
+        balanceSheetViewModel.debtsTotal = Currency(0, Util.getCurrencyDefaults());
+        for (let loan of budget.balances) {
+            balanceSheetViewModel.debtsTotal = balanceSheetViewModel.debtsTotal.add(loan.amount);
+        }
+        for (let creditCard of (bankData.accounts || []).filter(x => (x.type || '').toLowerCase() === 'credit')) {
+            balanceSheetViewModel.debtsTotal = balanceSheetViewModel.debtsTotal.add(creditCard.balances.current);
+        }
+        return balanceSheetViewModel;
     }
     async function sendRequest() {
         let requestParams = {
@@ -32,11 +44,10 @@ function HomeController() {
         let responseData;
         try {
             let response = await fetch('https://9hls6nao82.execute-api.us-east-1.amazonaws.com/production', requestParams);
-            console.log(response);
             responseData = await response.json(); // parses JSON response into native JavaScript objects
         } catch (error) {
             console.log(error);
-            console.log('token is likely invalid causing cors to fail');
+            console.log('token is likely invalid causing cors to fail (cors can be fixed for errors in api gateway)');
             window.location=`${Util.rootUrl()}/pages/login.html${window.location.search}`;
         }
         return responseData;

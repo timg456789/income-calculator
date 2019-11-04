@@ -7,7 +7,7 @@ function LoanViewModel() {
     let self = this;
     this.getModels = function() {
         var balances = [];
-        $('.balance-item').each(function () {
+        $('.balance-item.editable').each(function () {
             balances.push(self.getModel(this));
         });
         return balances;
@@ -19,12 +19,11 @@ function LoanViewModel() {
             "rate": $(target).find('input.rate').val().trim()
         };
     };
-    this.getView = function (amount, name, rate, weeklyAmount) {
+    this.getView = function (amount, name, rate, weeklyAmount, isReadOnly) {
         let payOffDateText;
         let totalInterestText;
+        let lifetimeInterestText;
         if (weeklyAmount) {
-            let payoffDate;
-            let totalInterest;
             try {
                 let balanceStatement = payoffDateCalculator.getPayoffDate({
                     startTime: Date.UTC(
@@ -46,36 +45,40 @@ function LoanViewModel() {
                 payOffDateText = err;
                 totalInterestText = err;
             }
+            lifetimeInterestText = Currency(totalInterestText).divide(amount).multiply(100).toString() + '%';
         } else {
             payOffDateText = 'WARNING: no payment specified';
             let infinitySymbol = '&#8734;';
             totalInterestText = infinitySymbol;
+            lifetimeInterestText = infinitySymbol;
         }
-        let lifetimeInterest = Currency(totalInterestText).divide(amount).multiply(100);
-        let view = $(`<div class="balance-item row transaction-input-view">
+
+        let view = $(`<div class="balance-item row transaction-input-view ${isReadOnly ? 'read-only' : 'editable'}">
                     <div class="col-xs-2">
                         <div class="input-group">
                             <div class="input-group-addon ">$</div>
-                            <input class="amount form-control text-right" type="text" value="${amount}" />
+                            <input ${isReadOnly ? 'disabled=disabled' : ''} class="amount form-control text-right" type="text" value="${amount}" />
                         </div>
                     </div>
-                    <div class="col-xs-3"><input class="name form-control" type="text" value="${name}" /></div>
-                    <div class="col-xs-1"><input class="rate form-control text-right" type="text" value="${rate}" /></div>
+                    <div class="col-xs-3"><input ${isReadOnly ? 'disabled=disabled' : ''} class="name form-control" type="text" value="${name}" /></div>
+                    <div class="col-xs-1"><input ${isReadOnly ? 'disabled=disabled' : ''} class="rate form-control text-right" type="text" value="${rate}" /></div>
                     <div class="col-xs-2 text-center vertical-align amount-description-column">${payOffDateText}</div>
                     <div class="col-xs-2 text-right vertical-align amount-description-column">${totalInterestText}</div>
-                    <div class="col-xs-1 text-right vertical-align amount-description-column">${lifetimeInterest}%</div>
+                    <div class="col-xs-1 text-right vertical-align amount-description-column">${lifetimeInterestText}</div>
                     </div>
         `);
-        let removeButtonHtml = `<div class="col-xs-1">
+        if (!isReadOnly) {
+            let removeButtonHtml = `<div class="col-xs-1">
                                 <button class="btn remove add-remove-btn" title="Remove Loan">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>
                             </div>`;
-        let removeButton = $(removeButtonHtml);
-        removeButton.click(function () {
-            view.remove();
-        });
-        view.append(removeButton);
+            let removeButton = $(removeButtonHtml);
+            removeButton.click(function () {
+                view.remove();
+            });
+            view.append(removeButton);
+        }
         return view;
     };
 }
