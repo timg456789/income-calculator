@@ -5,6 +5,7 @@ const PayDaysController = require('./controllers/pay-days-controller');
 const AccountsController = require('./controllers/accounts-controller');
 const DepositController = require('./controllers/deposit-controller');
 const PricesController = require('./controllers/prices-controller');
+const LoginController = require('./controllers/login-controller');
 const Nav = require('./nav');
 const AccountSettingsView = require('./views/account-settings-view');
 const Util = require('./util');
@@ -26,15 +27,15 @@ $(document).ready(function () {
         controller = new BudgetCalendarController();
     } else if (pageName.startsWith('deposit.html')) {
         controller = new DepositController();
-    }
-    else if (pageName.startsWith('prices.html')) {
+    } else if (pageName.startsWith('prices.html')) {
         controller = new PricesController();
+    } else if (pageName.startsWith('login.html')) {
+        controller = new LoginController();
     }
     $('#command-buttons-container').append(AccountSettingsView.getCommandButtonsContainerView());
     $('body').append('<div id="page-footer"></div>');
     $('#page-footer').append(`<div id="debug-console" class="no-print"></div>`);
     $('#page-footer').append(`<div id="account-settings-container"></div>`).append(AccountSettingsView.getAccountSettingsView());
-    $('#page-footer').append(`<div id="account-settings-container"></div>`).append(AccountSettingsView.getSignInView());
     $('#page-footer').append(`<div id="raw-data-container"></div>`).append(AccountSettingsView.getRawDataView());
     controller.init(Util.settings());
 });

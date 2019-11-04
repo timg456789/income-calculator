@@ -37,8 +37,7 @@ function HomeController() {
         } catch (error) {
             console.log(error);
             console.log('token is likely invalid causing cors to fail');
-            alert('you need to login to fix the issue until the token refresh process is implemented');
-            return;
+            window.location=`${Util.rootUrl()}/pages/login.html${window.location.search}`;
         }
         return responseData;
     }
